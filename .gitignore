@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+
+# Next.js and build outputs
+.next/
+out/
+dist/
+build/
+
+# Hardhat / Solidity artifacts
+artifacts/
+cache/
+typechain-types/
+deployments/localhost/
+deployments/hardhat/
+
+# Test coverage
+coverage/
+coverage.json
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Private keys and wallet material
+*.key
+*.pem
+mnemonic.txt
+keystore/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+.pnpm-debug.log*
+pnpm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/settings.json
+.idea/
+*.suo
+
+# Vercel and deployment artifacts
+.vercel/
+
+# Miscellaneous
+*.tsbuildinfo
