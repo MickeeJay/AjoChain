@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ -f package.json ] || [ -f eslint.config.js ] || [ -f eslint.config.mjs ] || [ -f .eslintrc ] || [ -f .eslintrc.js ] || [ -f .eslintrc.cjs ] || [ -f .eslintrc.json ]; then
+  echo "Running ESLint..."
+  npx eslint .
+else
+  echo "No ESLint configuration found; skipping ESLint."
+fi
+
+if [ -f tsconfig.json ]; then
+  echo "Running TypeScript compile check..."
+  npx tsc --noEmit
+else
+  echo "No tsconfig.json found; skipping TypeScript compile check."
+fi
+
+if [ -d contracts ]; then
+  contract_files=$(find contracts -type f -name '*.sol' 2>/dev/null || true)
+  if [ -n "$contract_files" ]; then
+    echo "Running Solhint..."
+    # shellcheck disable=SC2086
+    npx solhint $contract_files
+  else
+    echo "No Solidity files found; skipping Solhint."
+  fi
+else
+  echo "No contracts directory found; skipping Solhint."
+fi
