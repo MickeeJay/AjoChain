@@ -1,22 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
 interface IAjoFactory {
-    event GroupCreated(address indexed group, address indexed creator, string name);
+    event GroupCreated(uint256 indexed groupId, address indexed groupAddress, address indexed creator, string name);
+    event MemberJoined(uint256 indexed groupId, address indexed member);
 
-    function cUSD() external view returns (address);
+    function cUSDToken() external view returns (address);
 
     function createGroup(
         string calldata name,
-        IERC20 token,
         uint256 contributionAmount,
-        uint256 maxMembers,
-        uint256 cycleDuration
-    ) external returns (address group);
+        uint256 frequencyInDays,
+        uint256 maxMembers
+    ) external;
 
-    function allGroups(uint256 index) external view returns (address);
+    function joinGroup(uint256 groupId, bytes32 inviteCode) external;
 
-    function totalGroups() external view returns (uint256);
+    function getUserGroups(address user) external view returns (uint256[] memory);
+
+    function getGroupInfo(uint256 groupId) external view returns (address);
+
+    function getActiveGroups(uint256 offset, uint256 limit) external view returns (uint256[] memory);
 }
