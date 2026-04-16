@@ -35,6 +35,7 @@ describe("AjoGroupFactory", function () {
     const factoryHash = await walletClient.deployContract({
       abi: factoryArtifact.abi,
       bytecode: factoryArtifact.bytecode as `0x${string}`,
+      args: [mockAddress],
     });
     const factoryReceipt = await publicClient.waitForTransactionReceipt({ hash: factoryHash });
     const factoryAddress = factoryReceipt.contractAddress as `0x${string}`;
@@ -60,6 +61,13 @@ describe("AjoGroupFactory", function () {
       functionName: "totalGroups",
     });
     expect(totalGroups).to.equal(1n);
+
+    const recordedCusd = await publicClient.readContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "cUSD",
+    });
+    expect(String(recordedCusd).toLowerCase()).to.equal(mockAddress.toLowerCase());
 
     const firstGroup = await publicClient.readContract({
       address: factoryAddress,
