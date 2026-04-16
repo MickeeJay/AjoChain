@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./interfaces/IAjoFactory.sol";
 import "./AjoSavingsGroup.sol";
 import "./libraries/Counters.sol";
@@ -31,7 +31,7 @@ contract AjoGroupFactory is Ownable, ReentrancyGuard, IAjoFactory {
     uint256 public constant MAX_CONTRIBUTION = 50e18;
     uint256 public constant MAX_POT_VALUE = 500e18;
 
-    constructor(address cUSDToken_) Ownable(msg.sender) {
+    constructor(address cUSDToken_) Ownable() {
         if (cUSDToken_ == address(0)) {
             revert InvalidTokenAddress();
         }
