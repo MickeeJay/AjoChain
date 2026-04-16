@@ -198,4 +198,83 @@ describe("AjoGroupFactory", function () {
       );
     });
   });
+
+  describe("joinGroup", function () {
+    it("should allow a member to join with the correct invite code", async function () {
+      const { groupId, group, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await joinGroup(alice, groupId, inviteCode);
+
+      expect(await factory.getUserGroups(aliceAddress)).to.deep.equal([groupId]);
+      expect(await group.memberCount()).to.equal(2n);
+      expect(await group.isMember(aliceAddress)).to.equal(true);
+    });
+
+    it("should add groupId to the joiner's userGroups", async function () {
+      const { groupId, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await joinGroup(alice, groupId, inviteCode);
+
+      expect(await factory.getUserGroups(aliceAddress)).to.deep.equal([groupId]);
+    });
+
+    it("should emit MemberJoined event", async function () {
+      const { groupId, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await expect(factory.connect(alice).joinGroup(groupId, inviteCode))
+        .to.emit(factory, "MemberJoined")
+        .withArgs(groupId, aliceAddress);
+    });
+
+    it("should revert with a wrong invite code", async function () {
+      const { groupId } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await expect(factory.connect(alice).joinGroup(groupId, inviteMismatchCode)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidInviteCode",
+      );
+    });
+
+    it("should revert if the group is already ACTIVE", async function () {
+      const { groupId, group, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await joinGroup(alice, groupId, inviteCode);
+      await joinGroup(bob, groupId, inviteCode);
+      await group.startGroup();
+
+      expect(await group.status()).to.equal(1n);
+
+      await expect(factory.connect(carol).joinGroup(groupId, inviteCode)).to.be.revertedWithCustomError(group, "OnlyForming");
+    });
+
+    it("should revert if the group is full", async function () {
+      const { groupId, group, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 3n);
+
+      await joinGroup(alice, groupId, inviteCode);
+      await joinGroup(bob, groupId, inviteCode);
+
+      await expect(factory.connect(carol).joinGroup(groupId, inviteCode)).to.be.revertedWithCustomError(
+        group,
+        "GroupFull",
+      );
+    });
+
+    it("should revert if the member is already in the group", async function () {
+      const { groupId, group, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await joinGroup(alice, groupId, inviteCode);
+
+      await expect(factory.connect(alice).joinGroup(groupId, inviteCode)).to.be.revertedWithCustomError(
+        group,
+        "InvalidState",
+      );
+    });
+
+    it("should revert if the group does not exist", async function () {
+      await expect(factory.connect(alice).joinGroup(999n, inviteMismatchCode)).to.be.revertedWithCustomError(
+        factory,
+        "GroupNotFound",
+      );
+    });
+  });
 });
