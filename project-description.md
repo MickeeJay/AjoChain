@@ -6,14 +6,14 @@ In West and East Africa, informal savings circles remain one of the most trusted
 
 ## Solution
 
-AjoChain turns that familiar savings pattern into a MiniPay Mini App on Celo. Instead of a human treasurer, smart contracts define the group rules and enforce them automatically: who belongs to the group, how much each member contributes, when the cycle runs, and when the pooled funds can be released. This removes the single point of failure while keeping the social model of rotating savings intact.
+AjoChain turns that familiar savings pattern into a MiniPay Mini App on Celo. Instead of a human treasurer, smart contracts define the group rules and enforce them automatically: who belongs to the group, how much each member contributes, when each round runs, and when the pooled funds can be released. This removes the single point of failure while keeping the social model of rotating savings intact.
 
-The product is designed to feel native to the way people already save. Members can join from their phone, contribute in cUSD, and follow a clear on-chain record of payments and payouts. Because the system is built for MiniPay, the experience stays lightweight and mobile-first, which matters for users who want a familiar savings tool without the overhead of a full crypto onboarding flow.
+The product is designed to feel native to the way people already save. Members can join from their phone, contribute in cUSD, and follow a clear on-chain record of payments, payouts, pauses, and exits. Because the system is built for MiniPay, the experience stays lightweight and mobile-first, which matters for users who want a familiar savings tool without the overhead of a full crypto onboarding flow.
 
 ## Target Users
 
 - Market traders who need disciplined weekly or daily savings.
-- Gig workers who want flexible but structured contribution cycles.
+- Gig workers who want flexible but structured contribution rounds.
 - Diaspora savers who support family or participate in home-country savings groups.
 - Community savings circles in Nigeria, Kenya, and Ghana.
 
@@ -42,7 +42,7 @@ MiniPay is the right entry point because it already reaches 14M users, supports 
 
 AjoChain can earn revenue through a few aligned paths:
 
-- Savings completion credential NFT: an optional badge proving successful participation and completion of a savings cycle.
+- Savings completion credential NFT: an optional badge proving successful participation and completion of a savings round.
 - Group insurance: a protection layer that can cover missed contributions or group defaults through a partnered product.
 - Premium tier: advanced analytics, better reminders, historical insights, and group administration tools for power users or organizers.
 

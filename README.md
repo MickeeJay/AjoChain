@@ -16,9 +16,9 @@ The weakness is not the idea. It is the coordination model. One organizer often 
 
 ## Solution
 
-AjoChain moves the savings circle onto Celo. A smart contract replaces the human organizer and becomes the neutral rule enforcer for the group. It tracks members, contribution schedules, missed payments, payout order, and completion rules in a way that no single person can alter on a whim.
+AjoChain moves the savings circle onto Celo. A smart contract replaces the human organizer and becomes the neutral rule enforcer for the group. It tracks members, contribution schedules, missed payments, payout rotation, pause control, and completion rules in a way that no single person can alter on a whim.
 
-The Mini App experience inside MiniPay keeps the user flow simple. Members can join with wallet-based identity, contribute with cUSD, and follow the group cycle without learning complex blockchain concepts. The result is a savings product that feels familiar locally, but gains the transparency and automation of software.
+The Mini App experience inside MiniPay keeps the user flow simple. Members can join with wallet-based identity, contribute with cUSD, and follow the group rounds without learning complex blockchain concepts. The result is a savings product that feels familiar locally, but gains the transparency and automation of software.
 
 ## One-Line Pitch
 
@@ -43,11 +43,12 @@ Celo Smart Contract
 
 ### Week 1 MVP
 
-- Create a savings group with fixed contribution amount and cycle length.
+- Create a savings group with fixed contribution amount and round length.
 - Join a group with wallet-based identity.
 - Contribute cUSD on schedule.
 - Track member status and payment history.
-- Trigger group payout when rules are satisfied.
+- Trigger group payout when round rules are satisfied.
+- Pause or exit a group using the on-chain recovery controls.
 - Basic MiniPay-compatible frontend built with Next.js App Router.
 
 ### Week 2 Full Version
@@ -78,7 +79,7 @@ Celo Smart Contract
 AjoChain uses two core contracts:
 
 - GroupFactory: creates new savings groups, stores lightweight registry data, and deploys or references group instances.
-- SavingsGroup: handles membership, contribution enforcement, payout execution, status tracking, and completion logic for one circle.
+- SavingsGroup: handles membership, contribution enforcement, payout execution, pause voting, emergency exit, status tracking, and completion logic for one circle.
 
 Suggested responsibilities:
 
@@ -114,7 +115,7 @@ Suggested responsibilities:
 3. User approves cUSD contribution
 4. Mini App submits transaction to Celo
 5. SavingsGroup records contribution on-chain
-6. When the cycle condition is met, contract releases payout
+6. When the round condition is met, contract releases payout
 7. Group completion is recorded and displayed back in the app
 ```
 

@@ -20,10 +20,10 @@ export function useAjoGroup({ groupAddress, groupAbi }: UseAjoGroupParams) {
     functionName: "memberCount",
     query: { enabled },
   });
-  const { data: currentCycle } = useReadContract({
+  const { data: currentRound } = useReadContract({
     address: contractAddress,
     abi: contractAbi,
-    functionName: "currentCycle",
+    functionName: "currentRound",
     query: { enabled },
   });
   const { data: canExecutePayout } = useReadContract({
@@ -38,14 +38,26 @@ export function useAjoGroup({ groupAddress, groupAbi }: UseAjoGroupParams) {
     functionName: "currentPayoutRecipient",
     query: { enabled },
   });
+  const { data: status } = useReadContract({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "status",
+    query: { enabled },
+  });
   const { data: isCompleted } = useReadContract({
     address: contractAddress,
     abi: contractAbi,
     functionName: "isCompleted",
     query: { enabled },
   });
+  const { data: remainingTime } = useReadContract({
+    address: contractAddress,
+    abi: contractAbi,
+    functionName: "getRemainingTime",
+    query: { enabled },
+  });
 
-  const joinGroup = async () => {
+  const startGroup = async () => {
     if (!enabled) {
       throw new Error("Group contract is not configured.");
     }
@@ -53,7 +65,7 @@ export function useAjoGroup({ groupAddress, groupAbi }: UseAjoGroupParams) {
     return writeContractAsync({
       address: groupAddress as Address,
       abi: groupAbi as Abi,
-      functionName: "joinGroup",
+      functionName: "startGroup",
     });
   };
 
@@ -81,15 +93,59 @@ export function useAjoGroup({ groupAddress, groupAbi }: UseAjoGroupParams) {
     });
   };
 
+  const pauseRound = async (pause: boolean) => {
+    if (!enabled) {
+      throw new Error("Group contract is not configured.");
+    }
+
+    return writeContractAsync({
+      address: groupAddress as Address,
+      abi: groupAbi as Abi,
+      functionName: "pauseRound",
+      args: [pause],
+    });
+  };
+
+  const voteOnPause = async (pause: boolean) => {
+    if (!enabled) {
+      throw new Error("Group contract is not configured.");
+    }
+
+    return writeContractAsync({
+      address: groupAddress as Address,
+      abi: groupAbi as Abi,
+      functionName: "voteOnPause",
+      args: [pause],
+    });
+  };
+
+  const emergencyExit = async () => {
+    if (!enabled) {
+      throw new Error("Group contract is not configured.");
+    }
+
+    return writeContractAsync({
+      address: groupAddress as Address,
+      abi: groupAbi as Abi,
+      functionName: "emergencyExit",
+    });
+  };
+
   return {
     memberCount,
-    currentCycle,
+    currentRound,
+    currentCycle: currentRound,
     canExecutePayout,
     currentPayoutRecipient,
+    status,
     isCompleted,
-    joinGroup,
+    remainingTime,
+    startGroup,
     contribute,
     executePayout,
+    pauseRound,
+    voteOnPause,
+    emergencyExit,
     isPending,
   };
 }
