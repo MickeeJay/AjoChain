@@ -4,7 +4,8 @@
     "types": ["node", "mocha"],
     "outDir": "./dist",
     "rootDir": ".",
-    "module": "commonjs"
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["./hardhat.config.ts", "./scripts", "./test"],
   "files": []
