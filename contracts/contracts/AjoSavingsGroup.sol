@@ -9,7 +9,7 @@ contract AjoSavingsGroup is IAjoGroup {
     using SafeERC20 for IERC20;
 
     address public immutable factory;
-    IERC20 public immutable override token;
+    address public immutable override token;
     string public groupName;
     uint256 public override contributionAmount;
     uint256 public immutable maxMembers;
@@ -48,7 +48,7 @@ contract AjoSavingsGroup is IAjoGroup {
 
         factory = factory_;
         groupName = groupName_;
-        token = token_;
+        token = address(token_);
         contributionAmount = contributionAmount_;
         maxMembers = maxMembers_;
         cycleDuration = cycleDuration_;
@@ -66,7 +66,7 @@ contract AjoSavingsGroup is IAjoGroup {
     function contribute() external override onlyMember whenActive {
         require(!hasContributed[currentCycle][msg.sender], "AjoSavingsGroup: already contributed");
         hasContributed[currentCycle][msg.sender] = true;
-        token.safeTransferFrom(msg.sender, address(this), contributionAmount);
+        IERC20(token).safeTransferFrom(msg.sender, address(this), contributionAmount);
         emit ContributionMade(msg.sender, contributionAmount, currentCycle);
     }
 
@@ -92,10 +92,10 @@ contract AjoSavingsGroup is IAjoGroup {
         require(canExecutePayout(), "AjoSavingsGroup: payout not ready");
 
         recipient = currentPayoutRecipient();
-        amount = token.balanceOf(address(this));
+        amount = IERC20(token).balanceOf(address(this));
         require(amount > 0, "AjoSavingsGroup: empty pool");
 
-        token.safeTransfer(recipient, amount);
+        IERC20(token).safeTransfer(recipient, amount);
         emit PayoutExecuted(recipient, amount, currentCycle);
 
         currentCycle += 1;
