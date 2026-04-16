@@ -109,7 +109,55 @@ describe("AjoSavingsGroup", function () {
     };
   }
 
-  it("allows members to contribute and rotate the payout", async function () {
+  async function activateGroup(fixture: Awaited<ReturnType<typeof deployFixture>>) {
+    const { publicClient, deployerWallet, aliceWallet, bobWallet, factoryAddress, factoryArtifact, inviteCode, groupAddress, groupArtifact } = fixture;
+
+    const aliceJoinHash = await aliceWallet.writeContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "joinGroup",
+      args: [0n, inviteCode],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: aliceJoinHash });
+
+    const bobJoinHash = await bobWallet.writeContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "joinGroup",
+      args: [0n, inviteCode],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: bobJoinHash });
+
+    const startHash = await deployerWallet.writeContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "startGroup",
+    });
+    await publicClient.waitForTransactionReceipt({ hash: startHash });
+
+    const memberCount = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "memberCount",
+    });
+
+    const memberOrder: `0x${string}`[] = [];
+    for (let index = 0n; index < memberCount; index++) {
+      const member = (await publicClient.readContract({
+        address: groupAddress,
+        abi: groupArtifact.abi,
+        functionName: "memberOrder",
+        args: [index],
+      })) as `0x${string}`;
+
+      memberOrder.push(member);
+    }
+
+    return memberOrder;
+  }
+
+  it("starts the group and auto-executes the first payout", async function () {
+    const fixture = await deployFixture();
     const {
       publicClient,
       deployerWallet,
@@ -119,31 +167,20 @@ describe("AjoSavingsGroup", function () {
       groupAddress,
       mockArtifact,
       groupArtifact,
-      factoryArtifact,
-      factoryAddress,
       deployer,
       alice,
       bob,
-      inviteCode,
-    } = await deployFixture();
+    } = fixture;
 
-    const groupId = 0n;
+    const memberOrder = await activateGroup(fixture);
+    const firstRecipient = memberOrder[0];
 
-    const aliceJoinHash = await aliceWallet.writeContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "joinGroup",
-      args: [groupId, inviteCode],
+    const remainingTime = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "getRemainingTime",
     });
-    await publicClient.waitForTransactionReceipt({ hash: aliceJoinHash });
-
-    const bobJoinHash = await bobWallet.writeContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "joinGroup",
-      args: [groupId, inviteCode],
-    });
-    await publicClient.waitForTransactionReceipt({ hash: bobJoinHash });
+    expect(remainingTime).to.be.greaterThan(0n);
 
     for (const account of [deployer, alice, bob]) {
       const walletClient = account === deployer ? deployerWallet : account === alice ? aliceWallet : bobWallet;
@@ -160,28 +197,32 @@ describe("AjoSavingsGroup", function () {
       });
     }
 
-    await network.provider.request({ method: "evm_increaseTime", params: [7 * 24 * 60 * 60] });
-    await network.provider.request({ method: "evm_mine", params: [] });
-
-    const ready = await publicClient.readContract({
-      address: groupAddress,
-      abi: groupArtifact.abi,
-      functionName: "canExecutePayout",
-    });
-    expect(ready).to.equal(true);
-
     const payoutRecipient = await publicClient.readContract({
       address: groupAddress,
       abi: groupArtifact.abi,
       functionName: "currentPayoutRecipient",
     });
-    expect(String(payoutRecipient).toLowerCase()).to.equal(deployer.toLowerCase());
+    expect(String(payoutRecipient).toLowerCase()).to.equal(memberOrder[1].toLowerCase());
 
-    await deployerWallet.writeContract({
+    const currentRound = await publicClient.readContract({
       address: groupAddress,
       abi: groupArtifact.abi,
-      functionName: "executePayout",
+      functionName: "currentRound",
     });
+    const payoutIndex = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "payoutIndex",
+    });
+    const status = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "status",
+    });
+
+    expect(currentRound).to.equal(1n);
+    expect(payoutIndex).to.equal(1n);
+    expect(status).to.equal(1n);
 
     const deployerBalance = await publicClient.readContract({
       address: tokenAddress,
@@ -202,8 +243,18 @@ describe("AjoSavingsGroup", function () {
       args: [bob],
     });
 
-    expect(deployerBalance).to.equal(parseUnits("12", 18));
-    expect(aliceBalance).to.equal(parseUnits("9", 18));
-    expect(bobBalance).to.equal(parseUnits("9", 18));
+    const balanceByMember = new Map<`0x${string}`, bigint>([
+      [deployer, deployerBalance as bigint],
+      [alice, aliceBalance as bigint],
+      [bob, bobBalance as bigint],
+    ]);
+
+    for (const [memberAddress, balance] of balanceByMember.entries()) {
+      if (memberAddress.toLowerCase() === firstRecipient.toLowerCase()) {
+        expect(balance).to.equal(parseUnits("12", 18));
+      } else {
+        expect(balance).to.equal(parseUnits("9", 18));
+      }
+    }
   });
 });

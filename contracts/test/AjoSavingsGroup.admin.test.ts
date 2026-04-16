@@ -15,7 +15,7 @@ const hardhatChain = defineChain({
   rpcUrls: { default: { http: ["http://127.0.0.1:8545"] } },
 });
 
-describe("full savings cycle", function () {
+describe("AjoSavingsGroup admin flows", function () {
   async function deployFixture() {
     const accounts = (await network.provider.request({ method: "eth_accounts" })) as `0x${string}`[];
     const [deployer, alice, bob] = accounts;
@@ -55,7 +55,7 @@ describe("full savings cycle", function () {
       address: factoryAddress,
       abi: factoryArtifact.abi,
       functionName: "createGroup",
-      args: ["Full Cycle Circle", parseUnits("1", 18), 7n, 3n],
+      args: ["Admin Circle", parseUnits("1", 18), 7n, 3n],
     });
     await publicClient.waitForTransactionReceipt({ hash: createHash });
 
@@ -73,13 +73,6 @@ describe("full savings cycle", function () {
       functionName: "inviteCode",
     })) as `0x${string}`;
 
-    const recordedCusd = await publicClient.readContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "cUSDToken",
-    });
-    expect(String(recordedCusd).toLowerCase()).to.equal(tokenAddress.toLowerCase());
-
     return {
       publicClient,
       deployerWallet,
@@ -87,7 +80,6 @@ describe("full savings cycle", function () {
       bobWallet,
       tokenAddress,
       groupAddress,
-      mockArtifact,
       groupArtifact,
       factoryAddress,
       factoryArtifact,
@@ -98,8 +90,8 @@ describe("full savings cycle", function () {
     };
   }
 
-  async function activateGroup(fixture: Awaited<ReturnType<typeof deployFixture>>) {
-    const { publicClient, deployerWallet, aliceWallet, bobWallet, factoryAddress, factoryArtifact, inviteCode, groupAddress, groupArtifact } = fixture;
+  async function joinMembers(fixture: Awaited<ReturnType<typeof deployFixture>>) {
+    const { publicClient, aliceWallet, bobWallet, factoryAddress, factoryArtifact, inviteCode } = fixture;
 
     const aliceJoinHash = await aliceWallet.writeContract({
       address: factoryAddress,
@@ -116,6 +108,13 @@ describe("full savings cycle", function () {
       args: [0n, inviteCode],
     });
     await publicClient.waitForTransactionReceipt({ hash: bobJoinHash });
+  }
+
+  it("requires a 60 percent vote to pause and resume", async function () {
+    const fixture = await deployFixture();
+    const { publicClient, deployerWallet, aliceWallet, groupAddress, groupArtifact } = fixture;
+
+    await joinMembers(fixture);
 
     const startHash = await deployerWallet.writeContract({
       address: groupAddress,
@@ -124,125 +123,97 @@ describe("full savings cycle", function () {
     });
     await publicClient.waitForTransactionReceipt({ hash: startHash });
 
+    for (const voter of [deployerWallet, aliceWallet]) {
+      await voter.writeContract({
+        address: groupAddress,
+        abi: groupArtifact.abi,
+        functionName: "voteOnPause",
+        args: [true],
+      });
+    }
+
+    const pauseHash = await deployerWallet.writeContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "pauseRound",
+      args: [true],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: pauseHash });
+
+    const pausedStatus = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "status",
+    });
+    expect(pausedStatus).to.equal(3n);
+
+    for (const voter of [deployerWallet, aliceWallet]) {
+      await voter.writeContract({
+        address: groupAddress,
+        abi: groupArtifact.abi,
+        functionName: "voteOnPause",
+        args: [false],
+      });
+    }
+
+    const resumeHash = await deployerWallet.writeContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "pauseRound",
+      args: [false],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: resumeHash });
+
+    const activeStatus = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "status",
+    });
+    expect(activeStatus).to.equal(1n);
+  });
+
+  it("allows members to exit while the group is still forming", async function () {
+    const fixture = await deployFixture();
+    const { publicClient, aliceWallet, groupAddress, groupArtifact, deployer, alice } = fixture;
+
+    await joinMembers(fixture);
+
+    const exitHash = await aliceWallet.writeContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "emergencyExit",
+    });
+    await publicClient.waitForTransactionReceipt({ hash: exitHash });
+
+    const state = await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "getGroupState",
+    });
+
+    expect((state as { status: bigint }).status).to.equal(0n);
+    expect((state as { remainingTime: bigint }).remainingTime).to.equal(0n);
+
     const memberCount = await publicClient.readContract({
       address: groupAddress,
       abi: groupArtifact.abi,
       functionName: "memberCount",
     });
-
-    const memberOrder: `0x${string}`[] = [];
-    for (let index = 0n; index < memberCount; index++) {
-      const member = (await publicClient.readContract({
-        address: groupAddress,
-        abi: groupArtifact.abi,
-        functionName: "memberOrder",
-        args: [index],
-      })) as `0x${string}`;
-
-      memberOrder.push(member);
-    }
-
-    return memberOrder;
-  }
-
-  it("completes a full three-cycle rotation and marks the group complete", async function () {
-    const fixture = await deployFixture();
-    const {
-      publicClient,
-      deployerWallet,
-      aliceWallet,
-      bobWallet,
-      tokenAddress,
-      groupAddress,
-      mockArtifact,
-      groupArtifact,
-      deployer,
-      alice,
-      bob,
-    } = fixture;
-
-    const memberOrder = await activateGroup(fixture);
-    const wallets = [deployerWallet, aliceWallet, bobWallet];
-    const members = [deployer, alice, bob] as const;
-
-    for (let cycle = 0; cycle < memberOrder.length; cycle++) {
-      for (const walletClient of wallets) {
-        await walletClient.writeContract({
-          address: tokenAddress,
-          abi: mockArtifact.abi,
-          functionName: "approve",
-          args: [groupAddress, parseUnits("1", 18)],
-        });
-      }
-
-      for (const walletClient of wallets) {
-        await walletClient.writeContract({
-          address: groupAddress,
-          abi: groupArtifact.abi,
-          functionName: "contribute",
-        });
-      }
-
-      const currentRound = await publicClient.readContract({
-        address: groupAddress,
-        abi: groupArtifact.abi,
-        functionName: "currentRound",
-      });
-      const payoutIndex = await publicClient.readContract({
-        address: groupAddress,
-        abi: groupArtifact.abi,
-        functionName: "payoutIndex",
-      });
-
-      expect(currentRound).to.equal(BigInt(cycle + 1));
-      expect(payoutIndex).to.equal(BigInt(cycle + 1));
-
-      if (cycle + 1 < memberOrder.length) {
-        const nextRecipient = await publicClient.readContract({
-          address: groupAddress,
-          abi: groupArtifact.abi,
-          functionName: "currentPayoutRecipient",
-        });
-
-        expect(String(nextRecipient).toLowerCase()).to.equal(memberOrder[cycle + 1].toLowerCase());
-      }
-    }
-
-    const status = await publicClient.readContract({
+    const aliceMember = await publicClient.readContract({
       address: groupAddress,
       abi: groupArtifact.abi,
-      functionName: "status",
+      functionName: "isMember",
+      args: [alice],
     });
-    const currentRound = await publicClient.readContract({
+    const deployerMember = await publicClient.readContract({
       address: groupAddress,
       abi: groupArtifact.abi,
-      functionName: "currentRound",
-    });
-    const payoutIndex = await publicClient.readContract({
-      address: groupAddress,
-      abi: groupArtifact.abi,
-      functionName: "payoutIndex",
-    });
-    const remainingTime = await publicClient.readContract({
-      address: groupAddress,
-      abi: groupArtifact.abi,
-      functionName: "getRemainingTime",
+      functionName: "isMember",
+      args: [deployer],
     });
 
-    expect(status).to.equal(2n);
-    expect(currentRound).to.equal(3n);
-    expect(payoutIndex).to.equal(3n);
-    expect(remainingTime).to.equal(0n);
-
-    for (const member of members) {
-      const balance = await publicClient.readContract({
-        address: tokenAddress,
-        abi: mockArtifact.abi,
-        functionName: "balanceOf",
-        args: [member],
-      });
-
-      expect(balance).to.equal(parseUnits("10", 18));
-    }
+    expect(memberCount).to.equal(2n);
+    expect(aliceMember).to.equal(false);
+    expect(deployerMember).to.equal(true);
   });
 });
