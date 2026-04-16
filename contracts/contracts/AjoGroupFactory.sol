@@ -6,7 +6,12 @@ import "./interfaces/IAjoFactory.sol";
 import "./AjoSavingsGroup.sol";
 
 contract AjoGroupFactory is IAjoFactory {
+    address public immutable cUSD;
     address[] private _allGroups;
+
+    constructor(IERC20 cUSD_) {
+        cUSD = address(cUSD_);
+    }
 
     function createGroup(
         string calldata name,

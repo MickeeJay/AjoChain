@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IAjoFactory {
     event GroupCreated(address indexed group, address indexed creator, string name);
 
+    function cUSD() external view returns (address);
+
     function createGroup(
         string calldata name,
         IERC20 token,
