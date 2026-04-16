@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { ethers } from "hardhat";
-import type { Signer } from "ethers";
 import {
   AjoCredential,
   AjoCredential__factory,
@@ -42,7 +41,6 @@ describe("AjoGroupFactory", function () {
   const overMaxContributionAmount = ethers.parseUnits("51", 18);
   const maxPotContributionAmount = ethers.parseUnits("50", 18);
   const inviteMismatchCode = ethers.keccak256(ethers.toUtf8Bytes("wrong invite code"));
-  const maxUint256 = (1n << 256n) - 1n;
 
   async function deployGroup(
     name: string,
@@ -278,6 +276,23 @@ describe("AjoGroupFactory", function () {
     });
   });
 
+  describe("authorizeGroup", function () {
+    it("should authorize a group through the credential contract", async function () {
+      const { groupAddress } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await expect(factory.authorizeGroup(groupAddress)).to.emit(credential, "GroupAuthorized").withArgs(groupAddress);
+      expect(await credential.authorizedGroups(groupAddress)).to.equal(true);
+    });
+
+    it("should revert when called by a non-owner", async function () {
+      const { groupAddress } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      await expect(factory.connect(alice).authorizeGroup(groupAddress)).to.be.revertedWith(
+        "Ownable: caller is not the owner",
+      );
+    });
+  });
+
   describe("view functions", function () {
     it("getUserGroups should return the correct array of group IDs", async function () {
       const firstGroup = await deployGroup(groupName, contributionAmount, 7n, 4n);
@@ -303,6 +318,25 @@ describe("AjoGroupFactory", function () {
       const { groupId, groupAddress } = await deployGroup(groupName, contributionAmount, 7n, 4n);
 
       expect(await factory.getGroupInfo(groupId)).to.equal(groupAddress);
+    });
+  });
+
+  describe("MockCUSD", function () {
+    it("allows any account to mint", async function () {
+      const mintAmount = ethers.parseUnits("12", 18);
+
+      await mockCUSD.connect(alice).mint(eveAddress, mintAmount);
+
+      expect(await mockCUSD.balanceOf(eveAddress)).to.equal(mintAmount);
+    });
+
+    it("allows different accounts to mint to the same recipient", async function () {
+      const mintAmount = ethers.parseUnits("3", 18);
+
+      await mockCUSD.connect(bob).mint(daveAddress, mintAmount);
+      await mockCUSD.connect(carol).mint(daveAddress, mintAmount);
+
+      expect(await mockCUSD.balanceOf(daveAddress)).to.equal(mintAmount * 2n);
     });
   });
 });
