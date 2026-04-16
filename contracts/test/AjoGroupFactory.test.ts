@@ -51,31 +51,47 @@ describe("AjoGroupFactory", function () {
       address: factoryAddress,
       abi: factoryArtifact.abi,
       functionName: "createGroup",
-      args: ["Market Circle", mockAddress, parseUnits("10", 18), 3n, 0n],
+      args: ["Market Circle", parseUnits("10", 18), 7n, 3n],
     });
     await publicClient.waitForTransactionReceipt({ hash: createHash });
 
-    const totalGroups = await publicClient.readContract({
+    const groupCount = await publicClient.readContract({
       address: factoryAddress,
       abi: factoryArtifact.abi,
-      functionName: "totalGroups",
+      functionName: "groupCount",
     });
-    expect(totalGroups).to.equal(1n);
+    expect(groupCount).to.equal(1n);
 
     const recordedCusd = await publicClient.readContract({
       address: factoryAddress,
       abi: factoryArtifact.abi,
-      functionName: "cUSD",
+      functionName: "cUSDToken",
     });
     expect(String(recordedCusd).toLowerCase()).to.equal(mockAddress.toLowerCase());
 
     const firstGroup = await publicClient.readContract({
       address: factoryAddress,
       abi: factoryArtifact.abi,
-      functionName: "allGroups",
+      functionName: "getGroupInfo",
       args: [0n],
     });
     expect(firstGroup).to.match(/^0x[a-fA-F0-9]{40}$/);
+
+    const userGroups = await publicClient.readContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "getUserGroups",
+      args: [deployer],
+    });
+    expect(userGroups).to.deep.equal([0n]);
+
+    const paginatedGroups = await publicClient.readContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "getActiveGroups",
+      args: [0n, 10n],
+    });
+    expect(paginatedGroups).to.deep.equal([0n]);
 
     const groupMemberCount = await publicClient.readContract({
       address: firstGroup as `0x${string}`,
