@@ -141,7 +141,10 @@ contract AjoGroupFactory is Ownable, ReentrancyGuard, IAjoFactory {
             return new uint256[](0);
         }
 
-        uint256 end = offset + limit;
+        uint256 end;
+        unchecked {
+            end = offset + limit;
+        }
         if (end < offset || end > groupCount) {
             end = groupCount;
         }

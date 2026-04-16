@@ -10,6 +10,8 @@ import {
   AjoSavingsGroup__factory,
   MockCUSD,
   MockCUSD__factory,
+  MockReentrantCredential,
+  MockReentrantCredential__factory,
 } from "../typechain-types";
 
 describe("AjoGroupFactory", function () {
@@ -41,6 +43,7 @@ describe("AjoGroupFactory", function () {
   const overMaxContributionAmount = ethers.parseUnits("51", 18);
   const maxPotContributionAmount = ethers.parseUnits("50", 18);
   const inviteMismatchCode = ethers.keccak256(ethers.toUtf8Bytes("wrong invite code"));
+  const maxUint256 = (1n << 256n) - 1n;
 
   async function deployGroup(
     name: string,
@@ -74,6 +77,25 @@ describe("AjoGroupFactory", function () {
     await expect(factory.connect(signer).joinGroup(groupId, inviteCode))
       .to.emit(factory, "MemberJoined")
       .withArgs(groupId, memberAddress);
+  }
+
+  async function deployReentrantFactory(attackMode: bigint) {
+    const reentrantCredential = await new MockReentrantCredential__factory(owner).deploy();
+    await reentrantCredential.waitForDeployment();
+
+    const reentrantFactory = await new AjoGroupFactory__factory(owner).deploy(
+      await mockCUSD.getAddress(),
+      await reentrantCredential.getAddress(),
+    );
+    await reentrantFactory.waitForDeployment();
+
+    await reentrantCredential.setFactory(await reentrantFactory.getAddress());
+    await reentrantCredential.setAttackMode(attackMode);
+
+    return {
+      reentrantCredential,
+      reentrantFactory,
+    };
   }
 
   beforeEach(async function () {
@@ -209,6 +231,24 @@ describe("AjoGroupFactory", function () {
     });
   });
 
+  describe("reentrancy guards", function () {
+    it("should revert when createGroup is reentered", async function () {
+      const { reentrantFactory } = await deployReentrantFactory(1n);
+
+      await expect(reentrantFactory.createGroup("Outer Circle", contributionAmount, 7n, 3n)).to.be.revertedWith(
+        "ReentrancyGuard: reentrant call",
+      );
+    });
+
+    it("should revert when joinGroup is reentered", async function () {
+      const { reentrantFactory } = await deployReentrantFactory(2n);
+
+      await expect(reentrantFactory.createGroup("Outer Circle", contributionAmount, 7n, 3n)).to.be.revertedWith(
+        "ReentrancyGuard: reentrant call",
+      );
+    });
+  });
+
   describe("joinGroup", function () {
     it("should allow a member to join with the correct invite code", async function () {
       const { groupId, group, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 4n);
@@ -321,7 +361,7 @@ describe("AjoGroupFactory", function () {
       await deployGroup(thirdGroupName, contributionAmount, 7n, 4n);
 
       expect(await factory.getActiveGroups(1n, 2n)).to.deep.equal([1n, 2n]);
-      expect(await factory.getActiveGroups(1n, 5n)).to.deep.equal([1n, 2n]);
+      expect(await factory.getActiveGroups(1n, maxUint256)).to.deep.equal([1n, 2n]);
       expect(await factory.getActiveGroups(3n, 1n)).to.deep.equal([]);
       expect(await factory.getActiveGroups(0n, 0n)).to.deep.equal([]);
     });
