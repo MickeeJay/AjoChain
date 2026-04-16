@@ -126,8 +126,20 @@ export async function deployGroupFactory(hre: HardhatRuntimeEnvironment) {
   const deployerAddress = await deployerSigner.getAddress();
   const cusdAddress = resolveCusdAddress(hre.network.name);
 
+  const credentialFactory = await hre.ethers.getContractFactory("AjoCredential", deployerSigner);
+  const credentialContract = await credentialFactory.deploy();
+  await credentialContract.waitForDeployment();
+
+  const credentialDeploymentTransaction = credentialContract.deploymentTransaction();
+  if (credentialDeploymentTransaction) {
+    await credentialDeploymentTransaction.wait(networkId === null ? 1 : 5);
+  }
+
+  const credentialAddress = await credentialContract.getAddress();
+  console.log(`AjoCredential deployed to ${credentialAddress} on ${hre.network.name}`);
+
   const factory = await hre.ethers.getContractFactory("AjoGroupFactory", deployerSigner);
-  const contract = await factory.deploy(cusdAddress);
+  const contract = await factory.deploy(cusdAddress, credentialAddress);
   await contract.waitForDeployment();
 
   const deploymentTransaction = contract.deploymentTransaction();
@@ -145,12 +157,18 @@ export async function deployGroupFactory(hre: HardhatRuntimeEnvironment) {
 
   if (networkId !== null) {
     await hre.run("verify:verify", {
+      address: credentialAddress,
+      constructorArguments: [],
+    });
+
+    await hre.run("verify:verify", {
       address: deployedAddress,
-      constructorArguments: [cusdAddress],
+      constructorArguments: [cusdAddress, credentialAddress],
     });
   }
 
   return {
+    credentialAddress,
     contract,
     deployedAddress,
     deployerAddress,
