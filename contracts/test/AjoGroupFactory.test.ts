@@ -135,6 +135,18 @@ describe("AjoGroupFactory", function () {
       expect(inviteCode).to.match(/^0x[a-fA-F0-9]{64}$/);
     });
 
+    it("should allow a daily frequency", async function () {
+      const { group } = await deployGroup("Daily Circle", contributionAmount, 1n, 3n);
+
+      expect(await group.frequencyInDays()).to.equal(1n);
+    });
+
+    it("should allow a monthly frequency", async function () {
+      const { group } = await deployGroup("Monthly Circle", contributionAmount, 30n, 3n);
+
+      expect(await group.frequencyInDays()).to.equal(30n);
+    });
+
     it("should increment groupCount", async function () {
       await deployGroup(groupName, contributionAmount, 7n, 3n);
 
