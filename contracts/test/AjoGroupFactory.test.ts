@@ -319,6 +319,10 @@ describe("AjoGroupFactory", function () {
 
       expect(await factory.getGroupInfo(groupId)).to.equal(groupAddress);
     });
+
+    it("should return the stored credential contract address", async function () {
+      expect(await factory.credentialContract()).to.equal(await credential.getAddress());
+    });
   });
 
   describe("MockCUSD", function () {
