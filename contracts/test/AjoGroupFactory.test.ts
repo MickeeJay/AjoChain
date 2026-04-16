@@ -120,4 +120,82 @@ describe("AjoGroupFactory", function () {
       );
     });
   });
+
+  describe("createGroup", function () {
+    it("should deploy a new AjoSavingsGroup and emit GroupCreated", async function () {
+      const { groupId, groupAddress, group, inviteCode } = await deployGroup(groupName, contributionAmount, 7n, 3n);
+
+      expect(await factory.cUSDToken()).to.equal(await mockCUSD.getAddress());
+      expect(await factory.groupCount()).to.equal(1n);
+      expect(await factory.getUserGroups(ownerAddress)).to.deep.equal([groupId]);
+      expect(await factory.getGroupInfo(groupId)).to.equal(groupAddress);
+      expect(await factory.groups(groupId)).to.equal(groupAddress);
+      expect(await credential.authorizedGroups(groupAddress)).to.equal(true);
+      expect(await group.memberCount()).to.equal(1n);
+      expect(await group.isMember(ownerAddress)).to.equal(true);
+      expect(await group.groupName()).to.equal(groupName);
+      expect(inviteCode).to.match(/^0x[a-fA-F0-9]{64}$/);
+    });
+
+    it("should increment groupCount", async function () {
+      await deployGroup(groupName, contributionAmount, 7n, 3n);
+
+      expect(await factory.groupCount()).to.equal(1n);
+    });
+
+    it("should add groupId to creator's userGroups", async function () {
+      const { groupId } = await deployGroup(groupName, contributionAmount, 7n, 3n);
+
+      expect(await factory.getUserGroups(ownerAddress)).to.deep.equal([groupId]);
+    });
+
+    it("should store group address in groups mapping", async function () {
+      const { groupId, groupAddress } = await deployGroup(groupName, contributionAmount, 7n, 3n);
+
+      expect(await factory.groups(groupId)).to.equal(groupAddress);
+      expect(await factory.getGroupInfo(groupId)).to.equal(groupAddress);
+    });
+
+    it("should revert if maxMembers is below the minimum group size", async function () {
+      await expect(factory.connect(owner).createGroup(groupName, contributionAmount, 7n, 2n)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidGroupSize",
+      );
+    });
+
+    it("should revert if maxMembers is above the maximum group size", async function () {
+      await expect(factory.connect(owner).createGroup(groupName, contributionAmount, 7n, 21n)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidGroupSize",
+      );
+    });
+
+    it("should revert if contributionAmount is 0", async function () {
+      await expect(factory.connect(owner).createGroup(groupName, 0n, 7n, 3n)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidContributionAmount",
+      );
+    });
+
+    it("should revert if contributionAmount is above MAX_CONTRIBUTION", async function () {
+      await expect(factory.connect(owner).createGroup(groupName, overMaxContributionAmount, 7n, 3n)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidContributionAmount",
+      );
+    });
+
+    it("should revert if the total pot exceeds MAX_POT_VALUE", async function () {
+      await expect(factory.connect(owner).createGroup(groupName, maxPotContributionAmount, 7n, 11n)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidPotValue",
+      );
+    });
+
+    it("should revert if frequencyInDays is not 1, 7, or 30", async function () {
+      await expect(factory.connect(owner).createGroup(groupName, contributionAmount, 2n, 3n)).to.be.revertedWithCustomError(
+        factory,
+        "InvalidFrequency",
+      );
+    });
+  });
 });
