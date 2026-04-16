@@ -133,3 +133,11 @@ contract AjoSavingsGroup is IAjoGroup {
         emit MemberJoined(account);
     }
 }
+    address public immutable creator;
+    bytes32 public immutable override inviteCode;
+    uint256 public immutable frequencyInDays;
+    modifier onlyFactory() {
+        require(msg.sender == factory, "AjoSavingsGroup: only factory");
+        _;
+    }
+
