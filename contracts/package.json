@@ -1,0 +1,22 @@
+{
+  "name": "@ajochain/contracts",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "hardhat compile",
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "lint": "solhint \"contracts/**/*.sol\"",
+    "deploy": "hardhat run scripts/deploy.ts --network celo",
+    "deploy:testnet": "hardhat run scripts/deploy-testnet.ts --network alfajores",
+    "verify": "hardhat run scripts/verify.ts --network celo"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.17",
+    "solhint": "^4.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
