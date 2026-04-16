@@ -6,7 +6,7 @@ interface IAjoGroup {
     event ContributionMade(address indexed member, uint256 amount, uint256 cycle);
     event PayoutExecuted(address indexed recipient, uint256 amount, uint256 cycle);
 
-    function joinGroup() external;
+    function addMember(address account) external;
 
     function contribute() external;
 
@@ -31,4 +31,6 @@ interface IAjoGroup {
     function isCompleted() external view returns (bool);
 
     function isMember(address account) external view returns (bool);
+
+    function inviteCode() external view returns (bytes32);
 }
