@@ -277,4 +277,32 @@ describe("AjoGroupFactory", function () {
       );
     });
   });
+
+  describe("view functions", function () {
+    it("getUserGroups should return the correct array of group IDs", async function () {
+      const firstGroup = await deployGroup(groupName, contributionAmount, 7n, 4n);
+      await joinGroup(alice, firstGroup.groupId, firstGroup.inviteCode);
+      await deployGroup(secondGroupName, contributionAmount, 7n, 4n);
+
+      expect(await factory.getUserGroups(ownerAddress)).to.deep.equal([0n, 1n]);
+      expect(await factory.getUserGroups(aliceAddress)).to.deep.equal([0n]);
+    });
+
+    it("getActiveGroups with pagination should return correct slice", async function () {
+      await deployGroup(groupName, contributionAmount, 7n, 4n);
+      await deployGroup(secondGroupName, contributionAmount, 7n, 4n);
+      await deployGroup(thirdGroupName, contributionAmount, 7n, 4n);
+
+      expect(await factory.getActiveGroups(1n, 2n)).to.deep.equal([1n, 2n]);
+      expect(await factory.getActiveGroups(1n, 5n)).to.deep.equal([1n, 2n]);
+      expect(await factory.getActiveGroups(3n, 1n)).to.deep.equal([]);
+      expect(await factory.getActiveGroups(0n, 0n)).to.deep.equal([]);
+    });
+
+    it("getGroupInfo should return the correct contract address", async function () {
+      const { groupId, groupAddress } = await deployGroup(groupName, contributionAmount, 7n, 4n);
+
+      expect(await factory.getGroupInfo(groupId)).to.equal(groupAddress);
+    });
+  });
 });
