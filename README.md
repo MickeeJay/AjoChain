@@ -3,7 +3,6 @@
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT)
 [![Celo Network](https://img.shields.io/badge/network-Celo-00A790)](https://docs.celo.org/)
-[![Proof of Ship Season 2](https://img.shields.io/badge/Celo-Proof%20of%20Ship%20Season%202-00C2A8)](https://docs.celo.org/)
 
 AjoChain is a MiniPay Mini App on Celo that turns African rotating savings groups into transparent, automated, on-chain savings circles.
 
@@ -223,10 +222,6 @@ Please keep contributions aligned with the MiniPay-compatible stack: viem, wagmi
 ## License
 
 MIT
-
-## Celo Proof of Ship Season 2
-
-AjoChain is being built for Celo Proof of Ship Season 2 and is intended as a MiniPay-native savings app that demonstrates practical on-chain financial coordination for African communities.
 
 ## Notes
 
