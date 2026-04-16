@@ -35,7 +35,7 @@ contract AjoCredential is ERC721, Ownable {
     constructor() ERC721("AjoChain Savings Certificate", "AJOCERT") Ownable() {}
 
     function authorizeGroup(address groupContract) external onlyOwner {
-        if (groupContract == address(0)) {
+        if (groupContract == address(0) || groupContract.code.length == 0) {
             revert InvalidAddress();
         }
 
@@ -44,7 +44,7 @@ contract AjoCredential is ERC721, Ownable {
     }
 
     function mint(address recipient, CredentialData calldata data) external returns (uint256 tokenId) {
-        if (!authorizedGroups[msg.sender]) {
+        if (!authorizedGroups[msg.sender] || msg.sender.code.length == 0) {
             revert UnauthorizedGroup();
         }
 
