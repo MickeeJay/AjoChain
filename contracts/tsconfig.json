@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node", "mocha"],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "module": "commonjs"
+  },
+  "include": ["./hardhat.config.ts", "./scripts", "./test"],
+  "files": []
+}
