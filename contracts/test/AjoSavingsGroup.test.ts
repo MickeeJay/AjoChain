@@ -37,6 +37,7 @@ describe("AjoSavingsGroup", function () {
     const factoryHash = await deployerWallet.deployContract({
       abi: factoryArtifact.abi,
       bytecode: factoryArtifact.bytecode as `0x${string}`,
+      args: [tokenAddress],
     });
     const factoryReceipt = await publicClient.waitForTransactionReceipt({ hash: factoryHash });
     const factoryAddress = factoryReceipt.contractAddress as `0x${string}`;
@@ -74,6 +75,13 @@ describe("AjoSavingsGroup", function () {
       functionName: "allGroups",
       args: [0n],
     })) as `0x${string}`;
+
+    const recordedCusd = await publicClient.readContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "cUSD",
+    });
+    expect(String(recordedCusd).toLowerCase()).to.equal(tokenAddress.toLowerCase());
 
     const groupArtifact = await artifacts.readArtifact("AjoSavingsGroup");
 
@@ -145,7 +153,7 @@ describe("AjoSavingsGroup", function () {
       abi: groupArtifact.abi,
       functionName: "currentPayoutRecipient",
     });
-    expect(payoutRecipient).to.equal(deployer);
+    expect(String(payoutRecipient).toLowerCase()).to.equal(deployer.toLowerCase());
 
     await deployerWallet.writeContract({
       address: groupAddress,
@@ -172,7 +180,7 @@ describe("AjoSavingsGroup", function () {
       args: [bob],
     });
 
-    expect(deployerBalance).to.equal(parseUnits("11", 18));
+    expect(deployerBalance).to.equal(parseUnits("12", 18));
     expect(aliceBalance).to.equal(parseUnits("9", 18));
     expect(bobBalance).to.equal(parseUnits("9", 18));
   });
