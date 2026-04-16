@@ -9,10 +9,13 @@ contract AjoSavingsGroup is IAjoGroup {
     using SafeERC20 for IERC20;
 
     address public immutable factory;
+    address public immutable creator;
     address public immutable override token;
+    bytes32 public immutable override inviteCode;
     string public groupName;
     uint256 public override contributionAmount;
     uint256 public immutable maxMembers;
+    uint256 public immutable frequencyInDays;
     uint256 public immutable cycleDuration;
     uint256 public override currentCycle;
     uint256 public cycleStartedAt;
@@ -21,6 +24,11 @@ contract AjoSavingsGroup is IAjoGroup {
     address[] private _members;
     mapping(address => bool) private _isMember;
     mapping(uint256 => mapping(address => bool)) public override hasContributed;
+
+    modifier onlyFactory() {
+        require(msg.sender == factory, "AjoSavingsGroup: only factory");
+        _;
+    }
 
     modifier onlyMember() {
         require(_isMember[msg.sender], "AjoSavingsGroup: not a member");
@@ -35,32 +43,40 @@ contract AjoSavingsGroup is IAjoGroup {
     constructor(
         address factory_,
         string memory groupName_,
-        IERC20 token_,
+        address token_,
         uint256 contributionAmount_,
+        uint256 frequencyInDays_,
         uint256 maxMembers_,
-        uint256 cycleDuration_,
-        address creator_
+        address creator_,
+        bytes32 inviteCode_
     ) {
         require(factory_ != address(0), "AjoSavingsGroup: factory required");
-        require(address(token_) != address(0), "AjoSavingsGroup: token required");
+        require(token_ != address(0), "AjoSavingsGroup: token required");
+        require(creator_ != address(0), "AjoSavingsGroup: creator required");
+        require(inviteCode_ != bytes32(0), "AjoSavingsGroup: invite code required");
         require(contributionAmount_ > 0, "AjoSavingsGroup: amount required");
         require(maxMembers_ > 1, "AjoSavingsGroup: max members too low");
+        require(frequencyInDays_ > 0, "AjoSavingsGroup: frequency required");
 
         factory = factory_;
+        creator = creator_;
         groupName = groupName_;
-        token = address(token_);
+        token = token_;
+        inviteCode = inviteCode_;
         contributionAmount = contributionAmount_;
         maxMembers = maxMembers_;
-        cycleDuration = cycleDuration_;
+        frequencyInDays = frequencyInDays_;
+        cycleDuration = frequencyInDays_ * 1 days;
         cycleStartedAt = block.timestamp;
 
         _addMember(creator_);
     }
 
-    function joinGroup() external override whenActive {
-        require(!_isMember[msg.sender], "AjoSavingsGroup: already joined");
+    function addMember(address account) external override onlyFactory whenActive {
+        require(account != address(0), "AjoSavingsGroup: zero address");
+        require(!_isMember[account], "AjoSavingsGroup: already joined");
         require(_members.length < maxMembers, "AjoSavingsGroup: group full");
-        _addMember(msg.sender);
+        _addMember(account);
     }
 
     function contribute() external override onlyMember whenActive {
@@ -91,19 +107,20 @@ contract AjoSavingsGroup is IAjoGroup {
     function executePayout() external override whenActive returns (address recipient, uint256 amount) {
         require(canExecutePayout(), "AjoSavingsGroup: payout not ready");
 
+        uint256 executedCycle = currentCycle;
         recipient = currentPayoutRecipient();
         amount = IERC20(token).balanceOf(address(this));
         require(amount > 0, "AjoSavingsGroup: empty pool");
 
-        IERC20(token).safeTransfer(recipient, amount);
-        emit PayoutExecuted(recipient, amount, currentCycle);
-
-        currentCycle += 1;
+        currentCycle = executedCycle + 1;
         cycleStartedAt = block.timestamp;
 
         if (currentCycle >= _members.length) {
             isCompleted = true;
         }
+
+        IERC20(token).safeTransfer(recipient, amount);
+        emit PayoutExecuted(recipient, amount, executedCycle);
     }
 
     function currentPayoutRecipient() public view override returns (address) {
@@ -133,11 +150,3 @@ contract AjoSavingsGroup is IAjoGroup {
         emit MemberJoined(account);
     }
 }
-    address public immutable creator;
-    bytes32 public immutable override inviteCode;
-    uint256 public immutable frequencyInDays;
-    modifier onlyFactory() {
-        require(msg.sender == factory, "AjoSavingsGroup: only factory");
-        _;
-    }
-
