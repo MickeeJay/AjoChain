@@ -37,6 +37,7 @@ describe("full savings cycle", function () {
     const factoryHash = await deployerWallet.deployContract({
       abi: factoryArtifact.abi,
       bytecode: factoryArtifact.bytecode as `0x${string}`,
+      args: [tokenAddress],
     });
     const factoryReceipt = await publicClient.waitForTransactionReceipt({ hash: factoryHash });
     const factoryAddress = factoryReceipt.contractAddress as `0x${string}`;
@@ -64,6 +65,13 @@ describe("full savings cycle", function () {
       functionName: "allGroups",
       args: [0n],
     })) as `0x${string}`;
+
+    const recordedCusd = await publicClient.readContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "cUSD",
+    });
+    expect(String(recordedCusd).toLowerCase()).to.equal(tokenAddress.toLowerCase());
 
     const groupArtifact = await artifacts.readArtifact("AjoSavingsGroup");
 
@@ -142,7 +150,7 @@ describe("full savings cycle", function () {
         abi: groupArtifact.abi,
         functionName: "currentPayoutRecipient",
       });
-      expect(recipient).to.equal(expectedRecipients[cycle]);
+      expect(String(recipient).toLowerCase()).to.equal(expectedRecipients[cycle].toLowerCase());
 
       await deployerWallet.writeContract({
         address: groupAddress,
