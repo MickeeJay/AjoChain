@@ -55,36 +55,46 @@ describe("full savings cycle", function () {
       address: factoryAddress,
       abi: factoryArtifact.abi,
       functionName: "createGroup",
-      args: ["Full Cycle Circle", tokenAddress, parseUnits("1", 18), 3n, 0n],
+      args: ["Full Cycle Circle", parseUnits("1", 18), 7n, 3n],
     });
     await publicClient.waitForTransactionReceipt({ hash: createHash });
 
     const groupAddress = (await publicClient.readContract({
       address: factoryAddress,
       abi: factoryArtifact.abi,
-      functionName: "allGroups",
+      functionName: "getGroupInfo",
       args: [0n],
+    })) as `0x${string}`;
+
+    const groupArtifact = await artifacts.readArtifact("AjoSavingsGroup");
+    const inviteCode = (await publicClient.readContract({
+      address: groupAddress,
+      abi: groupArtifact.abi,
+      functionName: "inviteCode",
     })) as `0x${string}`;
 
     const recordedCusd = await publicClient.readContract({
       address: factoryAddress,
       abi: factoryArtifact.abi,
-      functionName: "cUSD",
+      functionName: "cUSDToken",
     });
     expect(String(recordedCusd).toLowerCase()).to.equal(tokenAddress.toLowerCase());
 
-    const groupArtifact = await artifacts.readArtifact("AjoSavingsGroup");
+    const aliceJoinHash = await aliceWallet.writeContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
+      functionName: "joinGroup",
+      args: [0n, inviteCode],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: aliceJoinHash });
 
-    await aliceWallet.writeContract({
-      address: groupAddress,
-      abi: groupArtifact.abi,
+    const bobJoinHash = await bobWallet.writeContract({
+      address: factoryAddress,
+      abi: factoryArtifact.abi,
       functionName: "joinGroup",
+      args: [0n, inviteCode],
     });
-    await bobWallet.writeContract({
-      address: groupAddress,
-      abi: groupArtifact.abi,
-      functionName: "joinGroup",
-    });
+    await publicClient.waitForTransactionReceipt({ hash: bobJoinHash });
 
     return {
       publicClient,
@@ -137,6 +147,9 @@ describe("full savings cycle", function () {
           functionName: "contribute",
         });
       }
+
+      await network.provider.request({ method: "evm_increaseTime", params: [7 * 24 * 60 * 60] });
+      await network.provider.request({ method: "evm_mine", params: [] });
 
       const payoutReady = await publicClient.readContract({
         address: groupAddress,
