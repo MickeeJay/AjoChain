@@ -3,7 +3,9 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./AjoCredential.sol";
+import "./interfaces/IAjoFactory.sol";
 
 contract AjoSavingsGroup is ReentrancyGuard {
     using SafeERC20 for IERC20;
@@ -490,5 +492,32 @@ contract AjoSavingsGroup is ReentrancyGuard {
         return true;
     }
 
-    function _mintCompletionCredential() internal {}
+    function _mintCompletionCredential() internal {
+        address credentialContractAddress = IAjoFactory(factory).credentialContract();
+        if (credentialContractAddress == address(0)) revert InvalidAddress();
+
+        AjoCredential credentialContract = AjoCredential(credentialContractAddress);
+        uint256 totalSaved = contributionAmount * memberOrder.length;
+        uint256 completedAt = block.timestamp;
+
+        for (uint256 index = 0; index < memberOrder.length; ) {
+            address recipient = memberOrder[index];
+
+            credentialContract.mint(
+                recipient,
+                AjoCredential.CredentialData({
+                    recipient: recipient,
+                    groupContract: address(this),
+                    cyclesCompleted: 1,
+                    totalSaved: totalSaved,
+                    completedAt: completedAt,
+                    groupName: name
+                })
+            );
+
+            unchecked {
+                ++index;
+            }
+        }
+    }
 }

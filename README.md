@@ -55,7 +55,7 @@ Celo Smart Contract
 
 - Flexible group sizes and payout schedules.
 - Auto-detection of missed contributions and late-payment penalties.
-- Completion credential for successful members.
+- On-chain soulbound completion credential NFT for successful members.
 - Optional premium tier for advanced analytics and admin tools.
 - Group insurance hook for contribution protection.
 - Better onboarding, notifications, and mobile-first UX polish.
@@ -80,6 +80,7 @@ AjoChain uses two core contracts:
 
 - GroupFactory: creates new savings groups, stores lightweight registry data, and deploys or references group instances.
 - SavingsGroup: handles membership, contribution enforcement, payout execution, pause voting, emergency exit, status tracking, and completion logic for one circle.
+- AjoCredential: mints an on-chain soulbound certificate when a group completes a full savings cycle.
 
 Suggested responsibilities:
 
@@ -174,10 +175,12 @@ Faucet: https://faucet.celo.org/alfajores
 1. Audit and test the contracts thoroughly on Alfajores.
 2. Verify contract addresses and deployment parameters.
 3. Set the production RPC and deployer credentials.
-4. Deploy GroupFactory first, then deploy or register SavingsGroup instances.
-5. Update the frontend with mainnet contract addresses.
-6. Deploy the frontend to Vercel.
-7. Confirm end-to-end MiniPay flows on Celo mainnet.
+4. Deploy AjoCredential first, transfer ownership to the factory, then deploy GroupFactory.
+5. Confirm new savings groups are authorized for credential minting.
+6. Deploy or register SavingsGroup instances.
+7. Update the frontend with mainnet contract addresses.
+8. Deploy the frontend to Vercel.
+9. Confirm end-to-end MiniPay flows on Celo mainnet.
 
 For network guidance and current Celo documentation, see https://docs.celo.org/
 

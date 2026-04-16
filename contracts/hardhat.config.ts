@@ -25,6 +25,7 @@ const config: HardhatConfigWithNamedAccounts = {
         enabled: true,
         runs: 200,
       },
+      viaIR: true,
     },
   },
   networks: {

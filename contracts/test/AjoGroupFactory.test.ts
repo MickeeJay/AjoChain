@@ -31,20 +31,56 @@ describe("AjoGroupFactory", function () {
     const mockReceipt = await publicClient.waitForTransactionReceipt({ hash: mockHash });
     const mockAddress = mockReceipt.contractAddress as `0x${string}`;
 
+    const credentialArtifact = await artifacts.readArtifact("AjoCredential");
+    const credentialHash = await walletClient.deployContract({
+      abi: credentialArtifact.abi,
+      bytecode: credentialArtifact.bytecode as `0x${string}`,
+    });
+    const credentialReceipt = await publicClient.waitForTransactionReceipt({ hash: credentialHash });
+    const credentialAddress = credentialReceipt.contractAddress as `0x${string}`;
+
     const factoryArtifact = await artifacts.readArtifact("AjoGroupFactory");
     const factoryHash = await walletClient.deployContract({
       abi: factoryArtifact.abi,
       bytecode: factoryArtifact.bytecode as `0x${string}`,
-      args: [mockAddress],
+      args: [mockAddress, credentialAddress],
     });
     const factoryReceipt = await publicClient.waitForTransactionReceipt({ hash: factoryHash });
     const factoryAddress = factoryReceipt.contractAddress as `0x${string}`;
 
-    return { publicClient, walletClient, mockAddress, factoryAddress, factoryArtifact, mockArtifact, deployer };
+    const ownershipHash = await walletClient.writeContract({
+      address: credentialAddress,
+      abi: credentialArtifact.abi,
+      functionName: "transferOwnership",
+      args: [factoryAddress],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: ownershipHash });
+
+    return {
+      publicClient,
+      walletClient,
+      mockAddress,
+      credentialAddress,
+      factoryAddress,
+      factoryArtifact,
+      credentialArtifact,
+      mockArtifact,
+      deployer,
+    };
   }
 
   it("creates a new savings group and tracks it in the registry", async function () {
-    const { publicClient, walletClient, mockAddress, factoryAddress, factoryArtifact, mockArtifact, deployer } =
+    const {
+      publicClient,
+      walletClient,
+      mockAddress,
+      credentialAddress,
+      factoryAddress,
+      factoryArtifact,
+      credentialArtifact,
+      mockArtifact,
+      deployer,
+    } =
       await deployFixture();
 
     const createHash = await walletClient.writeContract({
@@ -69,6 +105,13 @@ describe("AjoGroupFactory", function () {
     });
     expect(String(recordedCusd).toLowerCase()).to.equal(mockAddress.toLowerCase());
 
+    const credentialOwner = await publicClient.readContract({
+      address: credentialAddress,
+      abi: credentialArtifact.abi,
+      functionName: "owner",
+    });
+    expect(String(credentialOwner).toLowerCase()).to.equal(factoryAddress.toLowerCase());
+
     const firstGroup = await publicClient.readContract({
       address: factoryAddress,
       abi: factoryArtifact.abi,
@@ -84,6 +127,14 @@ describe("AjoGroupFactory", function () {
       args: [deployer],
     });
     expect(userGroups).to.deep.equal([0n]);
+
+    const isGroupAuthorized = await publicClient.readContract({
+      address: credentialAddress,
+      abi: credentialArtifact.abi,
+      functionName: "authorizedGroups",
+      args: [firstGroup as `0x${string}`],
+    });
+    expect(isGroupAuthorized).to.equal(true);
 
     const paginatedGroups = await publicClient.readContract({
       address: factoryAddress,

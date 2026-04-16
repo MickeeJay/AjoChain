@@ -7,6 +7,8 @@ interface IAjoFactory {
 
     function cUSDToken() external view returns (address);
 
+    function credentialContract() external view returns (address);
+
     function createGroup(
         string calldata name,
         uint256 contributionAmount,

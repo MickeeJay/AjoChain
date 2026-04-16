@@ -33,14 +33,30 @@ describe("AjoSavingsGroup", function () {
     const mockReceipt = await publicClient.waitForTransactionReceipt({ hash: mockHash });
     const tokenAddress = mockReceipt.contractAddress as `0x${string}`;
 
+    const credentialArtifact = await artifacts.readArtifact("AjoCredential");
+    const credentialHash = await deployerWallet.deployContract({
+      abi: credentialArtifact.abi,
+      bytecode: credentialArtifact.bytecode as `0x${string}`,
+    });
+    const credentialReceipt = await publicClient.waitForTransactionReceipt({ hash: credentialHash });
+    const credentialAddress = credentialReceipt.contractAddress as `0x${string}`;
+
     const factoryArtifact = await artifacts.readArtifact("AjoGroupFactory");
     const factoryHash = await deployerWallet.deployContract({
       abi: factoryArtifact.abi,
       bytecode: factoryArtifact.bytecode as `0x${string}`,
-      args: [tokenAddress],
+      args: [tokenAddress, credentialAddress],
     });
     const factoryReceipt = await publicClient.waitForTransactionReceipt({ hash: factoryHash });
     const factoryAddress = factoryReceipt.contractAddress as `0x${string}`;
+
+    const ownershipHash = await deployerWallet.writeContract({
+      address: credentialAddress,
+      abi: credentialArtifact.abi,
+      functionName: "transferOwnership",
+      args: [factoryAddress],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: ownershipHash });
 
     await deployerWallet.writeContract({
       address: tokenAddress,
@@ -76,6 +92,21 @@ describe("AjoSavingsGroup", function () {
       args: [0n],
     })) as `0x${string}`;
 
+    const isAuthorized = await publicClient.readContract({
+      address: credentialAddress,
+      abi: credentialArtifact.abi,
+      functionName: "authorizedGroups",
+      args: [groupAddress],
+    });
+    expect(isAuthorized).to.equal(true);
+
+    const credentialOwner = await publicClient.readContract({
+      address: credentialAddress,
+      abi: credentialArtifact.abi,
+      functionName: "owner",
+    });
+    expect(String(credentialOwner).toLowerCase()).to.equal(factoryAddress.toLowerCase());
+
     const groupArtifact = await artifacts.readArtifact("AjoSavingsGroup");
 
     const inviteCode = (await publicClient.readContract({
@@ -97,8 +128,10 @@ describe("AjoSavingsGroup", function () {
       aliceWallet,
       bobWallet,
       tokenAddress,
+      credentialAddress,
       groupAddress,
       mockArtifact,
+      credentialArtifact,
       deployer,
       alice,
       bob,

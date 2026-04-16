@@ -42,7 +42,7 @@ MiniPay is the right entry point because it already reaches 14M users, supports 
 
 AjoChain can earn revenue through a few aligned paths:
 
-- Savings completion credential NFT: an optional badge proving successful participation and completion of a savings round.
+- Savings completion credential NFT: an on-chain soulbound badge proving successful participation and completion of a savings round.
 - Group insurance: a protection layer that can cover missed contributions or group defaults through a partnered product.
 - Premium tier: advanced analytics, better reminders, historical insights, and group administration tools for power users or organizers.
 

@@ -4,7 +4,7 @@ loadEnv();
 
 async function main() {
   console.log("Preparing an Alfajores deployment for AjoChain.");
-  console.log("Use the testnet RPC, fund the deployer wallet, then deploy the factory before the savings groups.");
+  console.log("Deploy AjoCredential first, then AjoGroupFactory, then authorize each group contract before the first completion payout.");
 }
 
 main().catch((error) => {
