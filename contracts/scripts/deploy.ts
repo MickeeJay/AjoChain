@@ -151,6 +151,9 @@ export async function deployGroupFactory(hre: HardhatRuntimeEnvironment) {
   console.log(`AjoGroupFactory deployed to ${deployedAddress} on ${hre.network.name}`);
   console.log(`Using cUSD address ${cusdAddress}`);
 
+  await credentialContract.transferOwnership(deployedAddress);
+  console.log(`Transferred AjoCredential ownership to ${deployedAddress}`);
+
   if (networkId !== null) {
     await exportFrontendAddresses(networkId, deployedAddress, cusdAddress);
   }

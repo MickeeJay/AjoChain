@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./interfaces/IAjoFactory.sol";
+import "./AjoCredential.sol";
 import "./AjoSavingsGroup.sol";
 import "./libraries/Counters.sol";
 
@@ -92,7 +93,12 @@ contract AjoGroupFactory is Ownable, ReentrancyGuard, IAjoFactory {
 
         address groupAddress = address(savingsGroup);
         groups[groupId] = groupAddress;
+        AjoCredential(credentialContract).authorizeGroup(groupAddress);
         emit GroupCreated(groupId, groupAddress, msg.sender, name);
+    }
+
+    function authorizeGroup(address groupContract) external onlyOwner {
+        AjoCredential(credentialContract).authorizeGroup(groupContract);
     }
 
     function joinGroup(uint256 groupId, bytes32 inviteCode) external override nonReentrant {
