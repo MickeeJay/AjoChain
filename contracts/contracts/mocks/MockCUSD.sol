@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract MockCUSD is ERC20, Ownable {
     constructor() ERC20("Mock Celo Dollar", "mCUSD") Ownable() {}
 
-    function mint(address to, uint256 amount) external onlyOwner {
+    function mint(address to, uint256 amount) external {
         _mint(to, amount);
     }
 }

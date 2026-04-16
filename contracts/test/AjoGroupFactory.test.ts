@@ -1,185 +1,123 @@
 import { expect } from "chai";
-import { artifacts, network } from "hardhat";
+import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
+import { ethers } from "hardhat";
+import type { Signer } from "ethers";
 import {
-  createPublicClient,
-  createWalletClient,
-  custom,
-  defineChain,
-  parseUnits,
-} from "viem";
-
-const hardhatChain = defineChain({
-  id: 31337,
-  name: "Hardhat",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  rpcUrls: { default: { http: ["http://127.0.0.1:8545"] } },
-});
+  AjoCredential,
+  AjoCredential__factory,
+  AjoGroupFactory,
+  AjoGroupFactory__factory,
+  AjoSavingsGroup,
+  AjoSavingsGroup__factory,
+  MockCUSD,
+  MockCUSD__factory,
+} from "../typechain-types";
 
 describe("AjoGroupFactory", function () {
-  async function deployFixture() {
-    const accounts = (await network.provider.request({ method: "eth_accounts" })) as `0x${string}`[];
-    const deployer = accounts[0];
-    const transport = custom(network.provider as never);
-    const publicClient = createPublicClient({ chain: hardhatChain, transport });
-    const walletClient = createWalletClient({ chain: hardhatChain, transport, account: deployer });
+  type TestSigner = Awaited<ReturnType<typeof ethers.getSigners>>[number];
 
-    const mockArtifact = await artifacts.readArtifact("MockCUSD");
-    const mockHash = await walletClient.deployContract({
-      abi: mockArtifact.abi,
-      bytecode: mockArtifact.bytecode as `0x${string}`,
-    });
-    const mockReceipt = await publicClient.waitForTransactionReceipt({ hash: mockHash });
-    const mockAddress = mockReceipt.contractAddress as `0x${string}`;
+  let owner: TestSigner;
+  let alice: TestSigner;
+  let bob: TestSigner;
+  let carol: TestSigner;
+  let dave: TestSigner;
+  let eve: TestSigner;
 
-    const credentialArtifact = await artifacts.readArtifact("AjoCredential");
-    const credentialHash = await walletClient.deployContract({
-      abi: credentialArtifact.abi,
-      bytecode: credentialArtifact.bytecode as `0x${string}`,
-    });
-    const credentialReceipt = await publicClient.waitForTransactionReceipt({ hash: credentialHash });
-    const credentialAddress = credentialReceipt.contractAddress as `0x${string}`;
+  let ownerAddress: string;
+  let aliceAddress: string;
+  let bobAddress: string;
+  let carolAddress: string;
+  let daveAddress: string;
+  let eveAddress: string;
 
-    const factoryArtifact = await artifacts.readArtifact("AjoGroupFactory");
-    const factoryHash = await walletClient.deployContract({
-      abi: factoryArtifact.abi,
-      bytecode: factoryArtifact.bytecode as `0x${string}`,
-      args: [mockAddress, credentialAddress],
-    });
-    const factoryReceipt = await publicClient.waitForTransactionReceipt({ hash: factoryHash });
-    const factoryAddress = factoryReceipt.contractAddress as `0x${string}`;
+  let mockCUSD: MockCUSD;
+  let credential: AjoCredential;
+  let factory: AjoGroupFactory;
 
-    const ownershipHash = await walletClient.writeContract({
-      address: credentialAddress,
-      abi: credentialArtifact.abi,
-      functionName: "transferOwnership",
-      args: [factoryAddress],
-    });
-    await publicClient.waitForTransactionReceipt({ hash: ownershipHash });
+  const groupName = "Circle One";
+  const secondGroupName = "Circle Two";
+  const thirdGroupName = "Circle Three";
+  const contributionAmount = ethers.parseUnits("1", 18);
+  const maxContributionAmount = ethers.parseUnits("50", 18);
+  const overMaxContributionAmount = ethers.parseUnits("51", 18);
+  const maxPotContributionAmount = ethers.parseUnits("50", 18);
+  const inviteMismatchCode = ethers.keccak256(ethers.toUtf8Bytes("wrong invite code"));
+  const maxUint256 = (1n << 256n) - 1n;
+
+  async function deployGroup(
+    name: string,
+    contribution: bigint,
+    frequencyInDays: bigint,
+    maxMembers: bigint,
+    signer: TestSigner = owner,
+  ) {
+    const groupId = await factory.groupCount();
+    const creatorAddress = await signer.getAddress();
+
+    await expect(factory.connect(signer).createGroup(name, contribution, frequencyInDays, maxMembers))
+      .to.emit(factory, "GroupCreated")
+      .withArgs(groupId, anyValue, creatorAddress, name);
+
+    const groupAddress = await factory.getGroupInfo(groupId);
+    const group = AjoSavingsGroup__factory.connect(groupAddress, owner);
+    const inviteCode = await group.inviteCode();
 
     return {
-      publicClient,
-      walletClient,
-      mockAddress,
-      credentialAddress,
-      factoryAddress,
-      factoryArtifact,
-      credentialArtifact,
-      mockArtifact,
-      deployer,
+      groupId,
+      groupAddress,
+      group,
+      inviteCode,
     };
   }
 
-  it("creates a new savings group and tracks it in the registry", async function () {
-    const {
-      publicClient,
-      walletClient,
-      mockAddress,
-      credentialAddress,
-      factoryAddress,
-      factoryArtifact,
-      credentialArtifact,
-      mockArtifact,
-      deployer,
-    } =
-      await deployFixture();
+  async function joinGroup(signer: TestSigner, groupId: bigint, inviteCode: string) {
+    const memberAddress = await signer.getAddress();
 
-    const createHash = await walletClient.writeContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "createGroup",
-      args: ["Market Circle", parseUnits("10", 18), 7n, 3n],
-    });
-    await publicClient.waitForTransactionReceipt({ hash: createHash });
+    await expect(factory.connect(signer).joinGroup(groupId, inviteCode))
+      .to.emit(factory, "MemberJoined")
+      .withArgs(groupId, memberAddress);
+  }
 
-    const groupCount = await publicClient.readContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "groupCount",
-    });
-    expect(groupCount).to.equal(1n);
+  beforeEach(async function () {
+    [owner, alice, bob, carol, dave, eve] = await ethers.getSigners();
+    [ownerAddress, aliceAddress, bobAddress, carolAddress, daveAddress, eveAddress] = await Promise.all([
+      owner.getAddress(),
+      alice.getAddress(),
+      bob.getAddress(),
+      carol.getAddress(),
+      dave.getAddress(),
+      eve.getAddress(),
+    ]);
 
-    const recordedCusd = await publicClient.readContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "cUSDToken",
-    });
-    expect(String(recordedCusd).toLowerCase()).to.equal(mockAddress.toLowerCase());
+    mockCUSD = await new MockCUSD__factory(owner).deploy();
+    await mockCUSD.waitForDeployment();
 
-    const credentialOwner = await publicClient.readContract({
-      address: credentialAddress,
-      abi: credentialArtifact.abi,
-      functionName: "owner",
-    });
-    expect(String(credentialOwner).toLowerCase()).to.equal(factoryAddress.toLowerCase());
+    credential = await new AjoCredential__factory(owner).deploy();
+    await credential.waitForDeployment();
 
-    const firstGroup = await publicClient.readContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "getGroupInfo",
-      args: [0n],
-    });
-    expect(firstGroup).to.match(/^0x[a-fA-F0-9]{40}$/);
+    factory = await new AjoGroupFactory__factory(owner).deploy(await mockCUSD.getAddress(), await credential.getAddress());
+    await factory.waitForDeployment();
 
-    const userGroups = await publicClient.readContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "getUserGroups",
-      args: [deployer],
-    });
-    expect(userGroups).to.deep.equal([0n]);
+    await credential.transferOwnership(await factory.getAddress());
+  });
 
-    const isGroupAuthorized = await publicClient.readContract({
-      address: credentialAddress,
-      abi: credentialArtifact.abi,
-      functionName: "authorizedGroups",
-      args: [firstGroup as `0x${string}`],
-    });
-    expect(isGroupAuthorized).to.equal(true);
+  describe("constructor", function () {
+    it("reverts when the token address is zero", async function () {
+      const factoryFactory = new AjoGroupFactory__factory(owner);
 
-    const paginatedGroups = await publicClient.readContract({
-      address: factoryAddress,
-      abi: factoryArtifact.abi,
-      functionName: "getActiveGroups",
-      args: [0n, 10n],
+      await expect(factoryFactory.deploy(ethers.ZeroAddress, await credential.getAddress())).to.be.revertedWithCustomError(
+        factoryFactory,
+        "InvalidTokenAddress",
+      );
     });
-    expect(paginatedGroups).to.deep.equal([0n]);
 
-    const groupMemberCount = await publicClient.readContract({
-      address: firstGroup as `0x${string}`,
-      abi: [
-        {
-          type: "function",
-          name: "memberCount",
-          stateMutability: "view",
-          inputs: [],
-          outputs: [{ name: "", type: "uint256" }],
-        },
-        {
-          type: "function",
-          name: "isMember",
-          stateMutability: "view",
-          inputs: [{ name: "account", type: "address" }],
-          outputs: [{ name: "", type: "bool" }],
-        },
-      ],
-      functionName: "memberCount",
-    });
-    expect(groupMemberCount).to.equal(1n);
+    it("reverts when the credential address is zero", async function () {
+      const factoryFactory = new AjoGroupFactory__factory(owner);
 
-    const isCreatorMember = await publicClient.readContract({
-      address: firstGroup as `0x${string}`,
-      abi: [
-        {
-          type: "function",
-          name: "isMember",
-          stateMutability: "view",
-          inputs: [{ name: "account", type: "address" }],
-          outputs: [{ name: "", type: "bool" }],
-        },
-      ],
-      functionName: "isMember",
-      args: [deployer],
+      await expect(factoryFactory.deploy(await mockCUSD.getAddress(), ethers.ZeroAddress)).to.be.revertedWithCustomError(
+        factoryFactory,
+        "InvalidCredentialAddress",
+      );
     });
-    expect(isCreatorMember).to.equal(true);
   });
 });
