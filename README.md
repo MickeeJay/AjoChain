@@ -223,8 +223,5 @@ Please keep contributions aligned with the MiniPay-compatible stack: viem, wagmi
 
 MIT
 
-## Notes
-
-- This project uses viem and wagmi v2 for wallet integration.
-- This project uses cUSD for user-facing payments and gas inside MiniPay.
-- See the Celo documentation at https://docs.celo.org/ for current network details and tooling guidance.
+## Resources
+- See the Celo documentation at https://docs.celo.org/ 
