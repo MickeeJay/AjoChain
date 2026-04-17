@@ -21,7 +21,7 @@ export default function InviteLandingPage({ params }: { params: { code: string }
           </Link>
         </div>
 
-        <WalletGuard isConnected={false}>
+        <WalletGuard>
           <div>Wallet connected</div>
         </WalletGuard>
       </div>
