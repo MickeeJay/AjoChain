@@ -210,7 +210,7 @@ contract AjoSavingsGroup is ReentrancyGuard {
     }
 
     function currentPayoutRecipient() public view returns (address) {
-        if (memberOrder.length == 0) {
+        if (memberOrder.length == 0 || status == GroupStatus.COMPLETED) {
             return address(0);
         }
 
@@ -218,7 +218,7 @@ contract AjoSavingsGroup is ReentrancyGuard {
             return memberOrder[payoutIndex];
         }
 
-        return memberOrder[memberOrder.length - 1];
+        return address(0);
     }
 
     function memberCount() external view returns (uint256) {
