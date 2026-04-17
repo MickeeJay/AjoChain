@@ -1,14 +1,12 @@
 import type { Address } from "viem";
 
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000" as Address;
-
 export const DEPLOYED_CONTRACT_ADDRESSES: Record<42220 | 44787, { factory: Address; cusd: Address }> = {
   42220: {
-    factory: ZERO_ADDRESS,
+    factory: "0xAb672F162220ebB17B82bBcf8823Cd0f141515b9",
     cusd: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
   },
   44787: {
-    factory: ZERO_ADDRESS,
+    factory: "0x0000000000000000000000000000000000000000",
     cusd: "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1",
   },
 };
