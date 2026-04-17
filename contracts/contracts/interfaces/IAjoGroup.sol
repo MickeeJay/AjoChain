@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 interface IAjoGroup {
     enum GroupStatus {
@@ -12,9 +12,9 @@ interface IAjoGroup {
     struct Member {
         address wallet;
         bool hasContributedThisRound;
+        bool isActive;
         uint256 totalContributed;
         uint256 roundsCompleted;
-        bool isActive;
     }
 
     struct GroupState {
@@ -37,11 +37,11 @@ interface IAjoGroup {
         uint256 remainingTime;
     }
 
-    event MemberAdded(address member, uint256 timestamp);
-    event GroupStarted(uint256 startTime, address[] memberOrder);
-    event ContributionReceived(address member, uint256 round, uint256 amount);
-    event RoundCompleted(uint256 round, address recipient, uint256 amount);
-    event GroupCompleted(uint256 totalCycles, uint256 completedAt);
+    event MemberAdded(address indexed member, uint256 indexed timestamp);
+    event GroupStarted(uint256 indexed startTime, address[] memberOrder);
+    event ContributionReceived(address indexed member, uint256 indexed round, uint256 indexed amount);
+    event RoundCompleted(uint256 indexed round, address indexed recipient, uint256 indexed amount);
+    event GroupCompleted(uint256 indexed totalCycles, uint256 indexed completedAt);
 
     function addMember(address newMember) external;
 
