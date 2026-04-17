@@ -338,7 +338,6 @@ contract AjoSavingsGroup is ReentrancyGuard {
     }
 
     function _executeRoundPayout() internal returns (address recipient, uint256 amount) {
-        if (!canExecutePayout()) revert InvalidState();
 
         recipient = memberOrder[payoutIndex];
         amount = contributionAmount * memberOrder.length;
