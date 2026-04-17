@@ -108,7 +108,7 @@ contract AjoGroupFactory is Ownable, ReentrancyGuard, IAjoFactory {
         }
 
         bytes32 storedInviteCode = _groupInviteCodes[groupId];
-        if (keccak256(abi.encodePacked(inviteCode)) != keccak256(abi.encodePacked(storedInviteCode))) {
+        if (inviteCode != storedInviteCode) {
             revert InvalidInviteCode();
         }
 
