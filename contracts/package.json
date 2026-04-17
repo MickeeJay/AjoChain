@@ -9,7 +9,10 @@
     "lint": "solhint \"contracts/**/*.sol\"",
     "deploy": "hardhat run scripts/deploy.ts --network celo",
     "deploy:testnet": "hardhat run scripts/deploy-testnet.ts --network alfajores",
-    "verify": "hardhat run scripts/verify.ts --network celo"
+    "verify": "hardhat run scripts/verify.ts --network celo",
+    "verify:testnet": "hardhat run scripts/verify.ts --network alfajores",
+    "smoke:testnet": "hardhat run scripts/smoke-test.ts --network alfajores",
+    "check-balance:testnet": "hardhat run scripts/check-balance.ts --network alfajores"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
