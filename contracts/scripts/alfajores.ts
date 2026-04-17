@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from "fs/promises";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
 import type { HardhatRuntimeEnvironment } from "hardhat/types";
 import type { Address } from "viem";
 
