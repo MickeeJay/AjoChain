@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
@@ -7,7 +7,7 @@ import { AjoSavingsGroup } from "../AjoSavingsGroup.sol";
 
 /// @title Mock Celo Dollar
 /// @notice ERC20 test token that can optionally re-enter a savings group during payout.
-/// @author GitHub Copilot
+/// @author AjoChain
 contract MockCUSD is ERC20, Ownable {
     /// @notice Target group used by the optional payout reentrancy hook.
     address public targetGroup;
