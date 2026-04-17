@@ -45,7 +45,9 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
 
   const { writeContractAsync, isPending } = useWriteContract();
 
-  const approve = async (amount: bigint) => {
+  const approve = async (amount: bigint, spenderOverride?: Address) => {
+    const resolvedSpender = spenderOverride ?? spender;
+
     if (!spender) {
       throw new Error("Spender address is not configured.");
     }
@@ -54,12 +56,16 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
       throw new Error("cUSD address is not configured.");
     }
 
-    return writeContractAsync({
+    const hash = await writeContractAsync({
       address: tokenAddress,
       abi: IERC20_ABI,
       functionName: "approve",
-      args: [spender, amount],
+      args: [resolvedSpender, amount],
     });
+
+    void refetchAllowance();
+
+    return hash;
   };
 
   return {
