@@ -170,6 +170,31 @@ Use Alfajores for test deployments before going to mainnet.
 
 Faucet: https://faucet.celo.org/alfajores
 
+### Get testnet tokens
+
+1. Go to: https://faucet.celo.org/alfajores
+2. Enter your deployer wallet address
+3. Request both CELO and cUSD
+4. Wait 30 seconds, check balance:
+
+```bash
+npx hardhat run scripts/check-balance.ts --network alfajores
+```
+
+Smoke test the deployment after the contracts are live:
+
+```bash
+npx hardhat run scripts/smoke-test.ts --network alfajores
+```
+
+Verify the deployed contracts on Alfajores:
+
+```bash
+npx hardhat run scripts/verify.ts --network alfajores
+```
+
+Keep Alfajores deployment addresses separate from mainnet addresses.ts. The frontend detects chainId at runtime and loads the correct addresses. Never hardcode mainnet addresses into testnet builds.
+
 ## Mainnet Deployment
 
 1. Audit and test the contracts thoroughly on Alfajores.
