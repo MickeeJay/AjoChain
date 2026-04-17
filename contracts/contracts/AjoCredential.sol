@@ -107,7 +107,7 @@ contract AjoCredential is ERC721, Ownable {
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        ownerOf(tokenId);
+        _requireMinted(tokenId);
 
         CredentialData storage credential = credentials[tokenId];
         string memory image = string(
