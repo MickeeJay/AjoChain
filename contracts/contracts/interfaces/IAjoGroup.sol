@@ -75,9 +75,9 @@ interface IAjoGroup {
         returns (
             address wallet,
             bool hasContributedThisRound,
+            bool isActive,
             uint256 totalContributed,
-            uint256 roundsCompleted,
-            bool isActive
+            uint256 roundsCompleted
         );
 
     function memberOrder(uint256 index) external view returns (address);
