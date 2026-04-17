@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { WalletStatus } from "@/components/shared/WalletStatus";
 import { BottomNav } from "./BottomNav";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -9,8 +10,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">AjoChain</p>
           <p className="mt-1 text-sm text-slate-500">Rotating savings for MiniPay</p>
         </div>
-        <div className="hidden rounded-full bg-slate-950 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white lg:inline-flex">
-          Celo mainnet ready
+        <div className="flex items-center gap-3">
+          <div className="hidden rounded-full bg-slate-950 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white lg:inline-flex">
+            Celo mainnet ready
+          </div>
+          <WalletStatus />
         </div>
       </header>
       <main className="flex-1">{children}</main>
