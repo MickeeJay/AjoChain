@@ -13,6 +13,7 @@ cache/
 typechain-types/
 deployments/localhost/
 deployments/hardhat/
+deployments/*.json
 
 # Test coverage
 coverage/
