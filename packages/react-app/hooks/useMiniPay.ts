@@ -43,5 +43,7 @@ export function useMiniPay() {
     isMiniPay,
     isReady,
     isConnected,
+    address,
+    chainId,
   };
 }
