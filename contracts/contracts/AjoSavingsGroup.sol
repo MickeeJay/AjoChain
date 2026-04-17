@@ -137,7 +137,7 @@ contract AjoSavingsGroup is ReentrancyGuard {
         }
 
         if (inviteCode_ == bytes32(0)) {
-            revert InvalidAddress();
+            revert InvalidState();
         }
 
         if (contributionAmount_ == 0 || frequencyInDays_ == 0 || maxMembers_ < MIN_GROUP_SIZE) {
