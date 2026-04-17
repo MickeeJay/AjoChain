@@ -1,19 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+
+declare global {
+  interface Window {
+    ethereum?: {
+      isMiniPay?: boolean;
+    };
+  }
+}
+
+let hasAttemptedMiniPayAutoConnect = false;
 
 export function useMiniPay() {
   const [isMiniPay, setIsMiniPay] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const { address, chainId, isConnected } = useAccount();
 
   useEffect(() => {
-    const provider = window as Window & {
-      ethereum?: {
-        isMiniPay?: boolean;
-      };
-    };
-
-    const detected = Boolean(provider.ethereum?.isMiniPay) || navigator.userAgent.toLowerCase().includes("minipay");
+    const detected = Boolean(window.ethereum?.isMiniPay);
     setIsMiniPay(detected);
     setIsReady(true);
   }, []);
@@ -21,5 +27,6 @@ export function useMiniPay() {
   return {
     isMiniPay,
     isReady,
+    isConnected,
   };
 }
