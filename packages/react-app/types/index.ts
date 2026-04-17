@@ -52,4 +52,4 @@ export type CreateGroupPayload = {
   invitees: string[];
 };
 
-export type ContractAddressMap = Record<NetworkId, { factory: `0x${string}`; cusd: `0x${string}` }>;
+export type ContractAddressMap = Record<NetworkId, { factory: `0x${string}`; credential: `0x${string}`; cUSD: `0x${string}` }>;
