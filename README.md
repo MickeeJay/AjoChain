@@ -4,9 +4,9 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT)
 [![Celo Network](https://img.shields.io/badge/network-Celo-00A790)](https://docs.celo.org/)
 
-AjoChain is a MiniPay Mini App on Celo that turns African rotating savings groups into transparent, automated, on-chain savings circles.
+AjoChain is a MiniPay Mini App on Celo that turns African rotating savings groups into transparent, on-chain savings circles with contract-enforced rules.
 
-AjoChain replaces the human organizer with smart contracts so contributions, payout order, and group rules are enforced automatically without a single person holding the money.
+AjoChain replaces the human organizer with smart contracts so contributions, payout order, and group rules are enforced by the contracts without a single person holding the money.
 
 ## Problem
 
@@ -18,7 +18,7 @@ The weakness is not the idea. It is the coordination model. One organizer often 
 
 AjoChain moves the savings circle onto Celo. A smart contract replaces the human organizer and becomes the neutral rule enforcer for the group. It tracks members, contribution schedules, missed payments, payout rotation, pause control, and completion rules in a way that no single person can alter on a whim.
 
-The Mini App experience inside MiniPay keeps the user flow simple. Members can join with wallet-based identity, contribute with cUSD, and follow the group rounds without learning complex blockchain concepts. The result is a savings product that feels familiar locally, but gains the transparency and automation of software.
+The Mini App experience inside MiniPay keeps the user flow simple. Members can join with wallet-based identity, contribute with cUSD, and follow the group rounds without learning complex blockchain concepts. The result is a savings product that feels familiar locally, but gains the transparency and consistency of software.
 
 ## One-Line Pitch
 
@@ -65,7 +65,7 @@ Celo Smart Contract
 | Layer | Choice | Notes |
 | --- | --- | --- |
 | Blockchain | Celo | Ethereum L2 on OP Stack |
-| Smart Contracts | Solidity ^0.8.20 | Group logic and rule enforcement |
+| Smart Contracts | Solidity ^0.8.24 | Group logic and rule enforcement |
 | Contract Tooling | Hardhat | Deploy, test, and verify contracts |
 | Frontend | Next.js 14 | App Router, TypeScript |
 | Wallet | viem + wagmi v2 | MiniPay-compatible wallet stack |
