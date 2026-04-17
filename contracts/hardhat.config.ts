@@ -82,7 +82,9 @@ const config: HardhatConfigWithNamedAccounts = {
     ? {
         enabled: true,
       }
-    : undefined,
+    : {
+        enabled: false,
+      },
   paths: {
     sources: "./contracts",
     tests: "./test",
