@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
+
+/* solhint-disable gas-struct-packing, gas-indexed-events, gas-increment-by-one */
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -20,9 +22,9 @@ contract AjoSavingsGroup is ReentrancyGuard {
     struct Member {
         address wallet;
         bool hasContributedThisRound;
+        bool isActive;
         uint256 totalContributed;
         uint256 roundsCompleted;
-        bool isActive;
     }
 
     struct GroupState {
@@ -60,11 +62,11 @@ contract AjoSavingsGroup is ReentrancyGuard {
     error InsufficientMembers();
     error InsufficientVotes();
 
-    event MemberAdded(address member, uint256 timestamp);
-    event GroupStarted(uint256 startTime, address[] memberOrder);
-    event ContributionReceived(address member, uint256 round, uint256 amount);
-    event RoundCompleted(uint256 round, address recipient, uint256 amount);
-    event GroupCompleted(uint256 totalCycles, uint256 completedAt);
+    event MemberAdded(address indexed member, uint256 indexed timestamp);
+    event GroupStarted(uint256 indexed startTime, address[] memberOrder);
+    event ContributionReceived(address indexed member, uint256 indexed round, uint256 indexed amount);
+    event RoundCompleted(uint256 indexed round, address indexed recipient, uint256 indexed amount);
+    event GroupCompleted(uint256 indexed totalCycles, uint256 indexed completedAt);
 
     uint256 public constant MIN_GROUP_SIZE = 3;
 
@@ -267,9 +269,9 @@ contract AjoSavingsGroup is ReentrancyGuard {
             }
 
             if (previousChoice) {
-                pauseSupportVotes -= 1;
+                --pauseSupportVotes;
             } else {
-                pauseOppositionVotes -= 1;
+                --pauseOppositionVotes;
             }
         } else {
             _pauseVoteRecorded[msg.sender] = true;
@@ -278,9 +280,9 @@ contract AjoSavingsGroup is ReentrancyGuard {
         pauseVotes[msg.sender] = pause;
 
         if (pause) {
-            pauseSupportVotes += 1;
+            ++pauseSupportVotes;
         } else {
-            pauseOppositionVotes += 1;
+            ++pauseOppositionVotes;
         }
     }
 
@@ -346,15 +348,15 @@ contract AjoSavingsGroup is ReentrancyGuard {
 
         uint256 completedRound = currentRound;
 
-        currentRound += 1;
-        payoutIndex += 1;
+        ++currentRound;
+        ++payoutIndex;
         roundStartTime = block.timestamp;
 
         for (uint256 index = 0; index < memberOrder.length; ) {
             address memberAddress = memberOrder[index];
             Member storage member = members[memberAddress];
             member.hasContributedThisRound = false;
-            member.roundsCompleted += 1;
+            ++member.roundsCompleted;
 
             unchecked {
                 ++index;
