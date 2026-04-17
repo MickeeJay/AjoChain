@@ -180,7 +180,7 @@ contract AjoSavingsGroup is ReentrancyGuard {
     }
 
     function contribute() external nonReentrant onlyMember onlyActive {
-        if (block.timestamp >= _roundDeadline()) revert RoundExpired();
+        if (block.timestamp > _roundDeadline()) revert RoundExpired();
 
         Member storage member = members[msg.sender];
         if (member.hasContributedThisRound) revert AlreadyContributed();
