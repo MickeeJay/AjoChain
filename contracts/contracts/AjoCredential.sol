@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -116,20 +116,20 @@ contract AjoCredential is ERC721, Ownable {
                 Base64.encode(
                     bytes(
                         abi.encodePacked(
-                            '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">',
-                            '<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">',
-                            '<stop offset="0%" stop-color="#34d399"/>',
-                            '<stop offset="100%" stop-color="#065f46"/>',
-                            '</linearGradient></defs>',
-                            '<rect width="1200" height="675" rx="42" fill="url(#bg)"/>',
-                            '<rect x="64" y="64" width="1072" height="547" rx="32" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)"/>',
-                            '<text x="96" y="170" fill="#ffffff" font-family="Arial, sans-serif" font-size="78" font-weight="700">AjoChain</text>',
-                            '<text x="96" y="245" fill="#dcfce7" font-family="Arial, sans-serif" font-size="40">Savings Certificate</text>',
-                            '<text x="96" y="360" fill="#ffffff" font-family="Arial, sans-serif" font-size="38">Cycles Completed</text>',
-                            '<text x="96" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="104" font-weight="700">',
+                            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1200\" height=\"675\" viewBox=\"0 0 1200 675\">",
+                            "<defs><linearGradient id=\"bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">",
+                            "<stop offset=\"0%\" stop-color=\"#34d399\"/>",
+                            "<stop offset=\"100%\" stop-color=\"#065f46\"/>",
+                            "</linearGradient></defs>",
+                            "<rect width=\"1200\" height=\"675\" rx=\"42\" fill=\"url(#bg)\"/>",
+                            "<rect x=\"64\" y=\"64\" width=\"1072\" height=\"547\" rx=\"32\" fill=\"rgba(255,255,255,0.08)\" stroke=\"rgba(255,255,255,0.25)\"/>",
+                            "<text x=\"96\" y=\"170\" fill=\"#ffffff\" font-family=\"Arial, sans-serif\" font-size=\"78\" font-weight=\"700\">AjoChain</text>",
+                            "<text x=\"96\" y=\"245\" fill=\"#dcfce7\" font-family=\"Arial, sans-serif\" font-size=\"40\">Savings Certificate</text>",
+                            "<text x=\"96\" y=\"360\" fill=\"#ffffff\" font-family=\"Arial, sans-serif\" font-size=\"38\">Cycles Completed</text>",
+                            "<text x=\"96\" y=\"470\" fill=\"#ffffff\" font-family=\"Arial, sans-serif\" font-size=\"104\" font-weight=\"700\">",
                             credential.cyclesCompleted.toString(),
-                            '</text>',
-                            '</svg>'
+                            "</text>",
+                            "</svg>"
                         )
                     )
                 )
@@ -138,21 +138,21 @@ contract AjoCredential is ERC721, Ownable {
 
         string memory json = string(
             abi.encodePacked(
-                '{"name":"AjoChain Savings Certificate","description":"On-chain certificate issued to members who complete a savings cycle in AjoChain.","image":"',
+                "{\"name\":\"AjoChain Savings Certificate\",\"description\":\"On-chain certificate issued to members who complete a savings cycle in AjoChain.\",\"image\":\"",
                 image,
-                '","attributes":[',
-                '{"trait_type":"groupName","value":"',
+                "\",\"attributes\":[",
+                "{\"trait_type\":\"groupName\",\"value\":\"",
                 credential.groupName,
-                '"},',
-                '{"trait_type":"cyclesCompleted","display_type":"number","value":',
+                "\"},",
+                "{\"trait_type\":\"cyclesCompleted\",\"display_type\":\"number\",\"value\":",
                 credential.cyclesCompleted.toString(),
-                '},',
-                '{"trait_type":"totalSaved","display_type":"number","value":',
+                "},",
+                "{\"trait_type\":\"totalSaved\",\"display_type\":\"number\",\"value\":",
                 credential.totalSaved.toString(),
-                '},',
-                '{"trait_type":"completedAt","display_type":"date","value":',
+                "},",
+                "{\"trait_type\":\"completedAt\",\"display_type\":\"date\",\"value\":",
                 credential.completedAt.toString(),
-                '}]}'
+                "}]}"
             )
         );
 
