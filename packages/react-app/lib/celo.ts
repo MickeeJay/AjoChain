@@ -7,6 +7,7 @@ export const celoMainnet = defineChain({
   id: 42220,
   name: "Celo",
   network: "celo",
+  testnet: false,
   nativeCurrency: {
     name: "Celo",
     symbol: "CELO",
@@ -18,6 +19,12 @@ export const celoMainnet = defineChain({
     },
     public: {
       http: [celoMainnetRpcUrl],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "CeloScan",
+      url: "https://celoscan.io",
     },
   },
 });
@@ -26,6 +33,7 @@ export const celoAlfajores = defineChain({
   id: 44787,
   name: "Alfajores",
   network: "alfajores",
+  testnet: true,
   nativeCurrency: {
     name: "Celo",
     symbol: "CELO",
@@ -37,6 +45,12 @@ export const celoAlfajores = defineChain({
     },
     public: {
       http: [celoAlfajoresRpcUrl],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "CeloScan Alfajores",
+      url: "https://alfajores.celoscan.io",
     },
   },
 });
