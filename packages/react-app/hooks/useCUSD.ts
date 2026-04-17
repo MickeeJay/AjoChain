@@ -1,7 +1,8 @@
 "use client";
 
 import type { Address } from "viem";
-import { useAccount, useBalance } from "wagmi";
+import { useAccount, useBalance, useReadContract } from "wagmi";
+import { IERC20_ABI } from "@/lib/contracts/abis";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000" as const;
 
@@ -12,10 +13,11 @@ const CUSD_ADDRESSES: Record<42220 | 44787, Address> = {
 
 type UseCUSDParams = {
   owner?: Address;
+  spender?: Address;
   chainId?: 42220 | 44787;
 };
 
-export function useCUSD({ owner, chainId }: UseCUSDParams = {}) {
+export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
   const { address: connectedAddress, chainId: connectedChainId } = useAccount();
   const resolvedOwner = owner ?? connectedAddress;
   const resolvedChainId = chainId ?? (connectedChainId === 44787 ? 44787 : 42220);
@@ -30,10 +32,23 @@ export function useCUSD({ owner, chainId }: UseCUSDParams = {}) {
     },
   });
 
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: tokenAddress,
+    abi: IERC20_ABI,
+    functionName: "allowance",
+    args: resolvedOwner && spender ? [resolvedOwner, spender] : undefined,
+    chainId: resolvedChainId,
+    query: {
+      enabled: Boolean(resolvedOwner && spender && tokenAddress !== ZERO_ADDRESS),
+    },
+  });
+
   return {
     balance,
+    allowance,
     tokenAddress,
     chainId: resolvedChainId,
     isConfigured: tokenAddress !== ZERO_ADDRESS,
+    refetchAllowance,
   };
 }
