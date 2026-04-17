@@ -1,17 +1,39 @@
 "use client";
 
-import { formatUnits, parseUnits } from "viem";
+import type { Address } from "viem";
+import { useAccount, useBalance } from "wagmi";
 
-const CUSD_DECIMALS = 18;
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000" as const;
 
-export function useCUSD() {
-  const formatCUSD = (amount: bigint) => `${formatUnits(amount, CUSD_DECIMALS)} cUSD`;
-  const parseCUSD = (amount: string) => parseUnits(amount || "0", CUSD_DECIMALS);
+const CUSD_ADDRESSES: Record<42220 | 44787, Address> = {
+  42220: (process.env.NEXT_PUBLIC_CUSD_ADDRESS ?? ZERO_ADDRESS) as Address,
+  44787: (process.env.NEXT_PUBLIC_CUSD_ALFAJORES ?? ZERO_ADDRESS) as Address,
+};
+
+type UseCUSDParams = {
+  owner?: Address;
+  chainId?: 42220 | 44787;
+};
+
+export function useCUSD({ owner, chainId }: UseCUSDParams = {}) {
+  const { address: connectedAddress, chainId: connectedChainId } = useAccount();
+  const resolvedOwner = owner ?? connectedAddress;
+  const resolvedChainId = chainId ?? (connectedChainId === 44787 ? 44787 : 42220);
+  const tokenAddress = CUSD_ADDRESSES[resolvedChainId];
+
+  const { data: balance } = useBalance({
+    address: resolvedOwner,
+    token: tokenAddress,
+    chainId: resolvedChainId,
+    query: {
+      enabled: Boolean(resolvedOwner && tokenAddress !== ZERO_ADDRESS),
+    },
+  });
 
   return {
-    formatCUSD,
-    parseCUSD,
-    symbol: "cUSD",
-    decimals: CUSD_DECIMALS,
+    balance,
+    tokenAddress,
+    chainId: resolvedChainId,
+    isConfigured: tokenAddress !== ZERO_ADDRESS,
   };
 }
