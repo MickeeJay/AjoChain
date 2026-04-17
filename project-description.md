@@ -6,7 +6,7 @@ In West and East Africa, informal savings circles remain one of the most trusted
 
 ## Solution
 
-AjoChain turns that familiar savings pattern into a MiniPay Mini App on Celo. Instead of a human treasurer, smart contracts define the group rules and enforce them automatically: who belongs to the group, how much each member contributes, when each round runs, and when the pooled funds can be released. This removes the single point of failure while keeping the social model of rotating savings intact.
+AjoChain turns that familiar savings pattern into a MiniPay Mini App on Celo. Instead of a human treasurer, smart contracts define the group rules and enforce them on-chain: who belongs to the group, how much each member contributes, when each round runs, and when the pooled funds can be released. This removes the single point of failure while keeping the social model of rotating savings intact.
 
 The product is designed to feel native to the way people already save. Members can join from their phone, contribute in cUSD, and follow a clear on-chain record of payments, payouts, pauses, and exits. Because the system is built for MiniPay, the experience stays lightweight and mobile-first, which matters for users who want a familiar savings tool without the overhead of a full crypto onboarding flow.
 
@@ -33,10 +33,10 @@ MiniPay is the right entry point because it already reaches 14M users, supports 
 
 | Option | Strengths | Weaknesses | AjoChain Advantage |
 | --- | --- | --- | --- |
-| Traditional Ajo | Familiar, social trust, simple | Manual tracking, organizer risk, limited transparency | Keeps the tradition but automates trust and records on-chain |
+| Traditional Ajo | Familiar, social trust, simple | Manual tracking, organizer risk, limited transparency | Keeps the tradition with transparent on-chain rules and records |
 | Tanda | Community-based savings logic | Often localized, manual, and organizer-dependent | Provides a programmable and verifiable version of the same model |
 | WhatsApp groups | Easy communication and coordination | No native payments, no enforcement, no state consistency | Adds actual financial rails and contract enforcement |
-| AjoChain | Transparent, automated, mobile-first | Requires blockchain support | Built specifically for MiniPay and cUSD flows |
+| AjoChain | Transparent, rule-based, mobile-first | Requires blockchain support | Built specifically for MiniPay and cUSD flows |
 
 ## Business Model
 
