@@ -50,3 +50,6 @@ Thumbs.db
 
 # Miscellaneous
 *.tsbuildinfo
+
+
+contracts/scripts/tst/

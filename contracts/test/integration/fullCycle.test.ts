@@ -11,6 +11,10 @@ import {
   parseUnits,
   toHex,
   type Abi,
+  type PublicClient as ViemPublicClient,
+  type WalletClient as ViemWalletClient,
+  type Transport,
+  type Account,
 } from "viem";
 
 const hardhatChain = defineChain({
@@ -37,8 +41,8 @@ const INVALID_INVITE_CODE = keccak256(toHex("wrong invite code"));
 
 type Address = `0x${string}`;
 type Bytes32 = `0x${string}`;
-type PublicClient = ReturnType<typeof createPublicClient>;
-type WalletClient = ReturnType<typeof createWalletClient>;
+type PublicClient = ViemPublicClient<Transport, typeof hardhatChain>;
+type WalletClient = ViemWalletClient<Transport, typeof hardhatChain, Account>;
 
 type BaseFixture = {
   publicClient: PublicClient;
