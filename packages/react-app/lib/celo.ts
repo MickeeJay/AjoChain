@@ -1,5 +1,8 @@
 import { defineChain } from "viem";
 
+const celoMainnetRpcUrl = process.env.NEXT_PUBLIC_CELO_RPC_URL ?? "https://forno.celo.org";
+const celoAlfajoresRpcUrl = process.env.NEXT_PUBLIC_ALFAJORES_RPC_URL ?? "https://alfajores-forno.celo-testnet.org";
+
 export const celoMainnet = defineChain({
   id: 42220,
   name: "Celo",
@@ -11,15 +14,15 @@ export const celoMainnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: [process.env.NEXT_PUBLIC_CELO_RPC_URL ?? "https://forno.celo.org"],
+      http: [celoMainnetRpcUrl],
     },
     public: {
-      http: [process.env.NEXT_PUBLIC_CELO_RPC_URL ?? "https://forno.celo.org"],
+      http: [celoMainnetRpcUrl],
     },
   },
 });
 
-export const alfajores = defineChain({
+export const celoAlfajores = defineChain({
   id: 44787,
   name: "Alfajores",
   network: "alfajores",
@@ -30,10 +33,10 @@ export const alfajores = defineChain({
   },
   rpcUrls: {
     default: {
-      http: [process.env.NEXT_PUBLIC_ALFAJORES_RPC_URL ?? "https://alfajores-forno.celo-testnet.org"],
+      http: [celoAlfajoresRpcUrl],
     },
     public: {
-      http: [process.env.NEXT_PUBLIC_ALFAJORES_RPC_URL ?? "https://alfajores-forno.celo-testnet.org"],
+      http: [celoAlfajoresRpcUrl],
     },
   },
 });
