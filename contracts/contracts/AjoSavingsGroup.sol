@@ -253,6 +253,10 @@ contract AjoSavingsGroup is ReentrancyGuard {
         return frequencyInDays * 1 days;
     }
 
+    // emergencyExit is only callable while FORMING. During FORMING no cUSD has
+    // been transferred to this contract, so no refund logic is needed. If a
+    // deposit-on-join mechanic is ever added, that deposit MUST be returned here
+    // before removing the member from the roster.
     function emergencyExit() external onlyMember onlyForming {
         _removeActiveMember(msg.sender);
     }
