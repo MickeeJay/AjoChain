@@ -48,7 +48,7 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
   const approve = async (amount: bigint, spenderOverride?: Address) => {
     const resolvedSpender = spenderOverride ?? spender;
 
-    if (!spender) {
+    if (!resolvedSpender) {
       throw new Error("Spender address is not configured.");
     }
 
