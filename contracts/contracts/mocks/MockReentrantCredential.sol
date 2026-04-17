@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import { AjoCredential } from "../AjoCredential.sol";
 import { AjoSavingsGroup } from "../AjoSavingsGroup.sol";
@@ -7,7 +7,7 @@ import { IAjoFactory } from "../interfaces/IAjoFactory.sol";
 
 /// @title Mock Reentrant Credential
 /// @notice Credential mock that can re-enter the factory or group during authorization and minting.
-/// @author GitHub Copilot
+/// @author AjoChain
 contract MockReentrantCredential {
     /// @notice Factory used for createGroup and joinGroup reentrancy tests.
     IAjoFactory public factory;
