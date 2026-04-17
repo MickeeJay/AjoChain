@@ -417,6 +417,11 @@ contract AjoSavingsGroup is ReentrancyGuard {
             return roster;
         }
 
+        // Entropy sources: blockhash(block.number - 1) and block.timestamp.
+        // Celo validators can influence timestamp within the ~5-second window.
+        // For a social savings group the financial gain from manipulating payout
+        // order is small and acceptable. Do not use this shuffle pattern in
+        // high-stakes lotteries or games where miner manipulation is a concern.
         uint256 seed = uint256(
             keccak256(abi.encodePacked(blockhash(block.number - 1), address(this), creator, roster.length, block.timestamp))
         );
