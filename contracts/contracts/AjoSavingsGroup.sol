@@ -498,7 +498,8 @@ contract AjoSavingsGroup is ReentrancyGuard {
         if (credentialContractAddress == address(0)) revert InvalidAddress();
 
         AjoCredential credentialContract = AjoCredential(credentialContractAddress);
-        uint256 totalSaved = contributionAmount * memberOrder.length;
+        // Each member contributes once per round over memberOrder.length rounds.
+        uint256 totalSavedPerMember = contributionAmount * memberOrder.length;
         uint256 completedAt = block.timestamp;
 
         for (uint256 index = 0; index < memberOrder.length; ) {
@@ -510,7 +511,7 @@ contract AjoSavingsGroup is ReentrancyGuard {
                     recipient: recipient,
                     groupContract: address(this),
                     cyclesCompleted: 1,
-                    totalSaved: totalSaved,
+                    totalSaved: totalSavedPerMember,
                     completedAt: completedAt,
                     groupName: name
                 })
