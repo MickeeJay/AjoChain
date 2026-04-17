@@ -1,7 +1,7 @@
 "use client";
 
 import type { Address } from "viem";
-import { useAccount, useBalance, useReadContract } from "wagmi";
+import { useAccount, useBalance, useReadContract, useWriteContract } from "wagmi";
 import { IERC20_ABI } from "@/lib/contracts/abis";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000" as const;
@@ -43,9 +43,30 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
     },
   });
 
+  const { writeContractAsync, isPending } = useWriteContract();
+
+  const approve = async (amount: bigint) => {
+    if (!spender) {
+      throw new Error("Spender address is not configured.");
+    }
+
+    if (tokenAddress === ZERO_ADDRESS) {
+      throw new Error("cUSD address is not configured.");
+    }
+
+    return writeContractAsync({
+      address: tokenAddress,
+      abi: IERC20_ABI,
+      functionName: "approve",
+      args: [spender, amount],
+    });
+  };
+
   return {
     balance,
     allowance,
+    approve,
+    isApproving: isPending,
     tokenAddress,
     chainId: resolvedChainId,
     isConfigured: tokenAddress !== ZERO_ADDRESS,
