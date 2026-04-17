@@ -51,10 +51,7 @@ const config: HardhatConfigWithNamedAccounts = {
     },
   },
   etherscan: {
-    apiKey: {
-      celo: CELOSCAN_API_KEY,
-      alfajores: CELOSCAN_API_KEY,
-    },
+    apiKey: CELOSCAN_API_KEY,
     customChains: [
       {
         network: "celo",

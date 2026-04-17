@@ -9,7 +9,7 @@ import {
   readDeploymentRecord,
   resolveNetworkConfig,
   type DeploymentRecord,
-} from "./alfajores.js";
+} from "./alfajores";
 
 loadEnv();
 
