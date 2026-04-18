@@ -14,7 +14,7 @@ export function ContributeButton({ disabled, isLoading, onClick }: ContributeBut
       type="button"
       disabled={disabled || isLoading}
       onClick={onClick}
-      className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
+      className="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
     >
       {label}
     </button>
