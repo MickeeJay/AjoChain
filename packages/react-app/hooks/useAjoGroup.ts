@@ -42,10 +42,11 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
   const { address: accountAddress } = useAccount();
   const chainId = useChainId();
   const networkId = resolveNetworkId(chainId);
-  const { writeContractAsync, isPending: isWriting } = useWriteContract();
+  const { writeContractAsync } = useWriteContract();
   const [approveHash, setApproveHash] = useState<Hash | undefined>();
   const [contributeHash, setContributeHash] = useState<Hash | undefined>();
   const [startHash, setStartHash] = useState<Hash | undefined>();
+  const [pendingAction, setPendingAction] = useState<"contribute" | "start" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const approveResolverRef = useRef<ReceiptResolver | null>(null);
   const contributeResolverRef = useRef<ReceiptResolver | null>(null);
@@ -205,6 +206,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     }
 
     try {
+      setPendingAction("contribute");
       const currentAllowance = allowanceData ?? 0n;
 
       if (currentAllowance < contributionAmount) {
@@ -241,9 +243,11 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
       void refetchGroupState();
       void refetchAllowance();
       setActionError(null);
+      setPendingAction(null);
 
       return contributeTxHash;
     } catch (error) {
+      setPendingAction(null);
       const message = getErrorMessage(error);
       setActionError(message);
       throw error instanceof Error ? error : new Error(message);
@@ -260,6 +264,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     }
 
     try {
+      setPendingAction("start");
       const startTxHash = await writeContractAsync({
         address: groupAddress,
         abi: AJO_GROUP_ABI,
@@ -275,9 +280,11 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
       void refetchGroupState();
       setActionError(null);
+      setPendingAction(null);
 
       return startTxHash;
     } catch (error) {
+      setPendingAction(null);
       const message = getErrorMessage(error);
       setActionError(message);
       throw error instanceof Error ? error : new Error(message);
@@ -289,8 +296,8 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     getRemainingTime,
     contribute,
     startGroup,
-    isContributing: isWriting || approveReceipt.isLoading || contributeReceipt.isLoading || Boolean(approveHash || contributeHash),
-    isStarting: isWriting || startReceipt.isLoading || Boolean(startHash),
+    isContributing: pendingAction === "contribute" || approveReceipt.isLoading || contributeReceipt.isLoading || Boolean(approveHash || contributeHash),
+    isStarting: pendingAction === "start" || startReceipt.isLoading || Boolean(startHash),
     error: actionError ?? groupStateError?.message ?? allowanceError?.message ?? null,
   };
 }
