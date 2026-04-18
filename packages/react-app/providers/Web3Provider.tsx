@@ -19,7 +19,16 @@ const wagmiConfig = createConfig({
 });
 
 export function Web3Provider({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 10_000,
+          },
+        },
+      }),
+  );
 
   return (
     <WagmiProvider config={wagmiConfig}>
