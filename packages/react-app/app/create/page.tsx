@@ -5,22 +5,22 @@ import { TransactionStatus } from "@/components/shared/TransactionStatus";
 
 export default function CreateGroupPage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-6 py-8 text-slate-900 lg:px-10">
-      <div className="grid gap-8 rounded-[2rem] border border-white/60 bg-white/85 p-8 shadow-[0_20px_80px_rgba(16,42,44,0.12)] backdrop-blur lg:grid-cols-[1.2fr_0.8fr]">
-        <section className="space-y-6">
-          <span className="inline-flex rounded-full bg-emerald-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+    <section className="flex flex-col gap-4 text-slate-900">
+      <div className="grid gap-5 rounded-[2rem] border border-slate-200/70 bg-white p-5 shadow-[0_20px_80px_rgba(16,42,44,0.12)] lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="space-y-5">
+          <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
             Create group
           </span>
-          <div className="space-y-4">
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">
+          <div className="space-y-3">
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-950 md:text-5xl">
               Set up a savings circle in minutes.
             </h1>
-            <p className="max-w-2xl text-base leading-7 text-slate-600">
+            <p className="hidden max-w-2xl text-sm leading-6 text-slate-600 md:block md:text-base md:leading-7">
               The factory contract deploys a new rotating savings group while the frontend keeps the setup simple for mobile users.
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="hidden gap-4 xl:grid xl:grid-cols-3">
             <article className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
               <CircleDollarSign className="h-5 w-5 text-emerald-600" />
               <p className="mt-3 text-sm font-semibold text-slate-900">Contribution</p>
@@ -39,16 +39,16 @@ export default function CreateGroupPage() {
           </div>
         </section>
 
-        <aside className="rounded-[1.5rem] bg-slate-950 p-6 text-white">
+        <aside className="rounded-[1.5rem] bg-slate-950 p-5 text-white">
           <TransactionStatus status="pending" label="Drafting new group" />
           <div className="mt-5">
             <CreateGroupForm />
           </div>
-          <Link href="/groups" className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-50">
+          <Link href="/groups" className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-50">
             Review groups
           </Link>
         </aside>
       </div>
-    </main>
+    </section>
   );
 }
