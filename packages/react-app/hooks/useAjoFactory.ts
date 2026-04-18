@@ -156,6 +156,7 @@ export function useAjoFactory() {
         logs: receipt.logs,
       });
       const createdGroup = parsedLogs[0]?.args.groupAddress as Address | undefined;
+      const createdGroupId = parsedLogs[0]?.args.groupId as bigint | undefined;
 
       if (!createdGroup) {
         throw new Error("Unable to read the created group address from the transaction receipt.");
@@ -168,6 +169,7 @@ export function useAjoFactory() {
 
       return {
         txHash,
+        groupId: createdGroupId ?? 0n,
         groupAddress: createdGroup,
       };
     } catch (error) {
