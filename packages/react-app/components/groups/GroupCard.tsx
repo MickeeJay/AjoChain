@@ -15,11 +15,11 @@ export function GroupCard({ id, name, status, current, total, nextPayout }: Grou
   return (
     <Link
       href={`/groups/${id}`}
-      className="group rounded-[1.5rem] border border-white/60 bg-white/85 p-5 shadow-[0_16px_50px_rgba(16,42,44,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_60px_rgba(16,42,44,0.12)]"
+      className="group rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-[0_16px_50px_rgba(16,42,44,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_60px_rgba(16,42,44,0.12)]"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-lg font-semibold text-slate-950">{name}</p>
+          <p className="text-base font-semibold text-slate-950">{name}</p>
           <p className="mt-1 text-sm text-slate-500">{status}</p>
         </div>
         <ArrowUpRight className="h-5 w-5 text-slate-400 transition group-hover:text-emerald-600" />
