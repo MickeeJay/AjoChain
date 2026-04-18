@@ -29,9 +29,10 @@ export function useAjoFactory() {
   const chainId = useChainId();
   const networkId = resolveNetworkId(chainId);
   const contractAddress = addresses[networkId].factory;
-  const { writeContractAsync, isPending: isWriting } = useWriteContract();
+  const { writeContractAsync } = useWriteContract();
   const [createHash, setCreateHash] = useState<Hash | undefined>();
   const [joinHash, setJoinHash] = useState<Hash | undefined>();
+  const [pendingAction, setPendingAction] = useState<"create" | "join" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const createResolverRef = useRef<ReceiptResolver<TransactionReceipt> | null>(null);
   const joinResolverRef = useRef<ReceiptResolver<TransactionReceipt> | null>(null);
@@ -134,6 +135,7 @@ export function useAjoFactory() {
     }
 
     try {
+      setPendingAction("create");
       const txHash = await writeContractAsync({
         address: contractAddress,
         abi: AJO_FACTORY_ABI,
@@ -162,12 +164,14 @@ export function useAjoFactory() {
       void refetchGroupCount();
       void refetchUserGroups();
       setActionError(null);
+      setPendingAction(null);
 
       return {
         txHash,
         groupAddress: createdGroup,
       };
     } catch (error) {
+      setPendingAction(null);
       const message = getErrorMessage(error);
       setActionError(message);
       throw error instanceof Error ? error : new Error(message);
@@ -180,6 +184,7 @@ export function useAjoFactory() {
     }
 
     try {
+      setPendingAction("join");
       const txHash = await writeContractAsync({
         address: contractAddress,
         abi: AJO_FACTORY_ABI,
@@ -196,9 +201,11 @@ export function useAjoFactory() {
 
       void refetchUserGroups();
       setActionError(null);
+      setPendingAction(null);
 
       return txHash;
     } catch (error) {
+      setPendingAction(null);
       const message = getErrorMessage(error);
       setActionError(message);
       throw error instanceof Error ? error : new Error(message);
@@ -210,8 +217,8 @@ export function useAjoFactory() {
     userGroups,
     createGroup,
     joinGroup,
-    isCreating: isWriting || createReceipt.isLoading || Boolean(createHash),
-    isJoining: isWriting || joinReceipt.isLoading || Boolean(joinHash),
+    isCreating: pendingAction === "create" || createReceipt.isLoading || Boolean(createHash),
+    isJoining: pendingAction === "join" || joinReceipt.isLoading || Boolean(joinHash),
     error: actionError ?? groupCountError?.message ?? userGroupsError?.message ?? null,
   };
 }
