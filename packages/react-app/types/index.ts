@@ -23,6 +23,11 @@ export interface GroupState {
   memberOrder: `0x${string}`[];
   inviteCode: `0x${string}`;
   remainingTime: number;
+  factory: `0x${string}`;
+  creator: `0x${string}`;
+  cUSDToken: `0x${string}`;
+  pauseSupportVotes: bigint;
+  pauseOppositionVotes: bigint;
 }
 
 export interface CreateGroupParams {

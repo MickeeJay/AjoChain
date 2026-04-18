@@ -191,6 +191,11 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
       memberOrder: [...groupStateData.memberOrder],
       inviteCode: groupStateData.inviteCode,
       remainingTime: Number(groupStateData.remainingTime ?? 0n),
+      factory: groupStateData.factory,
+      creator: groupStateData.creator,
+      cUSDToken: groupStateData.cUSDToken,
+      pauseSupportVotes: groupStateData.pauseSupportVotes,
+      pauseOppositionVotes: groupStateData.pauseOppositionVotes,
     };
   }, [groupStateData]);
 
