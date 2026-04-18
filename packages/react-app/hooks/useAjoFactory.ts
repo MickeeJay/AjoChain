@@ -1,45 +1,217 @@
 "use client";
 
-import type { Abi, Address } from "viem";
-import { useReadContract, useWriteContract } from "wagmi";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useAccount, useChainId, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { parseEventLogs, type Address, type Hash, type TransactionReceipt } from "viem";
+import { AJO_FACTORY_ABI } from "@/lib/contracts/abis";
+import { addresses } from "@/lib/contracts/addresses";
+import type { CreateGroupParams, NetworkId } from "@/types";
 
-type UseAjoFactoryParams = {
-  factoryAddress?: Address;
-  factoryAbi?: Abi;
+type ReceiptResolver<T> = {
+  resolve: (value: T) => void;
+  reject: (reason: Error) => void;
 };
 
-export function useAjoFactory({ factoryAddress, factoryAbi }: UseAjoFactoryParams) {
-  const enabled = Boolean(factoryAddress && factoryAbi);
-  const { data: totalGroups } = useReadContract({
-    address: (factoryAddress ?? "0x0000000000000000000000000000000000000000") as Address,
-    abi: (factoryAbi ?? []) as Abi,
-    functionName: "totalGroups",
-    query: { enabled },
-  });
-  const { writeContractAsync, isPending } = useWriteContract();
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
 
-  const createGroup = async (args: {
-    name: string;
-    token: Address;
-    contributionAmount: bigint;
-    maxMembers: bigint;
-    cycleDuration: bigint;
-  }) => {
-    if (!enabled) {
-      throw new Error("Factory contract is not configured.");
+  return "An unexpected contract error occurred.";
+}
+
+function resolveNetworkId(chainId: number | undefined): NetworkId {
+  return chainId === 44787 ? 44787 : 42220;
+}
+
+export function useAjoFactory() {
+  const { address: accountAddress } = useAccount();
+  const chainId = useChainId();
+  const networkId = resolveNetworkId(chainId);
+  const contractAddress = addresses[networkId].factory;
+  const { writeContractAsync, isPending: isWriting } = useWriteContract();
+  const [createHash, setCreateHash] = useState<Hash | undefined>();
+  const [joinHash, setJoinHash] = useState<Hash | undefined>();
+  const [actionError, setActionError] = useState<string | null>(null);
+  const createResolverRef = useRef<ReceiptResolver<TransactionReceipt> | null>(null);
+  const joinResolverRef = useRef<ReceiptResolver<TransactionReceipt> | null>(null);
+
+  const {
+    data: groupCountData,
+    refetch: refetchGroupCount,
+    error: groupCountError,
+  } = useReadContract({
+    address: contractAddress,
+    abi: AJO_FACTORY_ABI,
+    functionName: "groupCount",
+    chainId,
+    query: {
+      enabled: Boolean(contractAddress),
+      staleTime: 10_000,
+    },
+  });
+
+  const {
+    data: userGroupsData,
+    refetch: refetchUserGroups,
+    error: userGroupsError,
+  } = useReadContract({
+    address: contractAddress,
+    abi: AJO_FACTORY_ABI,
+    functionName: "getUserGroups",
+    args: accountAddress ? [accountAddress] : undefined,
+    chainId,
+    query: {
+      enabled: Boolean(contractAddress && accountAddress),
+      staleTime: 10_000,
+    },
+  });
+
+  const createReceipt = useWaitForTransactionReceipt({
+    hash: createHash,
+    chainId,
+    query: {
+      enabled: Boolean(createHash),
+      staleTime: 10_000,
+    },
+  });
+
+  const joinReceipt = useWaitForTransactionReceipt({
+    hash: joinHash,
+    chainId,
+    query: {
+      enabled: Boolean(joinHash),
+      staleTime: 10_000,
+    },
+  });
+
+  useEffect(() => {
+    if (!createReceipt.data || !createResolverRef.current) {
+      return;
     }
 
-    return writeContractAsync({
-      address: factoryAddress as Address,
-      abi: factoryAbi as Abi,
-      functionName: "createGroup",
-      args: [args.name, args.token, args.contributionAmount, args.maxMembers, args.cycleDuration],
-    });
+    createResolverRef.current.resolve(createReceipt.data);
+    createResolverRef.current = null;
+    setCreateHash(undefined);
+  }, [createReceipt.data]);
+
+  useEffect(() => {
+    if (!joinReceipt.data || !joinResolverRef.current) {
+      return;
+    }
+
+    joinResolverRef.current.resolve(joinReceipt.data);
+    joinResolverRef.current = null;
+    setJoinHash(undefined);
+  }, [joinReceipt.data]);
+
+  useEffect(() => {
+    if (!createReceipt.error || !createResolverRef.current) {
+      return;
+    }
+
+    createResolverRef.current.reject(new Error(getErrorMessage(createReceipt.error)));
+    createResolverRef.current = null;
+    setCreateHash(undefined);
+  }, [createReceipt.error]);
+
+  useEffect(() => {
+    if (!joinReceipt.error || !joinResolverRef.current) {
+      return;
+    }
+
+    joinResolverRef.current.reject(new Error(getErrorMessage(joinReceipt.error)));
+    joinResolverRef.current = null;
+    setJoinHash(undefined);
+  }, [joinReceipt.error]);
+
+  const groupCount = useMemo(() => Number(groupCountData ?? 0n), [groupCountData]);
+  const userGroups = useMemo(() => Array.from(userGroupsData ?? []), [userGroupsData]);
+
+  const createGroup = async (params: CreateGroupParams) => {
+    if (!accountAddress) {
+      throw new Error("Connect a wallet before creating a group.");
+    }
+
+    try {
+      const txHash = await writeContractAsync({
+        address: contractAddress,
+        abi: AJO_FACTORY_ABI,
+        functionName: "createGroup",
+        args: [params.name, params.amount, BigInt(params.frequency), BigInt(params.maxMembers)],
+        chainId,
+      });
+
+      setCreateHash(txHash);
+
+      const receipt = await new Promise<TransactionReceipt>((resolve, reject) => {
+        createResolverRef.current = { resolve, reject };
+      });
+
+      const parsedLogs = parseEventLogs({
+        abi: AJO_FACTORY_ABI,
+        eventName: "GroupCreated",
+        logs: receipt.logs,
+      });
+      const createdGroup = parsedLogs[0]?.args.groupAddress as Address | undefined;
+
+      if (!createdGroup) {
+        throw new Error("Unable to read the created group address from the transaction receipt.");
+      }
+
+      void refetchGroupCount();
+      void refetchUserGroups();
+      setActionError(null);
+
+      return {
+        txHash,
+        groupAddress: createdGroup,
+      };
+    } catch (error) {
+      const message = getErrorMessage(error);
+      setActionError(message);
+      throw error instanceof Error ? error : new Error(message);
+    }
+  };
+
+  const joinGroup = async (groupId: bigint | number, inviteCode: `0x${string}`) => {
+    if (!accountAddress) {
+      throw new Error("Connect a wallet before joining a group.");
+    }
+
+    try {
+      const txHash = await writeContractAsync({
+        address: contractAddress,
+        abi: AJO_FACTORY_ABI,
+        functionName: "joinGroup",
+        args: [BigInt(groupId), inviteCode],
+        chainId,
+      });
+
+      setJoinHash(txHash);
+
+      await new Promise<TransactionReceipt>((resolve, reject) => {
+        joinResolverRef.current = { resolve, reject };
+      });
+
+      void refetchUserGroups();
+      setActionError(null);
+
+      return txHash;
+    } catch (error) {
+      const message = getErrorMessage(error);
+      setActionError(message);
+      throw error instanceof Error ? error : new Error(message);
+    }
   };
 
   return {
-    totalGroups,
+    groupCount,
+    userGroups,
     createGroup,
-    isPending,
+    joinGroup,
+    isCreating: isWriting || createReceipt.isLoading || Boolean(createHash),
+    isJoining: isWriting || joinReceipt.isLoading || Boolean(joinHash),
+    error: actionError ?? groupCountError?.message ?? userGroupsError?.message ?? null,
   };
 }
