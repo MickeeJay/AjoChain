@@ -1,4 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -24,26 +26,37 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#07955F",
+          DEFAULT: "#35D07F",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#102A2C",
+          DEFAULT: "#1A1A2E",
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "#E3F56A",
-          foreground: "#102A2C",
+          DEFAULT: "#FBCC5C",
+          foreground: "#1A1A2E",
         },
         muted: {
           DEFAULT: "#E9F2EC",
           foreground: "#41514A",
+        },
+        celo: {
+          green: "#35D07F",
+          gold: "#FBCC5C",
+          dark: "#1A1A2E",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      screens: {
+        minipay: "375px",
+      },
+      spacing: {
+        "safe-bottom": "env(safe-area-inset-bottom)",
       },
       keyframes: {
         "accordion-down": {
@@ -61,7 +74,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-};
+  plugins: [tailwindcssAnimate],
+} satisfies Config;
 
-module.exports = config;
+export default config;

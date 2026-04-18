@@ -11,5 +11,5 @@ const styles: Record<TransactionStatusProps["status"], string> = {
 };
 
 export function TransactionStatus({ status, label }: TransactionStatusProps) {
-  return <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${styles[status]}`}>{label}</span>;
+  return <span className={`inline-flex rounded-full px-3 py-1.5 text-sm font-semibold ${styles[status]}`}>{label}</span>;
 }

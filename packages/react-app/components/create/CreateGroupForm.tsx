@@ -19,7 +19,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
 
   return (
     <form
-      className="grid gap-4 rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_50px_rgba(16,42,44,0.08)]"
+      className="grid gap-3 rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-[0_16px_50px_rgba(16,42,44,0.08)]"
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit?.({ name, contributionAmount, members, cycleDuration });
@@ -30,7 +30,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         <input
           value={name}
           onChange={(event) => setName(event.target.value)}
-          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-500"
+          className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
         />
       </label>
       <label className="grid gap-2 text-sm font-medium text-slate-700">
@@ -38,7 +38,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         <input
           value={contributionAmount}
           onChange={(event) => setContributionAmount(event.target.value)}
-          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-500"
+          className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
         />
       </label>
       <label className="grid gap-2 text-sm font-medium text-slate-700">
@@ -46,7 +46,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         <input
           value={members}
           onChange={(event) => setMembers(event.target.value)}
-          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-500"
+          className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
         />
       </label>
       <label className="grid gap-2 text-sm font-medium text-slate-700">
@@ -54,10 +54,10 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         <input
           value={cycleDuration}
           onChange={(event) => setCycleDuration(event.target.value)}
-          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none transition focus:border-emerald-500"
+          className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
         />
       </label>
-      <button type="submit" className="mt-2 inline-flex justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+      <button type="submit" className="mt-1 inline-flex min-h-12 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
         Create group
       </button>
     </form>
