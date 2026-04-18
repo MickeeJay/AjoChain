@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Web3Provider } from "@/providers/Web3Provider";
@@ -10,10 +10,16 @@ export const metadata: Metadata = {
   description: "MiniPay-native rotating savings groups on Celo.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-white font-sans text-gray-900">
         <Web3Provider>
           <AppShell>{children}</AppShell>
         </Web3Provider>
