@@ -4,8 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccount, useChainId, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { type Address, type Hash, type TransactionReceipt, zeroAddress } from "viem";
 import { AJO_GROUP_ABI, IERC20_ABI } from "@/lib/contracts/abis";
-import { addresses } from "@/lib/contracts/addresses";
-import type { GroupState, GroupStatus, MemberInfo, NetworkId } from "@/types";
+import type { GroupState, GroupStatus, MemberInfo } from "@/types";
 
 type ReceiptResolver = {
   resolve: (value: TransactionReceipt) => void;
@@ -20,10 +19,6 @@ function getErrorMessage(error: unknown) {
   }
 
   return "An unexpected contract error occurred.";
-}
-
-function resolveNetworkId(chainId: number | undefined): NetworkId {
-  return chainId === 44787 ? 44787 : 42220;
 }
 
 function toGroupStatus(status: bigint | number): GroupStatus {
@@ -64,7 +59,6 @@ function toLoadedMemberInfo(
 export function useAjoGroup(groupAddress: `0x${string}`) {
   const { address: accountAddress } = useAccount();
   const chainId = useChainId();
-  const networkId = resolveNetworkId(chainId);
   const { writeContractAsync } = useWriteContract();
   const [approveHash, setApproveHash] = useState<Hash | undefined>();
   const [contributeHash, setContributeHash] = useState<Hash | undefined>();
