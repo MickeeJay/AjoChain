@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useAccount, useChainId, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useChainId, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { type Address, type Hash, type TransactionReceipt, zeroAddress } from "viem";
 import { AJO_GROUP_ABI, IERC20_ABI } from "@/lib/contracts/abis";
 import { addresses } from "@/lib/contracts/addresses";
@@ -35,6 +35,29 @@ function toMemberInfo(wallet: Address): MemberInfo {
   return {
     wallet,
     isActive: true,
+  };
+}
+
+function toLoadedMemberInfo(
+  wallet: Address,
+  memberRecord:
+    | {
+        result?: readonly [Address, boolean, boolean, bigint, bigint] | undefined;
+      }
+    | undefined,
+): MemberInfo {
+  if (!memberRecord?.result) {
+    return toMemberInfo(wallet);
+  }
+
+  const [recordedWallet, hasContributedThisRound, isActive, totalContributed, roundsCompleted] = memberRecord.result;
+
+  return {
+    wallet: recordedWallet,
+    hasContributedThisRound,
+    isActive,
+    totalContributed,
+    roundsCompleted,
   };
 }
 
@@ -82,6 +105,26 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     chainId,
     query: {
       enabled: Boolean(accountAddress && groupStateData?.cUSDToken && tokenAddress !== zeroAddress),
+      staleTime: 10_000,
+    },
+  });
+
+  const memberContracts = useMemo(
+    () =>
+      (groupStateData?.activeMembers ?? []).map((memberAddress) => ({
+        address: groupAddress,
+        abi: AJO_GROUP_ABI,
+        functionName: "members" as const,
+        args: [memberAddress],
+        chainId,
+      })),
+    [chainId, groupAddress, groupStateData?.activeMembers],
+  );
+
+  const { data: memberDetails } = useReadContracts({
+    contracts: memberContracts,
+    query: {
+      enabled: memberContracts.length > 0,
       staleTime: 10_000,
     },
   });
@@ -187,7 +230,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
       roundStartTime: groupStateData.roundStartTime,
       payoutIndex: groupStateData.payoutIndex,
       status: toGroupStatus(groupStateData.status),
-      members: groupStateData.activeMembers.map((wallet) => toMemberInfo(wallet)),
+      members: groupStateData.activeMembers.map((wallet, index) => toLoadedMemberInfo(wallet, memberDetails?.[index])),
       memberOrder: [...groupStateData.memberOrder],
       inviteCode: groupStateData.inviteCode,
       remainingTime: Number(groupStateData.remainingTime ?? 0n),
@@ -197,7 +240,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
       pauseSupportVotes: groupStateData.pauseSupportVotes,
       pauseOppositionVotes: groupStateData.pauseOppositionVotes,
     };
-  }, [groupStateData]);
+  }, [groupStateData, memberDetails]);
 
   const getRemainingTime = () => groupState?.remainingTime ?? 0;
 
