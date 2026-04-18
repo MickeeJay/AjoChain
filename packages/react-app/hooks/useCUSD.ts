@@ -40,6 +40,7 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
     chainId: resolvedChainId,
     query: {
       enabled: Boolean(resolvedOwner && spender && tokenAddress !== ZERO_ADDRESS),
+      staleTime: 10_000,
     },
   });
 
