@@ -27,6 +27,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
   const [txState, setTxState] = useState<"idle" | "pending" | "success" | "error">("idle");
 
   const maxSteps = 5;
+  const amountPattern = /^(\d+(\.\d{0,2})?)?$/;
   const selectedMembers = Number(members);
   const selectedContribution = Number(contributionAmount);
   const selectedFrequency = Number(cycleDuration);
@@ -175,8 +176,14 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
             Custom amount
             <input
               value={contributionAmount}
-              onChange={(event) => setContributionAmount(event.target.value)}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (amountPattern.test(value)) {
+                  setContributionAmount(value);
+                }
+              }}
               inputMode="decimal"
+              placeholder="Enter custom amount"
               className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
             />
           </label>
@@ -232,6 +239,11 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
             <span>{members} members</span>
             <span>pot = ${estimatedPot.toFixed(2)} per person</span>
           </div>
+          {estimatedPot >= 450 ? (
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+              Warning: payout pot is approaching the $500 reward cap.
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -244,6 +256,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
           <p>Size: {members} members</p>
           <p className="font-semibold text-emerald-700">Payout pot: ${estimatedPot.toFixed(2)}</p>
           <p className="text-xs font-medium text-slate-500">Estimated gas cost: ~$0.001 on Celo</p>
+          {estimatedPot >= 450 ? <p className="text-xs font-semibold text-amber-700">Heads up: this setup is close to the $500 cap.</p> : null}
         </div>
       ) : null}
 
