@@ -116,6 +116,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
           isContributing={isContributing}
           onStartGroup={onStartGroup}
           onContribute={onContribute}
+          canDownloadCertificate={isMember}
           certificateHref="/profile"
         />
 
