@@ -86,6 +86,16 @@ export const AJO_FACTORY_ABI = [
   },
 ] as const;
 
+export const AJO_CREDENTIAL_ABI = [
+  {
+    type: "function",
+    name: "getUserReputation",
+    stateMutability: "view",
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [{ name: "reputation", type: "uint256" }],
+  },
+] as const;
+
 export const AJO_GROUP_ABI = [
   {
     type: "event",
