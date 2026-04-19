@@ -22,18 +22,38 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
   const maxSteps = 5;
   const selectedMembers = Number(members);
   const selectedContribution = Number(contributionAmount);
-  const estimatedPot = Number.isFinite(selectedContribution) && Number.isFinite(selectedMembers)
-    ? selectedContribution * selectedMembers
-    : 0;
+  const selectedFrequency = Number(cycleDuration);
+  const estimatedPot = Number.isFinite(selectedContribution) && Number.isFinite(selectedMembers) ? selectedContribution * selectedMembers : 0;
+  const frequencyLabelMap: Record<number, string> = {
+    1: "Daily",
+    7: "Weekly",
+    30: "Monthly",
+  };
 
-  const nextStep = () => {
-    if (step === 1 && name.trim().length === 0) {
-      setFormError("Group name is required.");
-      return;
+  const validateStep = (targetStep: number): string | null => {
+    if (targetStep === 1 && name.trim().length === 0) {
+      return "Group name is required.";
     }
 
-    if (step === 2 && (!Number.isFinite(selectedContribution) || selectedContribution <= 0)) {
-      setFormError("Contribution amount must be greater than 0.");
+    if (targetStep === 2 && (!Number.isFinite(selectedContribution) || selectedContribution <= 0)) {
+      return "Contribution amount must be greater than 0.";
+    }
+
+    if (targetStep === 3 && ![1, 7, 30].includes(selectedFrequency)) {
+      return "Select a valid schedule.";
+    }
+
+    if (targetStep === 4 && (!Number.isFinite(selectedMembers) || selectedMembers < 3 || selectedMembers > 20)) {
+      return "Group size must be between 3 and 20 members.";
+    }
+
+    return null;
+  };
+
+  const nextStep = () => {
+    const validationError = validateStep(step);
+    if (validationError) {
+      setFormError(validationError);
       return;
     }
 
@@ -57,8 +77,14 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
           return;
         }
 
+        const validationError = validateStep(1) ?? validateStep(2) ?? validateStep(3) ?? validateStep(4);
+        if (validationError) {
+          setFormError(validationError);
+          return;
+        }
+
         onSubmit?.({
-          name,
+          name: name.trim(),
           contributionAmount,
           members,
           cycleDuration,
@@ -114,6 +140,11 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
           <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
             Estimated pot size: ${estimatedPot.toFixed(2)}
           </p>
+          {estimatedPot >= 450 ? (
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+              Warning: payout pot is approaching the $500 reward cap.
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -164,11 +195,12 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
       {step === 5 ? (
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
           <p className="font-semibold text-slate-900">Review</p>
-          <p>Group: {name}</p>
+          <p>Group: {name.trim()}</p>
           <p>Contribution: ${Number(contributionAmount || 0).toFixed(2)} cUSD</p>
-          <p>Frequency: Every {cycleDuration} day(s)</p>
+          <p>Frequency: {frequencyLabelMap[selectedFrequency] ?? `Every ${selectedFrequency} day(s)`}</p>
           <p>Size: {members} members</p>
           <p className="font-semibold text-emerald-700">Payout pot: ${estimatedPot.toFixed(2)}</p>
+          <p className="text-xs font-medium text-slate-500">Estimated gas cost: ~$0.001 on Celo</p>
         </div>
       ) : null}
 
