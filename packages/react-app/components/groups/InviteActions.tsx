@@ -27,12 +27,16 @@ export function InviteActions({ inviteCode }: InviteActionsProps) {
   }, [inviteCode]);
 
   const whatsappShareLink = useMemo(() => {
-    return `https://wa.me/?text=Join%20my%20AjoChain%20savings%20group%3A%20${encodeURIComponent(inviteLink)}`;
+    return `https://wa.me/?text=Join%20my%20AjoChain%20savings%20group%3A%20${inviteLink}`;
   }, [inviteLink]);
 
   const copyInviteLink = async () => {
     try {
-      await navigator.clipboard.writeText(inviteLink);
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(inviteLink);
+      } else {
+        window.prompt("Copy invite link", inviteLink);
+      }
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
