@@ -1,6 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { parseUnits } from "viem";
+import { useAjoFactory } from "@/hooks/useAjoFactory";
+import { TransactionStatus } from "@/components/shared/TransactionStatus";
 
 type CreateGroupFormProps = {
   onSubmit?: (value: {
@@ -12,12 +16,15 @@ type CreateGroupFormProps = {
 };
 
 export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
+  const router = useRouter();
+  const { createGroup, isCreating, error: contractError } = useAjoFactory();
   const [step, setStep] = useState(1);
   const [name, setName] = useState("Market Traders Circle");
   const [contributionAmount, setContributionAmount] = useState("10");
   const [members, setMembers] = useState("5");
   const [cycleDuration, setCycleDuration] = useState("7");
   const [formError, setFormError] = useState<string | null>(null);
+  const [txState, setTxState] = useState<"idle" | "pending" | "success" | "error">("idle");
 
   const maxSteps = 5;
   const selectedMembers = Number(members);
@@ -83,14 +90,50 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
           return;
         }
 
-        onSubmit?.({
-          name: name.trim(),
-          contributionAmount,
-          members,
-          cycleDuration,
-        });
+        const create = async () => {
+          try {
+            setFormError(null);
+            setTxState("pending");
+
+            const result = await createGroup({
+              name: name.trim(),
+              amount: parseUnits(contributionAmount, 18),
+              frequency: selectedFrequency,
+              maxMembers: selectedMembers,
+            });
+
+            onSubmit?.({
+              name: name.trim(),
+              contributionAmount,
+              members,
+              cycleDuration,
+            });
+
+            setTxState("success");
+            router.push(`/groups/${result.groupAddress}`);
+          } catch (error) {
+            const message = error instanceof Error ? error.message : "Unable to create group right now.";
+            setFormError(message);
+            setTxState("error");
+          }
+        };
+
+        void create();
       }}
     >
+      <TransactionStatus
+        status={txState === "idle" ? "idle" : txState}
+        label={
+          txState === "pending"
+            ? "Creating group on-chain"
+            : txState === "success"
+              ? "Group created successfully"
+              : txState === "error"
+                ? "Transaction failed"
+                : "Ready to create"
+        }
+      />
+
       <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
         <span>Step {step} of {maxSteps}</span>
         <span>{Math.round((step / maxSteps) * 100)}%</span>
@@ -205,18 +248,23 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
       ) : null}
 
       {formError ? <p className="text-sm font-medium text-rose-600">{formError}</p> : null}
+      {!formError && contractError ? <p className="text-sm font-medium text-rose-600">{contractError}</p> : null}
 
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={previousStep}
-          disabled={step === 1}
+          disabled={step === 1 || isCreating}
           className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Back
         </button>
-        <button type="submit" className="inline-flex min-h-12 flex-1 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-          {step === maxSteps ? "Create Group" : "Next"}
+        <button
+          type="submit"
+          disabled={isCreating}
+          className="inline-flex min-h-12 flex-1 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+        >
+          {isCreating ? "Creating..." : step === maxSteps ? "Create Group" : "Next"}
         </button>
       </div>
     </form>
