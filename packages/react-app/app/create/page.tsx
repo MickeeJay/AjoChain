@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, CircleDollarSign, Users } from "lucide-react";
 import { CreateGroupForm } from "@/components/create/CreateGroupForm";
-import { TransactionStatus } from "@/components/shared/TransactionStatus";
 
 export default function CreateGroupPage() {
   return (
@@ -16,7 +15,7 @@ export default function CreateGroupPage() {
               Set up a savings circle in minutes.
             </h1>
             <p className="hidden max-w-2xl text-sm leading-6 text-slate-600 md:block md:text-base md:leading-7">
-              The factory contract deploys a new rotating savings group while the frontend keeps the setup simple for mobile users.
+              Four core inputs, one final create tap. The guided flow keeps setup simple on MiniPay while preserving complete on-chain parameters.
             </p>
           </div>
 
@@ -40,10 +39,7 @@ export default function CreateGroupPage() {
         </section>
 
         <aside className="rounded-[1.5rem] bg-slate-950 p-5 text-white">
-          <TransactionStatus status="pending" label="Drafting new group" />
-          <div className="mt-5">
-            <CreateGroupForm />
-          </div>
+          <CreateGroupForm />
           <Link href="/groups" className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-50">
             Review groups
           </Link>
