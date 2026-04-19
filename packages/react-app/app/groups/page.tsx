@@ -8,7 +8,11 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
 function MyGroupsList() {
-  const { userGroups } = useDashboardData({ suspense: true });
+  const { userGroups, isGroupsLoading } = useDashboardData();
+
+  if (isGroupsLoading) {
+    return <GroupsListSkeleton />;
+  }
 
   if (userGroups.length === 0) {
     return <GroupsEmptyState />;

@@ -8,10 +8,6 @@ import { AJO_CREDENTIAL_ABI, AJO_FACTORY_ABI, AJO_GROUP_ABI } from "@/lib/contra
 import { addresses } from "@/lib/contracts/addresses";
 import type { ActivityItem, GroupStatus, UserGroupDashboardItem } from "@/types";
 
-type UseDashboardDataOptions = {
-  suspense?: boolean;
-};
-
 const GROUP_STATUSES: GroupStatus[] = ["FORMING", "ACTIVE", "COMPLETED", "PAUSED"];
 
 function resolveNetworkId(chainId: number | undefined): 42220 | 44787 {
@@ -27,8 +23,7 @@ function toReadableAddress(address: string) {
   return address.toLowerCase();
 }
 
-export function useDashboardData(options: UseDashboardDataOptions = {}) {
-  const { suspense = false } = options;
+export function useDashboardData() {
   const { address: accountAddress } = useAccount();
   const chainId = useChainId();
   const publicClient = usePublicClient({ chainId });
@@ -36,7 +31,7 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
   const factoryAddress = addresses[networkId].factory;
   const hasFactory = factoryAddress !== zeroAddress;
 
-  const { data: userGroupIdsData } = useReadContract({
+  const { data: userGroupIdsData, isLoading: isUserGroupsLoading } = useReadContract({
     address: factoryAddress,
     abi: AJO_FACTORY_ABI,
     functionName: "getUserGroups",
@@ -45,7 +40,6 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     query: {
       enabled: Boolean(accountAddress && hasFactory),
       staleTime: 15_000,
-      suspense,
     },
   });
 
@@ -63,12 +57,11 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     [chainId, factoryAddress, userGroupIds],
   );
 
-  const { data: groupInfoResults } = useReadContracts({
+  const { data: groupInfoResults, isLoading: isGroupInfoLoading } = useReadContracts({
     contracts: groupInfoContracts,
     query: {
       enabled: groupInfoContracts.length > 0,
       staleTime: 15_000,
-      suspense,
     },
   });
 
@@ -89,12 +82,11 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     [chainId, groupAddresses],
   );
 
-  const { data: groupStateResults } = useReadContracts({
+  const { data: groupStateResults, isLoading: isGroupStateLoading } = useReadContracts({
     contracts: groupStateContracts,
     query: {
       enabled: groupStateContracts.length > 0,
       staleTime: 15_000,
-      suspense,
     },
   });
 
@@ -112,16 +104,15 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     }));
   }, [accountAddress, chainId, groupAddresses]);
 
-  const { data: memberResults } = useReadContracts({
+  const { data: memberResults, isLoading: isMemberDetailsLoading } = useReadContracts({
     contracts: memberContracts,
     query: {
       enabled: Boolean(accountAddress && memberContracts.length > 0),
       staleTime: 15_000,
-      suspense,
     },
   });
 
-  const { data: credentialFromFactory } = useReadContract({
+  const { data: credentialFromFactory, isLoading: isCredentialAddressLoading } = useReadContract({
     address: factoryAddress,
     abi: AJO_FACTORY_ABI,
     functionName: "credentialContract",
@@ -129,13 +120,12 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     query: {
       enabled: hasFactory,
       staleTime: 15_000,
-      suspense,
     },
   });
 
   const credentialAddress = (credentialFromFactory ?? addresses[networkId].credential) as Address;
 
-  const { data: cyclesCompletedData } = useReadContract({
+  const { data: cyclesCompletedData, isLoading: isCyclesLoading } = useReadContract({
     address: credentialAddress,
     abi: AJO_CREDENTIAL_ABI,
     functionName: "getUserReputation",
@@ -144,7 +134,6 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     query: {
       enabled: Boolean(accountAddress && credentialAddress !== zeroAddress),
       staleTime: 15_000,
-      suspense,
     },
   });
 
@@ -210,11 +199,10 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
     }, {});
   }, [userGroups]);
 
-  const activityQuery = useQuery({
+  const activityQuery = useQuery<ActivityItem[]>({
     queryKey: ["dashboard-activity", chainId, accountAddress, groupAddresses],
     enabled: Boolean(accountAddress && publicClient && groupAddresses.length > 0),
     staleTime: 15_000,
-    suspense,
     queryFn: async () => {
       if (!publicClient || groupAddresses.length === 0) {
         return [] as ActivityItem[];
@@ -301,6 +289,14 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
   return {
     hasFactory,
     userGroups,
+    isGroupsLoading:
+      isUserGroupsLoading ||
+      isGroupInfoLoading ||
+      isGroupStateLoading ||
+      isMemberDetailsLoading ||
+      isCredentialAddressLoading,
+    isActivityLoading: activityQuery.isLoading,
+    isCyclesLoading,
     activeGroupCount: activeGroups.length,
     totalSaved: userGroups.reduce((total, group) => total + group.userTotalContributed, 0n),
     cyclesCompleted: cyclesCompletedData ?? 0n,
