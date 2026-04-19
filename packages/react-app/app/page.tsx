@@ -1,10 +1,11 @@
 "use client";
 
-import { Suspense } from "react";
-import { HomeDashboardContent } from "@/components/home/HomeDashboardContent";
+import { lazy, Suspense } from "react";
 import { HomeDashboardSkeleton } from "@/components/home/HomeDashboardSkeleton";
 import { HomeLanding } from "@/components/home/HomeLanding";
 import { useMiniPay } from "@/hooks/useMiniPay";
+
+const HomeDashboardContent = lazy(() => import("@/components/home/HomeDashboardContent").then((module) => ({ default: module.HomeDashboardContent })));
 
 export default function HomePage() {
   const { isMiniPay, isReady, isConnected } = useMiniPay();

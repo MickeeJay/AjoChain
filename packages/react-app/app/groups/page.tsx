@@ -1,44 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { GroupCard } from "@/components/groups/GroupCard";
-import { GroupsEmptyState } from "@/components/groups/GroupsEmptyState";
+import { lazy, Suspense, useState } from "react";
 import { GroupsListSkeleton } from "@/components/groups/GroupsListSkeleton";
-import { useDashboardData } from "@/hooks/useDashboardData";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
-function MyGroupsList() {
-  const { userGroups, isGroupsLoading } = useDashboardData();
-
-  if (isGroupsLoading) {
-    return <GroupsListSkeleton />;
-  }
-
-  if (userGroups.length === 0) {
-    return <GroupsEmptyState />;
-  }
-
-  return (
-    <section className="grid gap-4 md:grid-cols-2">
-      {userGroups.map((group) => (
-        <GroupCard
-          key={group.groupAddress}
-          groupAddress={group.groupAddress}
-          name={group.name}
-          status={group.status}
-          memberCount={group.memberCount}
-          maxMembers={group.maxMembers}
-          contributionAmount={group.contributionAmount}
-          currentRound={Number(group.currentRound)}
-          totalRounds={Number(group.totalRounds)}
-          memberOrder={group.memberOrder}
-          nextPayoutTo={group.nextPayoutTo}
-          needsContribution={group.needsContribution}
-        />
-      ))}
-    </section>
-  );
-}
+const MyGroupsList = lazy(() => import("@/components/groups/MyGroupsList"));
 
 export default function GroupsPage() {
   const [activeTab, setActiveTab] = useState<"my-groups" | "discover">("my-groups");
