@@ -91,3 +91,27 @@ export type CreateGroupPayload = {
 };
 
 export type ContractAddressMap = Record<NetworkId, ContractAddresses>;
+
+export interface UserGroupDashboardItem {
+  groupId: bigint;
+  groupAddress: `0x${string}`;
+  name: string;
+  status: GroupStatus;
+  memberCount: number;
+  maxMembers: number;
+  contributionAmount: bigint;
+  currentRound: bigint;
+  totalRounds: bigint;
+  memberOrder: `0x${string}`[];
+  remainingTime: number;
+  needsContribution: boolean;
+  nextPayoutTo: `0x${string}`;
+  userTotalContributed: bigint;
+}
+
+export interface ActivityItem {
+  id: string;
+  label: string;
+  groupName: string;
+  timestamp: number;
+}

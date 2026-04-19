@@ -9,7 +9,7 @@ const members = [
   { name: "Grace", paid: false },
 ];
 
-export default function GroupDetailPage({ params }: { params: { id: string } }) {
+export default function GroupDetailPage({ params }: { params: { address: string } }) {
   const paidCount = members.filter((member) => member.paid).length;
 
   return (
@@ -19,7 +19,7 @@ export default function GroupDetailPage({ params }: { params: { id: string } }) 
           <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
             Group detail
           </span>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">{params.id}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">{params.address}</h1>
           <p className="max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7">
             Monitor who has contributed, who is next in line, and whether the payout condition is ready to execute.
           </p>
