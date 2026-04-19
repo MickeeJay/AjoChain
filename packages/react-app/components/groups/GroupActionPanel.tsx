@@ -14,6 +14,7 @@ type GroupActionPanelProps = {
   isContributing: boolean;
   onStartGroup: () => void;
   onContribute: () => void;
+  canDownloadCertificate: boolean;
   certificateHref: string;
 };
 
@@ -30,6 +31,7 @@ export function GroupActionPanel({
   isContributing,
   onStartGroup,
   onContribute,
+  canDownloadCertificate,
   certificateHref,
 }: GroupActionPanelProps) {
   if (status === "FORMING" && isCreator) {
@@ -78,7 +80,23 @@ export function GroupActionPanel({
     );
   }
 
+  if (status === "ACTIVE" && !isMember) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
+        Group is active. Join from the invite flow to contribute.
+      </div>
+    );
+  }
+
   if (status === "COMPLETED") {
+    if (!canDownloadCertificate) {
+      return (
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
+          Group completed. Certificate is available to participating members.
+        </div>
+      );
+    }
+
     return (
       <Link
         href={certificateHref}
