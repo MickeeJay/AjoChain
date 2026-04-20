@@ -1,4 +1,7 @@
 import Link from "next/link";
+import type { Address, Hash } from "viem";
+import type { ContributionFlowStep } from "@/hooks/useAjoGroup";
+import { ContributeButton } from "./ContributeButton";
 import type { GroupStatus } from "@/types";
 
 type GroupActionPanelProps = {
@@ -10,8 +13,14 @@ type GroupActionPanelProps = {
   requiredMembers: number;
   hasContributedThisRound: boolean;
   contributionLabel: string;
+  allowance: bigint;
+  contributionAmount: bigint;
   isStarting: boolean;
   isContributing: boolean;
+  contributionFlowStep: ContributionFlowStep;
+  approveTxHash?: Hash;
+  contributeTxHash?: Hash;
+  lastPayoutRecipient?: Address | null;
   onStartGroup: () => void;
   onContribute: () => void;
   canDownloadCertificate: boolean;
@@ -27,8 +36,14 @@ export function GroupActionPanel({
   requiredMembers,
   hasContributedThisRound,
   contributionLabel,
+  allowance,
+  contributionAmount,
   isStarting,
   isContributing,
+  contributionFlowStep,
+  approveTxHash,
+  contributeTxHash,
+  lastPayoutRecipient,
   onStartGroup,
   onContribute,
   canDownloadCertificate,
@@ -61,14 +76,17 @@ export function GroupActionPanel({
 
   if (status === "ACTIVE" && isMember && !hasContributedThisRound) {
     return (
-      <button
-        type="button"
+      <ContributeButton
+        allowance={allowance}
+        contributionAmount={contributionAmount}
+        disabled={false}
+        isContributing={isContributing}
+        flowStep={contributionFlowStep}
+        approveTxHash={approveTxHash}
+        contributeTxHash={contributeTxHash}
+        lastPayoutRecipient={lastPayoutRecipient}
         onClick={onContribute}
-        disabled={isContributing}
-        className="inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
-      >
-        {isContributing ? "Submitting contribution..." : `Contribute ${contributionLabel}`}
-      </button>
+      />
     );
   }
 
