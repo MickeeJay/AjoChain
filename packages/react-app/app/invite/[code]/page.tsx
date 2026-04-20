@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { InviteJoinActions } from "@/components/invite/InviteJoinActions";
 import { formatCusdFromWei } from "@/lib/formatters";
 import { formatFrequencyLabel, getInviteGroupInfo, normalizeInviteCode } from "@/lib/contracts/invite";
 
 export const revalidate = 120;
+
+const getCachedInviteGroupInfo = unstable_cache(
+  async (inviteCode: string) => getInviteGroupInfo(inviteCode),
+  ["invite-group-data"],
+  { revalidate },
+);
 
 type InviteLandingPageProps = {
   params: {
@@ -14,7 +21,7 @@ type InviteLandingPageProps = {
 
 export async function generateMetadata({ params }: InviteLandingPageProps): Promise<Metadata> {
   const normalizedInviteCode = normalizeInviteCode(params.code);
-  const inviteGroup = normalizedInviteCode ? await getInviteGroupInfo(normalizedInviteCode) : null;
+  const inviteGroup = normalizedInviteCode ? await getCachedInviteGroupInfo(normalizedInviteCode) : null;
 
   const title = inviteGroup ? `Join ${inviteGroup.name} on AjoChain` : "Join an AjoChain savings group";
   const description = inviteGroup
@@ -39,7 +46,7 @@ export async function generateMetadata({ params }: InviteLandingPageProps): Prom
 
 export default async function InviteLandingPage({ params }: InviteLandingPageProps) {
   const normalizedInviteCode = normalizeInviteCode(params.code);
-  const inviteGroup = normalizedInviteCode ? await getInviteGroupInfo(normalizedInviteCode) : null;
+  const inviteGroup = normalizedInviteCode ? await getCachedInviteGroupInfo(normalizedInviteCode) : null;
 
   if (!inviteGroup) {
     return (
