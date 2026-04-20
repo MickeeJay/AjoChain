@@ -40,22 +40,27 @@ function DrawerStateIcon({ state }: { state: TransactionStatusItem["state"] }) {
 }
 
 export function TransactionStatus(props: TransactionStatusProps) {
-  if (props.mode === "drawer") {
+  const isDrawerMode = props.mode === "drawer";
+  const drawerOpen = isDrawerMode ? props.open : false;
+  const drawerItem = isDrawerMode ? props.item : null;
+  const drawerOnClose = isDrawerMode ? props.onClose : undefined;
+
+  useEffect(() => {
+    if (!drawerOpen || !drawerItem || drawerItem.state !== "success" || !drawerOnClose) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      drawerOnClose();
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [drawerItem, drawerOnClose, drawerOpen]);
+
+  if (isDrawerMode) {
     const { open, item, onClose } = props;
-
-    useEffect(() => {
-      if (!open || !item || item.state !== "success" || !onClose) {
-        return;
-      }
-
-      const timeoutId = window.setTimeout(() => {
-        onClose();
-      }, 3000);
-
-      return () => {
-        window.clearTimeout(timeoutId);
-      };
-    }, [item, onClose, open]);
 
     if (!open || !item) {
       return null;
