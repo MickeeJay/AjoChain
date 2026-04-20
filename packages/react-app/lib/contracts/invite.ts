@@ -7,8 +7,21 @@ import { addresses } from "@/lib/contracts/addresses";
 const INVITE_LOOKUP_LIMIT = 250;
 const INVITE_CODE_PATTERN = /^0x[a-fA-F0-9]{64}$/;
 
+type NetworkId = 42220 | 44787;
+
+type GroupStateView = {
+  inviteCode: Hex;
+  name: string;
+  contributionAmount: bigint;
+  frequencyInDays: bigint;
+  activeMembers: Address[];
+  maxMembers: bigint;
+};
+
 function resolveTargetChainId() {
-  return process.env.NEXT_PUBLIC_CELO_CHAIN_ID === "44787" ? 44787 : 42220;
+  const networkId: NetworkId = process.env.NEXT_PUBLIC_CELO_CHAIN_ID === "44787" ? 44787 : 42220;
+
+  return networkId;
 }
 
 function resolvePublicClient() {
@@ -115,7 +128,7 @@ export const getInviteGroupInfo = cache(async (rawCode: string): Promise<InviteG
           return null;
         }
 
-        const groupAddress = result.result;
+        const groupAddress = result.result as Address;
         if (!isAddress(groupAddress) || groupAddress === zeroAddress) {
           return null;
         }
@@ -145,7 +158,7 @@ export const getInviteGroupInfo = cache(async (rawCode: string): Promise<InviteG
         continue;
       }
 
-      const groupState = result.result;
+      const groupState = result.result as unknown as GroupStateView;
       if (groupState.inviteCode.toLowerCase() !== inviteCode) {
         continue;
       }
