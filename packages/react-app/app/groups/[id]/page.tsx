@@ -35,6 +35,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
     allowance,
     contributionAmount,
     contributionFlowStep,
+    approvalConfirmations,
     contributionConfirmations,
     requiredConfirmations,
     approveTxHash,
@@ -51,11 +52,15 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
     }
 
     if (contributionFlowStep === "approving") {
+      const isApprovalConfirming = approvalConfirmations > 0;
+
       return {
         id: "approval",
         label: "Approving cUSD allowance",
-        state: "pending",
+        state: isApprovalConfirming ? "confirming" : "pending",
         txHash: approveTxHash,
+        confirmations: approvalConfirmations,
+        requiredConfirmations,
       };
     }
 

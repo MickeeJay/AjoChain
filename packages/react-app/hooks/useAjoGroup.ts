@@ -68,6 +68,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
   const [startHash, setStartHash] = useState<Hash | undefined>();
   const [pendingAction, setPendingAction] = useState<"contribute" | "start" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [approvalConfirmations, setApprovalConfirmations] = useState(0);
   const [contributionFlowStep, setContributionFlowStep] = useState<ContributionFlowStep>("idle");
   const [contributionConfirmations, setContributionConfirmations] = useState(0);
   const [lastPayoutRecipient, setLastPayoutRecipient] = useState<Address | null>(null);
@@ -183,6 +184,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
     approveResolverRef.current.resolve(approveReceipt.data);
     approveResolverRef.current = null;
+    setApprovalConfirmations(1);
   }, [approveReceipt.data]);
 
   useEffect(() => {
@@ -211,6 +213,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
       return;
     }
 
+    setApprovalConfirmations(REQUIRED_CONFIRMATIONS);
     setApproveHash(undefined);
   }, [approveConfirmingReceipt.data]);
 
@@ -302,6 +305,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
     try {
       setPendingAction("contribute");
+      setApprovalConfirmations(0);
       setContributionFlowStep("idle");
       setContributionConfirmations(0);
       setLastPayoutRecipient(null);
@@ -369,6 +373,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
   const dismissContributionStatus = () => {
     setContributionFlowStep("idle");
     setContributionConfirmations(0);
+    setApprovalConfirmations(0);
   };
 
   const startGroup = async () => {
@@ -420,6 +425,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     approveTxHash: approveHash,
     contributeTxHash: contributeHash,
     contributionFlowStep,
+    approvalConfirmations,
     contributionConfirmations,
     requiredConfirmations: REQUIRED_CONFIRMATIONS,
     lastPayoutRecipient,
