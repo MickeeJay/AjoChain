@@ -60,108 +60,112 @@ export function formatFrequencyLabel(frequencyInDays: bigint) {
 }
 
 export const getInviteGroupInfo = cache(async (rawCode: string): Promise<InviteGroupInfo | null> => {
-  const inviteCode = normalizeInviteCode(rawCode);
-  if (!inviteCode) {
-    return null;
-  }
-
-  const { chainId, client } = resolvePublicClient();
-  const factoryAddress = addresses[chainId].factory;
-
-  if (!isAddress(factoryAddress) || factoryAddress === zeroAddress) {
-    return null;
-  }
-
-  const groupCount = (await client.readContract({
-    address: factoryAddress,
-    abi: AJO_FACTORY_ABI,
-    functionName: "groupCount",
-  })) as bigint;
-
-  if (groupCount === 0n) {
-    return null;
-  }
-
-  const lowerBound = groupCount > BigInt(INVITE_LOOKUP_LIMIT) ? groupCount - BigInt(INVITE_LOOKUP_LIMIT) : 0n;
-  const candidateGroupIds: bigint[] = [];
-
-  for (let groupId = groupCount - 1n; groupId >= lowerBound; groupId -= 1n) {
-    candidateGroupIds.push(groupId);
-
-    if (groupId === 0n) {
-      break;
+  try {
+    const inviteCode = normalizeInviteCode(rawCode);
+    if (!inviteCode) {
+      return null;
     }
-  }
 
-  if (candidateGroupIds.length === 0) {
-    return null;
-  }
+    const { chainId, client } = resolvePublicClient();
+    const factoryAddress = addresses[chainId].factory;
 
-  const groupAddressResults = await client.multicall({
-    contracts: candidateGroupIds.map((groupId) => ({
+    if (!isAddress(factoryAddress) || factoryAddress === zeroAddress) {
+      return null;
+    }
+
+    const groupCount = (await client.readContract({
       address: factoryAddress,
       abi: AJO_FACTORY_ABI,
-      functionName: "getGroupInfo",
-      args: [groupId],
-    })),
-    allowFailure: true,
-  });
+      functionName: "groupCount",
+    })) as bigint;
 
-  const candidateGroups = candidateGroupIds
-    .map((groupId, index) => {
-      const result = groupAddressResults[index];
+    if (groupCount === 0n) {
+      return null;
+    }
+
+    const lowerBound = groupCount > BigInt(INVITE_LOOKUP_LIMIT) ? groupCount - BigInt(INVITE_LOOKUP_LIMIT) : 0n;
+    const candidateGroupIds: bigint[] = [];
+
+    for (let groupId = groupCount - 1n; groupId >= lowerBound; groupId -= 1n) {
+      candidateGroupIds.push(groupId);
+
+      if (groupId === 0n) {
+        break;
+      }
+    }
+
+    if (candidateGroupIds.length === 0) {
+      return null;
+    }
+
+    const groupAddressResults = await client.multicall({
+      contracts: candidateGroupIds.map((groupId) => ({
+        address: factoryAddress,
+        abi: AJO_FACTORY_ABI,
+        functionName: "getGroupInfo",
+        args: [groupId],
+      })),
+      allowFailure: true,
+    });
+
+    const candidateGroups = candidateGroupIds
+      .map((groupId, index) => {
+        const result = groupAddressResults[index];
+        if (result.status !== "success") {
+          return null;
+        }
+
+        const groupAddress = result.result;
+        if (!isAddress(groupAddress) || groupAddress === zeroAddress) {
+          return null;
+        }
+
+        return {
+          groupId,
+          groupAddress,
+        };
+      })
+      .filter((entry): entry is { groupId: bigint; groupAddress: Address } => Boolean(entry));
+
+    if (candidateGroups.length === 0) {
+      return null;
+    }
+
+    const stateResults = await client.multicall({
+      contracts: candidateGroups.map((entry) => ({
+        address: entry.groupAddress,
+        abi: AJO_GROUP_ABI,
+        functionName: "getGroupState",
+      })),
+      allowFailure: true,
+    });
+
+    for (const [index, result] of stateResults.entries()) {
       if (result.status !== "success") {
-        return null;
+        continue;
       }
 
-      const groupAddress = result.result;
-      if (!isAddress(groupAddress) || groupAddress === zeroAddress) {
-        return null;
+      const groupState = result.result;
+      if (groupState.inviteCode.toLowerCase() !== inviteCode) {
+        continue;
       }
+
+      const group = candidateGroups[index];
 
       return {
-        groupId,
-        groupAddress,
+        groupId: group.groupId,
+        groupAddress: group.groupAddress,
+        inviteCode,
+        name: groupState.name,
+        contributionAmount: groupState.contributionAmount,
+        frequencyInDays: groupState.frequencyInDays,
+        memberCount: groupState.activeMembers.length,
+        maxMembers: groupState.maxMembers,
       };
-    })
-    .filter((entry): entry is { groupId: bigint; groupAddress: Address } => Boolean(entry));
+    }
 
-  if (candidateGroups.length === 0) {
+    return null;
+  } catch {
     return null;
   }
-
-  const stateResults = await client.multicall({
-    contracts: candidateGroups.map((entry) => ({
-      address: entry.groupAddress,
-      abi: AJO_GROUP_ABI,
-      functionName: "getGroupState",
-    })),
-    allowFailure: true,
-  });
-
-  for (const [index, result] of stateResults.entries()) {
-    if (result.status !== "success") {
-      continue;
-    }
-
-    const groupState = result.result;
-    if (groupState.inviteCode.toLowerCase() !== inviteCode) {
-      continue;
-    }
-
-    const group = candidateGroups[index];
-
-    return {
-      groupId: group.groupId,
-      groupAddress: group.groupAddress,
-      inviteCode,
-      name: groupState.name,
-      contributionAmount: groupState.contributionAmount,
-      frequencyInDays: groupState.frequencyInDays,
-      memberCount: groupState.activeMembers.length,
-      maxMembers: groupState.maxMembers,
-    };
-  }
-
-  return null;
 });
