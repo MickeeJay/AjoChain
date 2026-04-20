@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccount, useChainId, useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { type Address, type Hash, type TransactionReceipt, zeroAddress } from "viem";
+import { parseEventLogs, type Address, type Hash, type TransactionReceipt, zeroAddress } from "viem";
 import { AJO_GROUP_ABI, IERC20_ABI } from "@/lib/contracts/abis";
 import type { GroupState, GroupStatus, MemberInfo } from "@/types";
 
@@ -12,6 +12,9 @@ type ReceiptResolver = {
 };
 
 const GROUP_STATUSES: GroupStatus[] = ["FORMING", "ACTIVE", "COMPLETED", "PAUSED"];
+const REQUIRED_CONFIRMATIONS = 2;
+
+export type ContributionFlowStep = "idle" | "approving" | "contributing" | "confirming" | "success" | "failed";
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) {
@@ -65,6 +68,10 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
   const [startHash, setStartHash] = useState<Hash | undefined>();
   const [pendingAction, setPendingAction] = useState<"contribute" | "start" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [approvalConfirmations, setApprovalConfirmations] = useState(0);
+  const [contributionFlowStep, setContributionFlowStep] = useState<ContributionFlowStep>("idle");
+  const [contributionConfirmations, setContributionConfirmations] = useState(0);
+  const [lastPayoutRecipient, setLastPayoutRecipient] = useState<Address | null>(null);
   const approveResolverRef = useRef<ReceiptResolver | null>(null);
   const contributeResolverRef = useRef<ReceiptResolver | null>(null);
   const startResolverRef = useRef<ReceiptResolver | null>(null);
@@ -150,6 +157,26 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     },
   });
 
+  const approveConfirmingReceipt = useWaitForTransactionReceipt({
+    hash: approveHash,
+    chainId,
+    confirmations: REQUIRED_CONFIRMATIONS,
+    query: {
+      enabled: Boolean(approveHash),
+      staleTime: 10_000,
+    },
+  });
+
+  const contributeConfirmingReceipt = useWaitForTransactionReceipt({
+    hash: contributeHash,
+    chainId,
+    confirmations: REQUIRED_CONFIRMATIONS,
+    query: {
+      enabled: Boolean(contributeHash),
+      staleTime: 10_000,
+    },
+  });
+
   useEffect(() => {
     if (!approveReceipt.data || !approveResolverRef.current) {
       return;
@@ -157,7 +184,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
     approveResolverRef.current.resolve(approveReceipt.data);
     approveResolverRef.current = null;
-    setApproveHash(undefined);
+    setApprovalConfirmations(1);
   }, [approveReceipt.data]);
 
   useEffect(() => {
@@ -167,7 +194,8 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
     contributeResolverRef.current.resolve(contributeReceipt.data);
     contributeResolverRef.current = null;
-    setContributeHash(undefined);
+    setContributionFlowStep("confirming");
+    setContributionConfirmations(1);
   }, [contributeReceipt.data]);
 
   useEffect(() => {
@@ -179,6 +207,25 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     startResolverRef.current = null;
     setStartHash(undefined);
   }, [startReceipt.data]);
+
+  useEffect(() => {
+    if (!approveConfirmingReceipt.data) {
+      return;
+    }
+
+    setApprovalConfirmations(REQUIRED_CONFIRMATIONS);
+    setApproveHash(undefined);
+  }, [approveConfirmingReceipt.data]);
+
+  useEffect(() => {
+    if (!contributeConfirmingReceipt.data) {
+      return;
+    }
+
+    setContributionConfirmations(REQUIRED_CONFIRMATIONS);
+    setContributionFlowStep("success");
+    setContributeHash(undefined);
+  }, [contributeConfirmingReceipt.data]);
 
   useEffect(() => {
     if (!approveReceipt.error || !approveResolverRef.current) {
@@ -209,6 +256,15 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     startResolverRef.current = null;
     setStartHash(undefined);
   }, [startReceipt.error]);
+
+  useEffect(() => {
+    if (!contributeConfirmingReceipt.error) {
+      return;
+    }
+
+    setContributionFlowStep("failed");
+    setActionError(getErrorMessage(contributeConfirmingReceipt.error));
+  }, [contributeConfirmingReceipt.error]);
 
   const groupState: GroupState | undefined = useMemo(() => {
     if (!groupStateData) {
@@ -249,9 +305,14 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
     try {
       setPendingAction("contribute");
+      setApprovalConfirmations(0);
+      setContributionFlowStep("idle");
+      setContributionConfirmations(0);
+      setLastPayoutRecipient(null);
       const currentAllowance = allowanceData ?? 0n;
 
       if (currentAllowance < contributionAmount) {
+        setContributionFlowStep("approving");
         const approveTxHash = await writeContractAsync({
           address: tokenAddress,
           abi: IERC20_ABI,
@@ -269,6 +330,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
         void refetchAllowance();
       }
 
+      setContributionFlowStep("contributing");
       const contributeTxHash = await writeContractAsync({
         address: groupAddress,
         abi: AJO_GROUP_ABI,
@@ -278,9 +340,20 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
       setContributeHash(contributeTxHash);
 
-      await new Promise<TransactionReceipt>((resolve, reject) => {
+      const contributionTxReceipt = await new Promise<TransactionReceipt>((resolve, reject) => {
         contributeResolverRef.current = { resolve, reject };
       });
+
+      const roundCompletedEvents = parseEventLogs({
+        abi: AJO_GROUP_ABI,
+        eventName: "RoundCompleted",
+        logs: contributionTxReceipt.logs,
+      });
+
+      const payoutRecipient = roundCompletedEvents[0]?.args.recipient as Address | undefined;
+      if (payoutRecipient) {
+        setLastPayoutRecipient(payoutRecipient);
+      }
 
       void refetchGroupState();
       void refetchAllowance();
@@ -291,9 +364,16 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     } catch (error) {
       setPendingAction(null);
       const message = getErrorMessage(error);
+      setContributionFlowStep("failed");
       setActionError(message);
       throw error instanceof Error ? error : new Error(message);
     }
+  };
+
+  const dismissContributionStatus = () => {
+    setContributionFlowStep("idle");
+    setContributionConfirmations(0);
+    setApprovalConfirmations(0);
   };
 
   const startGroup = async () => {
@@ -337,8 +417,19 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
     groupState,
     getRemainingTime,
     contribute,
+    dismissContributionStatus,
     startGroup,
-    isContributing: pendingAction === "contribute" || approveReceipt.isLoading || contributeReceipt.isLoading || Boolean(approveHash || contributeHash),
+    allowance: allowanceData ?? 0n,
+    contributionAmount,
+    requiresApproval: (allowanceData ?? 0n) < contributionAmount,
+    approveTxHash: approveHash,
+    contributeTxHash: contributeHash,
+    contributionFlowStep,
+    approvalConfirmations,
+    contributionConfirmations,
+    requiredConfirmations: REQUIRED_CONFIRMATIONS,
+    lastPayoutRecipient,
+    isContributing: pendingAction === "contribute" || approveReceipt.isLoading || contributeReceipt.isLoading,
     isStarting: pendingAction === "start" || startReceipt.isLoading || Boolean(startHash),
     error: actionError ?? groupStateError?.message ?? allowanceError?.message ?? null,
   };

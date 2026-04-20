@@ -51,6 +51,18 @@ export interface NetworkConfig {
 
 export type TransactionState = "idle" | "pending" | "success" | "error";
 
+export type TransactionDrawerState = "pending" | "confirming" | "success" | "failed";
+
+export interface TransactionStatusItem {
+  id: string;
+  label: string;
+  state: TransactionDrawerState;
+  txHash?: `0x${string}`;
+  confirmations?: number;
+  requiredConfirmations?: number;
+  errorMessage?: string;
+}
+
 export type AjoMember = {
   address: `0x${string}`;
   displayName: string;

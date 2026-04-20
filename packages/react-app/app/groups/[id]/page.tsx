@@ -12,6 +12,7 @@ import { RoundCountdown } from "@/components/groups/RoundCountdown";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
 import { useAjoGroup } from "@/hooks/useAjoGroup";
 import { formatCusdFromWei } from "@/lib/formatters";
+import type { TransactionStatusItem } from "@/types";
 
 const MIN_GROUP_SIZE = 3;
 
@@ -26,7 +27,80 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
   const inputAddress = params.id;
   const isValidGroupAddress = isAddress(inputAddress);
   const groupAddress = (isValidGroupAddress ? inputAddress : "0x0000000000000000000000000000000000000000") as `0x${string}`;
-  const { groupState, startGroup, contribute, isStarting, isContributing, error } = useAjoGroup(groupAddress);
+  const {
+    groupState,
+    startGroup,
+    contribute,
+    dismissContributionStatus,
+    allowance,
+    contributionAmount,
+    contributionFlowStep,
+    approvalConfirmations,
+    contributionConfirmations,
+    requiredConfirmations,
+    approveTxHash,
+    contributeTxHash,
+    lastPayoutRecipient,
+    isStarting,
+    isContributing,
+    error,
+  } = useAjoGroup(groupAddress);
+
+  const drawerStatusItem: TransactionStatusItem | null = (() => {
+    if (contributionFlowStep === "idle") {
+      return null;
+    }
+
+    if (contributionFlowStep === "approving") {
+      const isApprovalConfirming = approvalConfirmations > 0;
+
+      return {
+        id: "approval",
+        label: "Approving cUSD allowance",
+        state: isApprovalConfirming ? "confirming" : "pending",
+        txHash: approveTxHash,
+        confirmations: approvalConfirmations,
+        requiredConfirmations,
+      };
+    }
+
+    if (contributionFlowStep === "contributing") {
+      return {
+        id: "contribution-pending",
+        label: "Submitting contribution",
+        state: "pending",
+        txHash: contributeTxHash,
+      };
+    }
+
+    if (contributionFlowStep === "confirming") {
+      return {
+        id: "contribution-confirming",
+        label: "Contribution is confirming",
+        state: "confirming",
+        txHash: contributeTxHash,
+        confirmations: contributionConfirmations,
+        requiredConfirmations,
+      };
+    }
+
+    if (contributionFlowStep === "success") {
+      return {
+        id: "contribution-success",
+        label: lastPayoutRecipient ? `Payout executed to ${lastPayoutRecipient}` : "Contribution confirmed",
+        state: "success",
+        txHash: contributeTxHash,
+      };
+    }
+
+    return {
+      id: "contribution-failed",
+      label: "Contribution failed",
+      state: "failed",
+      txHash: contributeTxHash ?? approveTxHash,
+      errorMessage: error ?? "Unable to complete contribution.",
+    };
+  })();
 
   if (!isValidGroupAddress) {
     return (
@@ -45,7 +119,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-8 text-slate-900 lg:px-10">
         <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
-          <TransactionStatus status="pending" label="Loading group state" />
+          <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold text-amber-800">Loading group state...</div>
         </section>
       </main>
     );
@@ -112,8 +186,14 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
           requiredMembers={MIN_GROUP_SIZE}
           hasContributedThisRound={hasContributedThisRound}
           contributionLabel={contributionLabel}
+          allowance={allowance}
+          contributionAmount={contributionAmount}
           isStarting={isStarting}
           isContributing={isContributing}
+          contributionFlowStep={contributionFlowStep}
+          approveTxHash={approveTxHash}
+          contributeTxHash={contributeTxHash}
+          lastPayoutRecipient={lastPayoutRecipient}
           onStartGroup={onStartGroup}
           onContribute={onContribute}
           canDownloadCertificate={isMember}
@@ -121,7 +201,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
         />
 
         {groupState.status === "FORMING" ? <InviteActions inviteCode={groupState.inviteCode} /> : null}
-        {error ? <TransactionStatus status="error" label={error} /> : null}
+        {error && contributionFlowStep === "idle" ? <TransactionStatus status="error" label={error} /> : null}
 
         <div className="space-y-3">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Members</p>
@@ -139,6 +219,8 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
           </Link>
         </div>
       </div>
+
+      <TransactionStatus mode="drawer" open={Boolean(drawerStatusItem)} item={drawerStatusItem} onClose={dismissContributionStatus} />
     </section>
   );
 }
