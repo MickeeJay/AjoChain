@@ -127,3 +127,26 @@ export interface ActivityItem {
   groupName: string;
   timestamp: number;
 }
+
+export interface UserCredential {
+  tokenId: bigint;
+  recipient: `0x${string}`;
+  groupContract: `0x${string}`;
+  groupName: string;
+  cyclesCompleted: bigint;
+  totalSaved: bigint;
+  completedAt: bigint;
+}
+
+export interface CredentialMetadataAttribute {
+  trait_type: string;
+  display_type?: string;
+  value: string | number;
+}
+
+export interface CredentialTokenMetadata {
+  name: string;
+  description?: string;
+  image?: string;
+  attributes?: CredentialMetadataAttribute[];
+}

@@ -5,7 +5,10 @@ import { Web3Provider } from "@/providers/Web3Provider";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 
+const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://ajochain.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appBaseUrl),
   title: "AjoChain",
   description: "MiniPay-native rotating savings groups on Celo.",
 };

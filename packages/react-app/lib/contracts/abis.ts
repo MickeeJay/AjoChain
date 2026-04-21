@@ -94,6 +94,34 @@ export const AJO_CREDENTIAL_ABI = [
     inputs: [{ name: "user", type: "address" }],
     outputs: [{ name: "reputation", type: "uint256" }],
   },
+  {
+    type: "function",
+    name: "getCredentials",
+    stateMutability: "view",
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [{ name: "", type: "uint256[]" }],
+  },
+  {
+    type: "function",
+    name: "credentials",
+    stateMutability: "view",
+    inputs: [{ name: "", type: "uint256" }],
+    outputs: [
+      { name: "recipient", type: "address" },
+      { name: "groupContract", type: "address" },
+      { name: "cyclesCompleted", type: "uint256" },
+      { name: "totalSaved", type: "uint256" },
+      { name: "completedAt", type: "uint256" },
+      { name: "groupName", type: "string" },
+    ],
+  },
+  {
+    type: "function",
+    name: "tokenURI",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "string" }],
+  },
 ] as const;
 
 export const AJO_GROUP_ABI = [
