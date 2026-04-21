@@ -25,23 +25,25 @@ export function ShellHeader() {
           AjoChain
         </Link>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
           <span
             className={cn(
-              "inline-flex min-h-10 items-center rounded-full px-3 text-[14px] font-medium whitespace-nowrap",
+              "inline-flex min-h-10 max-w-[118px] items-center rounded-full px-3 text-[14px] font-medium whitespace-nowrap",
               isReady ? "border border-slate-200 bg-slate-50 text-slate-700" : "border border-slate-200 bg-white text-slate-400",
             )}
+            title={networkLabel}
           >
-            {networkLabel}
+            <span className="truncate">{networkLabel}</span>
           </span>
           <span
             className={cn(
-              "inline-flex min-h-10 items-center rounded-full px-3 text-[14px] font-semibold whitespace-nowrap",
+              "inline-flex min-h-10 max-w-[132px] items-center rounded-full px-3 text-[14px] font-semibold whitespace-nowrap",
               isReady ? "border border-celo-green/20 bg-white text-slate-900 shadow-sm" : "border border-slate-200 bg-white text-slate-400",
             )}
+            title={balanceLabel}
           >
-            {balanceLabel}
+            <span className="truncate">{balanceLabel}</span>
           </span>
         </div>
       </div>
