@@ -34,12 +34,20 @@ export function readNumericAttribute(metadata: CredentialTokenMetadata, trait: s
     return null;
   }
 
-  const numeric = Number(attribute.value);
-  if (!Number.isFinite(numeric)) {
+  if (typeof attribute.value === "number") {
+    if (!Number.isFinite(attribute.value)) {
+      return null;
+    }
+
+    return BigInt(Math.trunc(attribute.value));
+  }
+
+  const raw = String(attribute.value).trim();
+  if (!/^\d+$/.test(raw)) {
     return null;
   }
 
-  return BigInt(Math.trunc(numeric));
+  return BigInt(raw);
 }
 
 export function readTextAttribute(metadata: CredentialTokenMetadata, trait: string): string | null {
