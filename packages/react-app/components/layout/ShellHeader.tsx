@@ -29,7 +29,7 @@ export function ShellHeader() {
           {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
           <span
             className={cn(
-              "inline-flex min-h-9 items-center rounded-full px-3 text-sm font-medium whitespace-nowrap",
+              "inline-flex min-h-10 items-center rounded-full px-3 text-[14px] font-medium whitespace-nowrap",
               isReady ? "border border-slate-200 bg-slate-50 text-slate-700" : "border border-slate-200 bg-white text-slate-400",
             )}
           >
@@ -37,7 +37,7 @@ export function ShellHeader() {
           </span>
           <span
             className={cn(
-              "inline-flex min-h-9 items-center rounded-full px-3 text-sm font-semibold whitespace-nowrap",
+              "inline-flex min-h-10 items-center rounded-full px-3 text-[14px] font-semibold whitespace-nowrap",
               isReady ? "border border-celo-green/20 bg-white text-slate-900 shadow-sm" : "border border-slate-200 bg-white text-slate-400",
             )}
           >
