@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --shell-min-height: 650px;
   --background: 0 0% 100%;
   --foreground: 160 18% 10%;
   --card: 0 0% 100%;
