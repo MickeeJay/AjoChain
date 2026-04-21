@@ -21,7 +21,7 @@ export function ShellHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur" style={{ height: SHELL_HEADER_HEIGHT_PX }}>
       <div className="mx-auto flex h-full w-full max-w-[430px] items-center justify-between gap-3 px-4">
-        <Link href="/" className="text-lg font-bold tracking-tight text-celo-green">
+        <Link href="/" className="text-lg font-bold tracking-tight text-[#35D07F]">
           AjoChain
         </Link>
 
