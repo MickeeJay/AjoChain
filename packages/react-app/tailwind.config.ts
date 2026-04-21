@@ -56,7 +56,7 @@ const config = {
         minipay: "375px",
       },
       spacing: {
-        "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-bottom": "max(env(safe-area-inset-bottom), 0px)",
       },
       keyframes: {
         "accordion-down": {
