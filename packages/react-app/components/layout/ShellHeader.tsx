@@ -6,6 +6,7 @@ import { useCUSD } from "@/hooks/useCUSD";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { formatCusdAmount } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
+import { SHELL_HEADER_HEIGHT_PX } from "./shell.constants";
 
 export function ShellHeader() {
   const { address, chainId } = useAccount();
@@ -18,7 +19,7 @@ export function ShellHeader() {
   const balanceLabel = isReady && isConnected && balance ? `cUSD ${formatCusdAmount(balance.formatted)}` : "cUSD --";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 h-14 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur" style={{ height: SHELL_HEADER_HEIGHT_PX }}>
       <div className="mx-auto flex h-full w-full max-w-[430px] items-center justify-between gap-3 px-4">
         <Link href="/" className="text-lg font-bold tracking-tight text-celo-green">
           AjoChain
