@@ -1,69 +1,146 @@
 "use client";
 
-import Link from "next/link";
-import { CircleDollarSign, Globe, UserRound } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { type Address } from "viem";
 import { useAccount } from "wagmi";
-import { useCUSD } from "@/hooks/useCUSD";
-import { useMiniPay } from "@/hooks/useMiniPay";
-import { formatCusdAmount } from "@/lib/formatters";
+import { CredentialsSection } from "@/components/profile/CredentialsSection";
+import { ProfileIdentityHeader } from "@/components/profile/ProfileIdentityHeader";
+import { ProfileShareActions } from "@/components/profile/ProfileShareActions";
+import { ProfileStatsRow } from "@/components/profile/ProfileStatsRow";
+import { ReputationPanel } from "@/components/profile/ReputationPanel";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { useOptionalEnsName } from "@/hooks/useOptionalEnsName";
+import { useUserCredentials } from "@/hooks/useUserCredentials";
+import { formatCusdCurrency } from "@/lib/profile";
 import { shortenAddress } from "@/lib/utils";
 
 export default function ProfilePage() {
-  const { address, chainId } = useAccount();
-  const { isMiniPay, isConnected } = useMiniPay();
-  const resolvedChainId = chainId === 44787 ? 44787 : 42220;
-  const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
+  const { address } = useAccount();
+  const { ensName } = useOptionalEnsName(address as Address | undefined);
+  const { userGroups, activeGroupCount, totalSaved, cyclesCompleted, isGroupsLoading, isCyclesLoading } = useDashboardData();
+  const { credentials, isLoading: isCredentialsLoading } = useUserCredentials();
 
-  const networkLabel = resolvedChainId === 44787 ? "Celo testnet" : "Celo mainnet";
-  const balanceLabel = balance ? `cUSD ${formatCusdAmount(balance.formatted)}` : "cUSD --";
+  const [copiedAddress, setCopiedAddress] = useState(false);
+  const [copiedProfile, setCopiedProfile] = useState(false);
+  const [sharingTokenId, setSharingTokenId] = useState<bigint | null>(null);
+  const [baseUrl, setBaseUrl] = useState("");
+
+  useEffect(() => {
+    setBaseUrl(window.location.origin);
+  }, []);
+
+  const groupsCompleted = useMemo(() => userGroups.filter((group) => group.status === "COMPLETED").length, [userGroups]);
+
+  const addressLabel = useMemo(() => (address ? shortenAddress(address) : "No wallet connected"), [address]);
+
+  const profileUrl = useMemo(() => {
+    if (!baseUrl || !address) {
+      return "";
+    }
+
+    return `${baseUrl}/profile?address=${address}`;
+  }, [address, baseUrl]);
+
+  const latestCredentialLink = useMemo(() => {
+    if (!baseUrl || credentials.length === 0) {
+      return profileUrl;
+    }
+
+    return `${baseUrl}/credentials/${credentials[0].tokenId.toString()}`;
+  }, [baseUrl, credentials, profileUrl]);
+
+  const whatsappMessage = useMemo(() => {
+    const saved = formatCusdCurrency(totalSaved);
+    const link = latestCredentialLink || profileUrl || "https://ajochain.app";
+    return `I completed a savings cycle on AjoChain! Total saved: ${saved}. Verify: ${link}`;
+  }, [latestCredentialLink, profileUrl, totalSaved]);
+
+  const whatsappHref = useMemo(() => `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`, [whatsappMessage]);
+
+  const copyToClipboard = async (value: string) => {
+    if (!value) {
+      return false;
+    }
+
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleCopyAddress = () => {
+    if (!address) {
+      return;
+    }
+
+    void copyToClipboard(address).then((success) => {
+      if (!success) {
+        return;
+      }
+
+      setCopiedAddress(true);
+      window.setTimeout(() => setCopiedAddress(false), 1500);
+    });
+  };
+
+  const handleCopyProfile = () => {
+    if (!profileUrl) {
+      return;
+    }
+
+    void copyToClipboard(profileUrl).then((success) => {
+      if (!success) {
+        return;
+      }
+
+      setCopiedProfile(true);
+      window.setTimeout(() => setCopiedProfile(false), 1500);
+    });
+  };
+
+  const handleShareCredential = (tokenId: bigint) => {
+    if (!baseUrl) {
+      return;
+    }
+
+    const credentialLink = `${baseUrl}/credentials/${tokenId.toString()}`;
+    void copyToClipboard(credentialLink).then((success) => {
+      if (!success) {
+        return;
+      }
+
+      setSharingTokenId(tokenId);
+      window.setTimeout(() => setSharingTokenId(null), 1700);
+    });
+  };
 
   return (
     <section className="flex flex-col gap-4 text-slate-900">
-      <div className="space-y-3">
-        <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
-          Profile
-        </span>
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">Wallet and app preferences.</h1>
-        <p className="max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7">
-          Check the network, cUSD balance, and MiniPay connection state tied to this device.
-        </p>
-      </div>
+      <ProfileIdentityHeader addressLabel={addressLabel} ensName={ensName} onCopyAddress={handleCopyAddress} copied={copiedAddress} />
 
-      <div className="grid gap-4">
-        <article className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_50px_rgba(16,42,44,0.08)]">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium text-slate-500">Connection</p>
-              <p className="mt-1 text-lg font-semibold text-slate-950">{isMiniPay ? (isConnected ? "MiniPay connected" : "MiniPay connecting") : "Regular wallet"}</p>
-            </div>
-            <UserRound className="h-5 w-5 text-celo-green" />
-          </div>
-          <p className="mt-4 text-sm text-slate-600">{address ? shortenAddress(address) : "No wallet address yet"}</p>
-        </article>
+      <ReputationPanel score={cyclesCompleted} loading={isCyclesLoading} />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <article className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_50px_rgba(16,42,44,0.08)]">
-            <Globe className="h-5 w-5 text-celo-gold" />
-            <p className="mt-3 text-sm font-medium text-slate-500">Network</p>
-            <p className="mt-1 text-lg font-semibold text-slate-950">{networkLabel}</p>
-          </article>
+      <ProfileStatsRow
+        totalSaved={totalSaved}
+        groupsCompleted={groupsCompleted}
+        activeGroups={activeGroupCount}
+        loading={isGroupsLoading}
+      />
 
-          <article className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_50px_rgba(16,42,44,0.08)]">
-            <CircleDollarSign className="h-5 w-5 text-celo-green" />
-            <p className="mt-3 text-sm font-medium text-slate-500">cUSD balance</p>
-            <p className="mt-1 text-lg font-semibold text-slate-950">{balanceLabel}</p>
-          </article>
-        </div>
+      <ProfileShareActions onCopyProfile={handleCopyProfile} copiedProfile={copiedProfile} whatsappHref={whatsappHref} />
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Link href="/create" className="inline-flex min-h-12 items-center justify-center rounded-full bg-celo-green px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700">
-            Create a group
-          </Link>
-          <Link href="/groups" className="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300">
-            View groups
-          </Link>
-        </div>
-      </div>
+      <CredentialsSection
+        credentials={credentials}
+        isLoading={isCredentialsLoading}
+        sharingTokenId={sharingTokenId}
+        onShare={handleShareCredential}
+      />
+
+      <p className="text-xs text-slate-500">
+        Reputation reflects on-chain savings completions and can be queried by partners for creditworthiness.
+      </p>
     </section>
   );
 }
