@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, PlusCircle, Users, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SHELL_BOTTOM_NAV_HEIGHT_PX } from "./shell.constants";
 
 const items = [
   { href: "/", label: "Home", icon: Home, exact: true },
@@ -26,7 +27,7 @@ export function BottomNav() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto w-full max-w-[430px] px-3 pb-safe-bottom">
-        <div className="grid h-16 grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-1" style={{ height: SHELL_BOTTOM_NAV_HEIGHT_PX }}>
         {items.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href, item.exact);
