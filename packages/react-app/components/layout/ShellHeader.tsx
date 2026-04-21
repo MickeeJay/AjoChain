@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 
 export function ShellHeader() {
   const { address, chainId } = useAccount();
-  const { isReady, isConnected } = useMiniPay();
+  const { isMiniPay, isReady, isConnected } = useMiniPay();
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
   const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
+  const showWalletStatus = !isMiniPay && isReady && isConnected;
 
   const networkLabel = resolvedChainId === 44787 ? "Celo testnet" : "Celo mainnet";
   const balanceLabel = isReady && isConnected && balance ? `cUSD ${formatCusdAmount(balance.formatted)}` : "cUSD --";
@@ -24,7 +25,7 @@ export function ShellHeader() {
         </Link>
 
         <div className="flex items-center gap-2">
-          {isReady && isConnected ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
+          {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
           <span
             className={cn(
               "inline-flex min-h-9 items-center rounded-full px-3 text-sm font-medium whitespace-nowrap",
