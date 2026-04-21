@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
@@ -9,7 +10,13 @@ type WalletGuardProps = {
 };
 
 export function WalletGuard({ children }: WalletGuardProps) {
+  const pathname = usePathname();
   const { isMiniPay, isConnected, isReady } = useMiniPay();
+  const isPublicCredentialRoute = pathname?.startsWith("/credentials/") ?? false;
+
+  if (isPublicCredentialRoute) {
+    return <>{children}</>;
+  }
 
   if (!isReady) {
     return (
