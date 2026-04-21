@@ -1,4 +1,5 @@
 import { BadgeCheck } from "lucide-react";
+import { AjoChainMark } from "@/components/profile/AjoChainMark";
 import { formatCredentialCompletionDate, formatCusdCurrency } from "@/lib/profile";
 import type { PublicCredentialPayload } from "@/lib/contracts/publicCredential";
 
@@ -16,7 +17,7 @@ export function PublicCredentialView({ credential, verifyUrl }: PublicCredential
 
         <div className="relative flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-900">AjoChain</p>
+            <AjoChainMark className="inline-flex items-center gap-2 text-emerald-900" />
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-emerald-950 sm:text-4xl">Savings Certificate</h1>
           </div>
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-emerald-700 text-white">

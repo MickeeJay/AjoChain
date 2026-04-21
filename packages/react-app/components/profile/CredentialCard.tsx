@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, Share2 } from "lucide-react";
+import { AjoChainMark } from "@/components/profile/AjoChainMark";
 import { formatCredentialCompletionDate, formatCusdCurrency } from "@/lib/profile";
 import type { UserCredential } from "@/types";
 
@@ -17,10 +18,7 @@ export function CredentialCard({ credential, onShare, isSharing }: CredentialCar
       <div className="pointer-events-none absolute bottom-[-60px] left-[-40px] h-48 w-48 rounded-full border border-emerald-300/60" />
 
       <div className="relative flex items-center justify-between">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-white/65 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-900">
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-700 text-[10px] font-bold text-white">A</span>
-          AjoChain
-        </div>
+        <AjoChainMark className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-white/65 px-3 py-1 text-emerald-900" />
         <CheckCircle2 className="h-5 w-5 text-emerald-700" />
       </div>
 
