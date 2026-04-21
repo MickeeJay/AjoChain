@@ -20,7 +20,7 @@ export function WalletGuard({ children }: WalletGuardProps) {
     );
   }
 
-  if (isConnected) {
+  if (isConnected || isMiniPay) {
     return <>{children}</>;
   }
 
