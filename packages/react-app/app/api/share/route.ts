@@ -59,6 +59,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Group not found." }, { status: 404 });
   }
 
+  if (groupState.inviteCode.toLowerCase() !== inviteCode.toLowerCase()) {
+    return NextResponse.json({ error: "Invite code does not match this group." }, { status: 404 });
+  }
+
   const payload = buildSharePayload({
     appUrl: resolveAppUrl(request),
     inviteCode: inviteCode.toLowerCase() as Hex,
@@ -73,6 +77,7 @@ export async function POST(request: NextRequest) {
     headers: {
       "X-RateLimit-Limit": "10",
       "X-RateLimit-Remaining": String(rateLimit.remaining),
+      "X-RateLimit-Reset": String(Math.floor(rateLimit.resetAt / 1000)),
     },
   });
 }
