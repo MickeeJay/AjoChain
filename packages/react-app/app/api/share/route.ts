@@ -54,30 +54,34 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "A valid inviteCode is required." }, { status: 400 });
   }
 
-  const groupState = await getCachedGroupState(groupAddress);
-  if (!groupState) {
-    return NextResponse.json({ error: "Group not found." }, { status: 404 });
+  try {
+    const groupState = await getCachedGroupState(groupAddress);
+    if (!groupState) {
+      return NextResponse.json({ error: "Group not found." }, { status: 404 });
+    }
+
+    if (groupState.inviteCode.toLowerCase() !== inviteCode.toLowerCase()) {
+      return NextResponse.json({ error: "Invite code does not match this group." }, { status: 404 });
+    }
+
+    const payload = buildSharePayload({
+      appUrl: resolveAppUrl(request),
+      inviteCode: inviteCode.toLowerCase() as Hex,
+      groupName: groupState.name,
+      contributionAmount: BigInt(groupState.contributionAmount),
+      frequencyInDays: BigInt(groupState.frequencyInDays),
+      memberCount: groupState.memberCount,
+      maxMembers: BigInt(groupState.maxMembers),
+    });
+
+    return NextResponse.json(payload, {
+      headers: {
+        "X-RateLimit-Limit": "10",
+        "X-RateLimit-Remaining": String(rateLimit.remaining),
+        "X-RateLimit-Reset": String(Math.floor(rateLimit.resetAt / 1000)),
+      },
+    });
+  } catch {
+    return NextResponse.json({ error: "Unable to build share payload." }, { status: 502 });
   }
-
-  if (groupState.inviteCode.toLowerCase() !== inviteCode.toLowerCase()) {
-    return NextResponse.json({ error: "Invite code does not match this group." }, { status: 404 });
-  }
-
-  const payload = buildSharePayload({
-    appUrl: resolveAppUrl(request),
-    inviteCode: inviteCode.toLowerCase() as Hex,
-    groupName: groupState.name,
-    contributionAmount: BigInt(groupState.contributionAmount),
-    frequencyInDays: BigInt(groupState.frequencyInDays),
-    memberCount: groupState.memberCount,
-    maxMembers: BigInt(groupState.maxMembers),
-  });
-
-  return NextResponse.json(payload, {
-    headers: {
-      "X-RateLimit-Limit": "10",
-      "X-RateLimit-Remaining": String(rateLimit.remaining),
-      "X-RateLimit-Reset": String(Math.floor(rateLimit.resetAt / 1000)),
-    },
-  });
 }
