@@ -58,11 +58,17 @@ export async function getCachedGroupState(groupAddress: string): Promise<CachedG
 
   const { client } = createCeloPublicClient();
 
-  const groupState = (await client.readContract({
-    address: normalizedAddress,
-    abi: AJO_GROUP_ABI,
-    functionName: "getGroupState",
-  })) as GroupStateView;
+  let groupState: GroupStateView;
+
+  try {
+    groupState = (await client.readContract({
+      address: normalizedAddress,
+      abi: AJO_GROUP_ABI,
+      functionName: "getGroupState",
+    })) as GroupStateView;
+  } catch {
+    return null;
+  }
 
   const value: CachedGroupState = {
     groupAddress: normalizedAddress,
