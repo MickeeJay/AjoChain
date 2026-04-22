@@ -93,6 +93,16 @@ AjoChain uses three contracts that work together:
 - Exit safely while the group is still forming.
 - Earn a soulbound completion credential NFT with on-chain metadata.
 
+## Off-Chain Coordination APIs
+
+The Mini App now exposes minimal read-only API routes for invite and social coordination. These routes never use `PRIVATE_KEY` and never submit transactions.
+
+| Route | Method | Purpose | Cache / Limit |
+|-------|--------|---------|---------------|
+| `/api/invite?code=0x...` | GET | Resolves invite code to group metadata (`name`, `amount`, `frequency`, `memberCount`, `maxMembers`) | 60s cache |
+| `/api/groups/[address]` | GET | Returns wallet-free cached group state for invite landing and share pages | 30s cache |
+| `/api/share` | POST | Builds WhatsApp message + deep link and Twitter/X card metadata from `{ groupAddress, inviteCode }` | 10 req/IP/min |
+
 ## Tech Stack
 
 | Layer | Choice | Notes |
