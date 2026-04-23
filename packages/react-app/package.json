@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "tunnel": "ngrok http 3000",
+    "dev:minipay": "concurrently \"npm run dev\" \"npm run tunnel\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
