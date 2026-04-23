@@ -399,11 +399,13 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
     try {
       setPendingAction("start");
+      const feeCurrency = resolveFeeCurrency(groupStateData?.cUSDToken ?? zeroAddress);
       const startTxHash = await writeContractAsync({
         address: groupAddress,
         abi: AJO_GROUP_ABI,
         functionName: "startGroup",
         chainId,
+        feeCurrency,
       });
 
       setStartHash(startTxHash);
