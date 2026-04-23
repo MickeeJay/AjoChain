@@ -199,12 +199,14 @@ export function useAjoFactory() {
 
     try {
       setPendingAction("join");
+      const feeCurrency = resolveFeeCurrency(networkId);
       const txHash = await writeContractAsync({
         address: contractAddress,
         abi: AJO_FACTORY_ABI,
         functionName: "joinGroup",
         args: [BigInt(groupId), inviteCode],
         chainId,
+        feeCurrency,
       });
 
       setJoinHash(txHash);
