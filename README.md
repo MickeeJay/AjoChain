@@ -229,16 +229,35 @@ cast call <CredentialAddress> "owner()(address)" --rpc-url https://forno.celo.or
 
 ## Testing in MiniPay
 
-1. Enable developer mode in MiniPay settings.
-2. Expose your local app with a tunnel:
+1. Start the frontend and tunnel together:
 
 ```bash
-ngrok http 3000
+cd packages/react-app
+npm run dev:minipay
 ```
 
-3. Open the tunnel URL inside MiniPay.
-4. Confirm wallet connection and cUSD contribution flows.
-5. Test both group creation and member join paths.
+2. Optional: use the guided shell script from the repository root:
+
+```bash
+./scripts/tunnel.sh
+```
+
+3. Open MiniPay and enable developer mode:
+
+- Settings -> About
+- Tap the app version 5 times
+- Open Developer Settings
+- Use "Load test page" and paste your ngrok URL
+
+4. If testing with MiniPay Developer Mode, enable Testnet mode for Alfajores before validating testnet contracts.
+5. Validate the complete contribute flow end-to-end (approve, contribute, confirmations, and state refresh).
+6. Validate group create and join flows on the same test page.
+
+For a fixed ngrok domain, use:
+
+```bash
+ngrok http 3000 --domain=your-static-domain.ngrok-free.app
+```
 
 ## Environment Variables
 
