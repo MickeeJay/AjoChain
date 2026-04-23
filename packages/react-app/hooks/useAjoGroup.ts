@@ -341,11 +341,13 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
       }
 
       setContributionFlowStep("contributing");
+      const feeCurrency = resolveFeeCurrency(tokenAddress);
       const contributeTxHash = await writeContractAsync({
         address: groupAddress,
         abi: AJO_GROUP_ABI,
         functionName: "contribute",
         chainId,
+        feeCurrency,
       });
 
       setContributeHash(contributeTxHash);
