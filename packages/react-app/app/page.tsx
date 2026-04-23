@@ -8,9 +8,9 @@ import { useMiniPay } from "@/hooks/useMiniPay";
 const HomeDashboardContent = lazy(() => import("@/components/home/HomeDashboardContent").then((module) => ({ default: module.HomeDashboardContent })));
 
 export default function HomePage() {
-  const { isMiniPay, isReady, isConnected } = useMiniPay();
+  const { isMiniPay, isLoading, isConnected } = useMiniPay();
 
-  if (!isReady) {
+  if (isLoading) {
     return <HomeDashboardSkeleton />;
   }
 
