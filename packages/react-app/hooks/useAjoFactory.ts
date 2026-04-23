@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccount, useChainId, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { parseEventLogs, type Address, type Hash, type TransactionReceipt } from "viem";
+import { parseEventLogs, type Address, type Hash, type TransactionReceipt, zeroAddress } from "viem";
 import { AJO_FACTORY_ABI } from "@/lib/contracts/abis";
 import { addresses } from "@/lib/contracts/addresses";
 import type { CreateGroupParams, NetworkId } from "@/types";
@@ -22,6 +22,16 @@ function getErrorMessage(error: unknown) {
 
 function resolveNetworkId(chainId: number | undefined): NetworkId {
   return chainId === 44787 ? 44787 : 42220;
+}
+
+function resolveFeeCurrency(networkId: NetworkId): Address {
+  const feeCurrency = addresses[networkId].cUSD;
+
+  if (feeCurrency === zeroAddress) {
+    throw new Error("cUSD fee currency is not configured for this network.");
+  }
+
+  return feeCurrency;
 }
 
 export function useAjoFactory() {
@@ -136,12 +146,14 @@ export function useAjoFactory() {
 
     try {
       setPendingAction("create");
+      const feeCurrency = resolveFeeCurrency(networkId);
       const txHash = await writeContractAsync({
         address: contractAddress,
         abi: AJO_FACTORY_ABI,
         functionName: "createGroup",
         args: [params.name, params.amount, BigInt(params.frequency), BigInt(params.maxMembers)],
         chainId,
+        feeCurrency,
       });
 
       setCreateHash(txHash);
