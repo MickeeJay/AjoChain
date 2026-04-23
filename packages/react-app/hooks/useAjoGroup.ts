@@ -329,7 +329,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
           args: [groupAddress, contributionAmount],
           chainId,
           feeCurrency,
-        });
+        } as Parameters<typeof writeContractAsync>[0]);
 
         setApproveHash(approveTxHash);
 
@@ -348,7 +348,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
         functionName: "contribute",
         chainId,
         feeCurrency,
-      });
+      } as Parameters<typeof writeContractAsync>[0]);
 
       setContributeHash(contributeTxHash);
 
@@ -406,7 +406,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
         functionName: "startGroup",
         chainId,
         feeCurrency,
-      });
+      } as Parameters<typeof writeContractAsync>[0]);
 
       setStartHash(startTxHash);
 
