@@ -154,7 +154,7 @@ export function useAjoFactory() {
         args: [params.name, params.amount, BigInt(params.frequency), BigInt(params.maxMembers)],
         chainId,
         feeCurrency,
-      });
+      } as Parameters<typeof writeContractAsync>[0]);
 
       setCreateHash(txHash);
 
@@ -207,7 +207,7 @@ export function useAjoFactory() {
         args: [BigInt(groupId), inviteCode],
         chainId,
         feeCurrency,
-      });
+      } as Parameters<typeof writeContractAsync>[0]);
 
       setJoinHash(txHash);
 
