@@ -59,6 +59,14 @@ function toLoadedMemberInfo(
   };
 }
 
+function resolveFeeCurrency(cusdAddress: Address) {
+  if (cusdAddress === zeroAddress) {
+    throw new Error("cUSD fee currency is not configured for this group.");
+  }
+
+  return cusdAddress;
+}
+
 export function useAjoGroup(groupAddress: `0x${string}`) {
   const { address: accountAddress } = useAccount();
   const chainId = useChainId();
@@ -313,12 +321,14 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
       if (currentAllowance < contributionAmount) {
         setContributionFlowStep("approving");
+        const feeCurrency = resolveFeeCurrency(tokenAddress);
         const approveTxHash = await writeContractAsync({
           address: tokenAddress,
           abi: IERC20_ABI,
           functionName: "approve",
           args: [groupAddress, contributionAmount],
           chainId,
+          feeCurrency,
         });
 
         setApproveHash(approveTxHash);
