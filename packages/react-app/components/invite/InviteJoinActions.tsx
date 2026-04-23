@@ -18,11 +18,17 @@ type InviteJoinActionsProps = {
 
 export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJoinActionsProps) {
   const router = useRouter();
-  const { isMiniPay, isConnected } = useMiniPay();
+  const { isMiniPay, isConnected, chainId } = useMiniPay();
   const { joinGroup, isJoining } = useAjoFactory();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const isWrongNetwork = isMiniPay && chainId !== undefined && chainId !== 42220;
 
   const handleJoin = async () => {
+    if (isWrongNetwork) {
+      setErrorMessage("Switch MiniPay to Celo Mainnet (42220) before joining this group.");
+      return;
+    }
+
     if (!isConnected) {
       setErrorMessage("Connect your wallet to join this group.");
       return;
@@ -45,7 +51,7 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
       <button
         type="button"
         onClick={() => void handleJoin()}
-        disabled={isJoining}
+        disabled={isJoining || isWrongNetwork}
         className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-celo-green px-5 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
       >
         {isJoining ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
