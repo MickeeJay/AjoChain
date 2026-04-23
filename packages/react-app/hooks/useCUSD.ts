@@ -62,7 +62,8 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
       abi: IERC20_ABI,
       functionName: "approve",
       args: [resolvedSpender, amount],
-    });
+      feeCurrency: tokenAddress,
+    } as Parameters<typeof writeContractAsync>[0]);
 
     void refetchAllowance();
 

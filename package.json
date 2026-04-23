@@ -7,6 +7,8 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace packages/react-app",
+    "tunnel": "npm run tunnel --workspace packages/react-app",
+    "dev:minipay": "npm run dev:minipay --workspace packages/react-app",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspace packages/react-app && npm run lint --workspace contracts",
     "test": "npm run test --workspace contracts",
