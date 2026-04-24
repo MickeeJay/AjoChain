@@ -23,6 +23,24 @@ coverage.json
 .env
 .env.*
 !.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Additional secret-bearing files
+*.p12
+*.jks
+*.pkcs8
+*.seed
+*.mnemonic
+mnemonic*
+wallet*.json
+private-key*
+.secret
+.secret.*
+*.secret
+secrets/
+credentials/
 
 # Private keys and wallet material
 *.key
@@ -47,9 +65,9 @@ Thumbs.db
 
 # Vercel and deployment artifacts
 .vercel/
+.vercel/cache/
 
 # Miscellaneous
 *.tsbuildinfo
-
-
 contracts/scripts/tst/
+
