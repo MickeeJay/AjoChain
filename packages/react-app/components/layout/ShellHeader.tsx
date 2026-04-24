@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAccount } from "wagmi";
+import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { formatCusdAmount } from "@/lib/formatters";
@@ -25,7 +26,8 @@ export function ShellHeader() {
           AjoChain
         </Link>
 
-        <div className="flex min-w-0 items-center gap-2">
+        {isConnected ? (
+          <div className="flex min-w-0 items-center gap-2">
           {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
           <span
             className={cn(
@@ -45,7 +47,15 @@ export function ShellHeader() {
           >
             <span className="truncate">{balanceLabel}</span>
           </span>
-        </div>
+          </div>
+        ) : (
+          <ConnectWalletButton
+            isMiniPay={isMiniPay}
+            className="min-h-10 px-4 py-2 text-xs font-semibold"
+            miniPayLabel="Open MiniPay"
+            defaultLabel="Connect"
+          />
+        )}
       </div>
     </header>
   );
