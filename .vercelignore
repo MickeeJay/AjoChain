@@ -1,0 +1,40 @@
+# Never upload local secrets or development artifacts to Vercel build context
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+
+# Git and editor metadata
+.git/
+.vscode/
+.idea/
+
+# Local build outputs and caches
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+build/
+coverage/
+
+# Contract artifacts not needed for frontend build
+contracts/artifacts/
+contracts/cache/
+contracts/typechain-types/
+
+# Secret material
+*.pem
+*.key
+*.p12
+*.jks
+*.seed
+*.mnemonic
+mnemonic*
+wallet*.json
+private-key*
+*secret*
+secrets/
+credentials/
