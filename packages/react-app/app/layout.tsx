@@ -42,6 +42,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        <meta
+          name="talentapp:project_verification"
+          content="d43002d56c192d6b0898d0034f00212acf3905feffeca2d8598da47cd3a9cea2b1cc29c43ba8dbbd28fe043fae644923d0f0f1855a85dd719152b4e9aa877911"
+        />
+      </head>
       <body className="bg-white font-sans text-gray-900">
         <Web3Provider>
           <AppShell>{children}</AppShell>
