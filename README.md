@@ -117,6 +117,77 @@ The Mini App now exposes minimal read-only API routes for invite and social coor
 | Hosting | Vercel | Frontend deployment |
 | Testing | Hardhat + Chai + Mocha | 67 tests (unit, integration, security) |
 
+## Frontend Deployment (Vercel + MiniPay)
+
+This repository is preconfigured for Vercel monorepo deployment using root-level `vercel.json`.
+
+### 1. Connect repository to Vercel
+
+1. Import the GitHub repository in the Vercel dashboard.
+2. Keep the project root as the repository root.
+3. Vercel reads these settings from `vercel.json`:
+  - `framework`: `nextjs`
+  - `installCommand`: `npm install`
+  - `buildCommand`: `cd packages/react-app && npm run build`
+  - `outputDirectory`: `packages/react-app/.next`
+
+### 2. Set production environment variables
+
+In Vercel Project -> Settings -> Environment Variables, set these values for Production:
+
+| Variable | Value |
+|----------|-------|
+| `NEXT_PUBLIC_CELO_RPC_URL` | `https://forno.celo.org` |
+| `NEXT_PUBLIC_ALFAJORES_RPC_URL` | `https://alfajores-forno.celo-testnet.org` |
+| `NEXT_PUBLIC_FACTORY_CONTRACT_ADDRESS` | `0xAb672F162220ebB17B82bBcf8823Cd0f141515b9` |
+| `NEXT_PUBLIC_CREDENTIAL_CONTRACT_ADDRESS` | `0x70A8C3AbF529B26dB520a12ea63276cceb50bB30` |
+| `NEXT_PUBLIC_CUSD_ADDRESS` | `0x765DE816845861e75A25fCA122bb6898B8B1282a` |
+| `NEXT_PUBLIC_CELO_CHAIN_ID` | `42220` |
+| `NEXT_PUBLIC_APP_URL` | `https://ajochain.vercel.app` (or your custom domain) |
+
+Optional (if you still run testnet checks from production build):
+
+| Variable | Value |
+|----------|-------|
+| `NEXT_PUBLIC_ALFAJORES_CHAIN_ID` | `44787` |
+| `NEXT_PUBLIC_CUSD_ALFAJORES` | `0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1` |
+
+All `NEXT_PUBLIC_*` variables above are public configuration values, not backend secrets.
+
+### 3. Deploy and verify
+
+1. Trigger a Production deployment in Vercel.
+2. Open the deployed URL and verify the app loads without client errors.
+3. Test key routes directly:
+  - `/`
+  - `/create`
+  - `/invite/<inviteCode>`
+
+### 4. MiniPay iframe compatibility
+
+The deployment config sets both:
+
+- `X-Frame-Options: SAMEORIGIN`
+- CSP with `frame-ancestors` including `https://minipay.xyz` and `https://*.minipay.xyz`
+
+MiniPay embedding behavior depends on the host WebView policy. If production embedding is blocked, keep CSP `frame-ancestors` and remove `X-Frame-Options` as a fallback to permit trusted cross-origin framing.
+
+### 5. Post-deployment acceptance checks
+
+Before Mini App submission, validate on the production URL (not ngrok):
+
+1. Wallet auto-connect in MiniPay.
+2. Create group flow end-to-end.
+3. Invite page renders group metadata without wallet connection.
+4. WhatsApp preview contains `og:image` (the app now serves dynamic OG images via `/api/og`).
+5. No console errors in web and MiniPay contexts.
+
+### 6. Optional custom domain
+
+1. Add `ajochain.xyz` or `ajochain.app` in Vercel -> Settings -> Domains.
+2. Update `NEXT_PUBLIC_APP_URL` to the custom domain.
+3. Redeploy so invite links and metadata use the final domain.
+
 ## Local Development
 
 ### Prerequisites
