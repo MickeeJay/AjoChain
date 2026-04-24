@@ -9,6 +9,7 @@ import { GroupProgress } from "@/components/groups/GroupProgress";
 import { InviteActions } from "@/components/groups/InviteActions";
 import { MemberList } from "@/components/groups/MemberList";
 import { RoundCountdown } from "@/components/groups/RoundCountdown";
+import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
 import { useAjoGroup } from "@/hooks/useAjoGroup";
 import { formatCusdFromWei } from "@/lib/formatters";
@@ -145,6 +146,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
 
   return (
     <section className="flex flex-col gap-4 text-slate-900">
+      <NetworkMismatchNotice />
       <div className="space-y-4 rounded-[2rem] border border-slate-200/70 bg-white p-5 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
         <GroupDetailHeader
           name={groupState.name}
