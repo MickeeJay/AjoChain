@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAccount, useConnect } from "wagmi";
 
 declare global {
@@ -16,8 +16,6 @@ declare global {
 
 const CELO_MAINNET_CHAIN_ID = 42220;
 const CELO_MAINNET_HEX_CHAIN_ID = "0xa4ec";
-
-let hasAttemptedMiniPayAutoConnect = false;
 
 function parseChainId(rawChainId: unknown) {
   if (typeof rawChainId === "number") {
@@ -35,66 +33,60 @@ function parseChainId(rawChainId: unknown) {
   return undefined;
 }
 
-async function promptSwitchToCeloMainnet(provider: NonNullable<Window["ethereum"]>) {
-  await provider.request({
-    method: "wallet_switchEthereumChain",
-    params: [{ chainId: CELO_MAINNET_HEX_CHAIN_ID }],
-  });
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return "Wallet action failed. Please try again.";
 }
 
 export function useMiniPay() {
   const [isMiniPay, setIsMiniPay] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnecting, setIsConnecting] = useState(false);
   const [address, setAddress] = useState<`0x${string}` | undefined>();
   const [chainId, setChainId] = useState<number | undefined>();
+  const [error, setError] = useState<string | null>(null);
   const { address: wagmiAddress, chainId: wagmiChainId, isConnected: wagmiIsConnected } = useAccount();
-  const { connectAsync, connectors } = useConnect();
-  const hasAttemptedConnectRef = useRef(false);
-  const hasPromptedSwitchRef = useRef(false);
+  const { connectAsync, connectors, isPending } = useConnect();
+  const hasAttemptedConnectorSyncRef = useRef(false);
 
   useEffect(() => {
     const provider = window.ethereum;
     const detected = Boolean(provider?.isMiniPay);
     setIsMiniPay(detected);
 
-    if (!detected || !provider) {
+    if (!provider) {
       setIsLoading(false);
       return;
     }
 
-    const syncMiniPayState = async () => {
-      if (hasAttemptedConnectRef.current || hasAttemptedMiniPayAutoConnect) {
-        setIsLoading(false);
-        return;
-      }
-
-      hasAttemptedConnectRef.current = true;
-      hasAttemptedMiniPayAutoConnect = true;
+    const syncWalletState = async () => {
       setIsLoading(true);
 
       try {
-        const accounts = (await provider.request({ method: "eth_requestAccounts" })) as string[];
-        const rawChainId = await provider.request({ method: "eth_chainId" });
-        const resolvedChainId = parseChainId(rawChainId);
+        const [accountsResponse, rawChainId] = await Promise.all([
+          provider.request({ method: "eth_accounts" }),
+          provider.request({ method: "eth_chainId" }),
+        ]);
 
-        setAddress(accounts?.[0] as `0x${string}` | undefined);
-        setChainId(resolvedChainId);
+        const accounts = Array.isArray(accountsResponse) ? accountsResponse : [];
+        const primaryAddress = typeof accounts[0] === "string" ? (accounts[0] as `0x${string}`) : undefined;
 
-        if (!wagmiIsConnected) {
+        setAddress(primaryAddress);
+        setChainId(parseChainId(rawChainId));
+
+        if (primaryAddress && !wagmiIsConnected && !hasAttemptedConnectorSyncRef.current) {
+          hasAttemptedConnectorSyncRef.current = true;
           const injectedConnector = connectors.find((connector) => connector.id === "injected");
 
           if (injectedConnector) {
             await connectAsync({ connector: injectedConnector });
           }
         }
-
-        if (resolvedChainId !== CELO_MAINNET_CHAIN_ID && !hasPromptedSwitchRef.current) {
-          hasPromptedSwitchRef.current = true;
-          await promptSwitchToCeloMainnet(provider);
-
-          const switchedChainId = parseChainId(await provider.request({ method: "eth_chainId" }));
-          setChainId(switchedChainId);
-        }
+      } catch (syncError) {
+        setError(getErrorMessage(syncError));
       } finally {
         setIsLoading(false);
       }
@@ -114,7 +106,7 @@ export function useMiniPay() {
       setChainId(parseChainId(nextChainId));
     };
 
-    void syncMiniPayState();
+    void syncWalletState();
     provider.on?.("accountsChanged", handleAccountsChanged);
     provider.on?.("chainChanged", handleChainChanged);
 
@@ -124,15 +116,81 @@ export function useMiniPay() {
     };
   }, [connectAsync, connectors, wagmiIsConnected]);
 
+  const connectWallet = useCallback(async () => {
+    const provider = window.ethereum;
+
+    if (!provider) {
+      setError("No supported wallet provider was detected.");
+      return false;
+    }
+
+    try {
+      setError(null);
+      setIsConnecting(true);
+      const requestedAccounts = await provider.request({ method: "eth_requestAccounts" });
+      const accounts = Array.isArray(requestedAccounts) ? requestedAccounts : [];
+      const primaryAddress = typeof accounts[0] === "string" ? (accounts[0] as `0x${string}`) : undefined;
+
+      setAddress(primaryAddress);
+      const rawChainId = await provider.request({ method: "eth_chainId" });
+      setChainId(parseChainId(rawChainId));
+
+      if (!wagmiIsConnected) {
+        const injectedConnector = connectors.find((connector) => connector.id === "injected");
+
+        if (injectedConnector) {
+          await connectAsync({ connector: injectedConnector });
+        }
+      }
+
+      return true;
+    } catch (connectError) {
+      setError(getErrorMessage(connectError));
+      return false;
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [connectAsync, connectors, wagmiIsConnected]);
+
+  const switchToCeloMainnet = useCallback(async () => {
+    const provider = window.ethereum;
+
+    if (!provider) {
+      setError("No wallet provider is available to switch networks.");
+      return false;
+    }
+
+    try {
+      setError(null);
+      await provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: CELO_MAINNET_HEX_CHAIN_ID }],
+      });
+
+      const switchedChainId = parseChainId(await provider.request({ method: "eth_chainId" }));
+      setChainId(switchedChainId);
+      return true;
+    } catch (switchError) {
+      setError(getErrorMessage(switchError));
+      return false;
+    }
+  }, []);
+
   const resolvedAddress = address ?? wagmiAddress;
   const resolvedChainId = chainId ?? wagmiChainId;
   const isConnected = Boolean(resolvedAddress);
+  const isWrongNetwork = Boolean(isConnected && resolvedChainId !== undefined && resolvedChainId !== CELO_MAINNET_CHAIN_ID);
 
   return {
     isMiniPay,
     isLoading,
+    isConnecting: isConnecting || isPending,
     isConnected,
+    isWrongNetwork,
+    connectWallet,
+    switchToCeloMainnet,
     address: resolvedAddress,
     chainId: resolvedChainId,
+    error,
   };
 }
