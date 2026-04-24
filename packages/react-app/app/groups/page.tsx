@@ -2,6 +2,7 @@
 
 import { lazy, Suspense, useState } from "react";
 import { GroupsListSkeleton } from "@/components/groups/GroupsListSkeleton";
+import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
 const MyGroupsList = lazy(() => import("@/components/groups/MyGroupsList"));
@@ -51,8 +52,9 @@ export default function GroupsPage() {
             <MyGroupsList />
           </Suspense>
         ) : (
-          <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600">
-            Connect your wallet to view your groups.
+          <section className="space-y-3 rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600">
+            <p>Connect your wallet to view your groups.</p>
+            <ConnectWalletButton isMiniPay={false} />
           </section>
         )
       ) : (
