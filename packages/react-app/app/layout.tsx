@@ -11,6 +11,26 @@ export const metadata: Metadata = {
   metadataBase: new URL(appBaseUrl),
   title: "AjoChain",
   description: "MiniPay-native rotating savings groups on Celo.",
+  openGraph: {
+    title: "AjoChain",
+    description: "MiniPay-native rotating savings groups on Celo.",
+    type: "website",
+    url: "/",
+    images: [
+      {
+        url: "/api/og?title=AjoChain&subtitle=MiniPay-native%20rotating%20savings%20groups%20on%20Celo.",
+        width: 1200,
+        height: 630,
+        alt: "AjoChain",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AjoChain",
+    description: "MiniPay-native rotating savings groups on Celo.",
+    images: ["/api/og?title=AjoChain&subtitle=MiniPay-native%20rotating%20savings%20groups%20on%20Celo."],
+  },
 };
 
 export const viewport: Viewport = {
