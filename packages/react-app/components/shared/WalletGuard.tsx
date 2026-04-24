@@ -13,8 +13,9 @@ export function WalletGuard({ children }: WalletGuardProps) {
   const pathname = usePathname();
   const { isMiniPay, isConnected, isLoading } = useMiniPay();
   const isPublicCredentialRoute = pathname?.startsWith("/credentials/") ?? false;
+  const isPublicEntryRoute = pathname === "/" || (pathname?.startsWith("/invite/") ?? false);
 
-  if (isPublicCredentialRoute) {
+  if (isPublicCredentialRoute || isPublicEntryRoute) {
     return <>{children}</>;
   }
 
