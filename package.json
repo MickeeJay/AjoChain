@@ -12,6 +12,7 @@
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspace packages/react-app && npm run lint --workspace contracts",
     "test": "npm run test --workspace contracts",
-    "clean": "npm run clean --workspace packages/react-app || true && npm run clean --workspace contracts || true"
+    "clean": "npm run clean --workspace packages/react-app || true && npm run clean --workspace contracts || true",
+    "security:check-secrets": "bash scripts/check-secrets.sh"
   }
 }
