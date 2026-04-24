@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useAccount } from "wagmi";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useMiniPay } from "@/hooks/useMiniPay";
@@ -10,8 +9,7 @@ import { cn } from "@/lib/utils";
 import { SHELL_HEADER_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constants";
 
 export function ShellHeader() {
-  const { address, chainId } = useAccount();
-  const { isMiniPay, isLoading, isConnected } = useMiniPay();
+  const { isMiniPay, isLoading, isConnected, address, chainId } = useMiniPay();
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
   const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
   const showWalletStatus = !isMiniPay && !isLoading && isConnected;
