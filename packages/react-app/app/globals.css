@@ -37,7 +37,16 @@ body {
   min-height: 100dvh;
   background: #ffffff;
   color: hsl(var(--foreground));
-  font-family: inherit;
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display), var(--font-body), "Segoe UI", sans-serif;
 }
 
 ::selection {
