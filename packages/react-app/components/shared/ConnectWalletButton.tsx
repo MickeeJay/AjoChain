@@ -1,8 +1,7 @@
 "use client";
 
 import { Loader2, Wallet } from "lucide-react";
-import { useMemo } from "react";
-import { useConnect } from "wagmi";
+import { useMiniPay } from "@/hooks/useMiniPay";
 import { cn } from "@/lib/utils";
 
 type ConnectWalletButtonProps = {
@@ -20,34 +19,26 @@ export function ConnectWalletButton({
   defaultLabel = "Connect wallet",
   isMiniPay = false,
 }: ConnectWalletButtonProps) {
-  const { connect, connectors, isPending } = useConnect();
-
-  const primaryConnector = useMemo(() => {
-    return connectors.find((connector) => connector.id === "injected") ?? connectors[0];
-  }, [connectors]);
+  const { connectWallet, isConnecting } = useMiniPay();
 
   const handleConnect = () => {
-    if (!primaryConnector) {
-      return;
-    }
-
-    connect({ connector: primaryConnector });
+    void connectWallet();
   };
 
-  const label = isPending ? "Connecting wallet" : isMiniPay ? miniPayLabel : defaultLabel;
+  const label = isConnecting ? "Connecting wallet" : isMiniPay ? miniPayLabel : defaultLabel;
 
   return (
     <button
       type="button"
       onClick={handleConnect}
-      disabled={!primaryConnector || isPending}
+      disabled={isConnecting}
       className={cn(
         "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-celo-green px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70",
         fullWidth ? "w-full" : "",
         className,
       )}
     >
-      {isPending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Wallet className="h-4 w-4" aria-hidden="true" />}
+      {isConnecting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Wallet className="h-4 w-4" aria-hidden="true" />}
       {label}
     </button>
   );
