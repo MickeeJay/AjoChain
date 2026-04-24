@@ -8,6 +8,20 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 import { formatCountdown, formatCusdFromWei } from "@/lib/formatters";
 import { shortenAddress } from "@/lib/utils";
 
+function resolveGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+    return "Good morning";
+  }
+
+  if (hour < 18) {
+    return "Good afternoon";
+  }
+
+  return "Good evening";
+}
+
 export function HomeDashboardContent() {
   const { address, chainId } = useAccount();
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
@@ -32,11 +46,12 @@ export function HomeDashboardContent() {
   }, [nextActionGroup, secondsLeft]);
 
   const greetingName = useMemo(() => shortenAddress(address), [address]);
+  const greetingPrefix = useMemo(() => resolveGreeting(), []);
 
   return (
     <section className="space-y-4 text-slate-900">
       <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(16,42,44,0.1)]">
-        <p className="text-sm font-medium text-slate-500">Good morning, {greetingName}</p>
+        <p className="text-sm font-medium text-slate-500">{greetingPrefix}, {greetingName}</p>
         <p className="mt-3 text-4xl font-semibold tracking-tight text-slate-950">cUSD {formatCusdFromWei(balance?.value)}</p>
       </section>
 
