@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Hex } from "viem";
+import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { useAjoFactory } from "@/hooks/useAjoFactory";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
@@ -18,10 +19,9 @@ type InviteJoinActionsProps = {
 
 export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJoinActionsProps) {
   const router = useRouter();
-  const { isMiniPay, isConnected, chainId } = useMiniPay();
+  const { isMiniPay, isConnected, chainId, isWrongNetwork, switchToCeloMainnet, isConnecting, error: walletError } = useMiniPay();
   const { joinGroup, isJoining } = useAjoFactory();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const isWrongNetwork = isMiniPay && chainId !== undefined && chainId !== 42220;
 
   const handleJoin = async () => {
     if (isWrongNetwork) {
@@ -48,10 +48,23 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
     <div className="space-y-3">
       {isMiniPay ? <p className="text-sm font-semibold text-emerald-700">Join with your MiniPay wallet</p> : null}
 
+      {!isConnected ? <ConnectWalletButton isMiniPay={isMiniPay} fullWidth /> : null}
+
+      {isWrongNetwork && chainId !== undefined ? (
+        <button
+          type="button"
+          onClick={() => void switchToCeloMainnet()}
+          disabled={isConnecting}
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-amber-300 bg-amber-50 px-5 py-3 text-sm font-semibold text-amber-900 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {isConnecting ? "Switching network" : "Switch to Celo Mainnet"}
+        </button>
+      ) : null}
+
       <button
         type="button"
         onClick={() => void handleJoin()}
-        disabled={isJoining || isWrongNetwork}
+        disabled={isJoining || isWrongNetwork || !isConnected}
         className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-celo-green px-5 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
       >
         {isJoining ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
@@ -75,6 +88,7 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
         .
       </p>
 
+      {walletError ? <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{walletError}</p> : null}
       {errorMessage ? <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{errorMessage}</p> : null}
     </div>
   );
