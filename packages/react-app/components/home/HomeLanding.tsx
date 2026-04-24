@@ -1,26 +1,12 @@
 "use client";
 
-import { Wallet } from "lucide-react";
-import { useMemo } from "react";
-import { useConnect } from "wagmi";
+import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 
 type HomeLandingProps = {
   isMiniPay: boolean;
 };
 
 export function HomeLanding({ isMiniPay }: HomeLandingProps) {
-  const { connect, connectors, isPending } = useConnect();
-
-  const primaryConnector = useMemo(() => connectors.find((connector) => connector.id === "injected") ?? connectors[0], [connectors]);
-
-  const handleConnect = () => {
-    if (!primaryConnector) {
-      return;
-    }
-
-    connect({ connector: primaryConnector });
-  };
-
   return (
     <section className="space-y-4 text-slate-900">
       <div className="relative overflow-hidden rounded-[2rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-lime-50 to-white p-6 shadow-[0_20px_60px_rgba(7,149,95,0.14)]">
@@ -41,15 +27,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
             Rotating savings groups secured by transparent smart contracts, with cUSD contributions and predictable payouts.
           </p>
 
-          <button
-            type="button"
-            onClick={handleConnect}
-            disabled={!primaryConnector || isPending}
-            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-celo-green px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            <Wallet className="h-4 w-4" />
-            {isMiniPay ? "Open MiniPay" : isPending ? "Connecting wallet" : "Connect wallet"}
-          </button>
+          <ConnectWalletButton isMiniPay={isMiniPay} />
         </div>
       </div>
     </section>
