@@ -12,6 +12,7 @@ export function GroupProgress({ currentRound, totalRounds, memberOrder, nextPayo
   const timelineCount = Math.max(totalRounds, 1);
   const rounds = Array.from({ length: timelineCount }, (_, index) => index);
   const normalizedCurrentRound = Math.max(0, Math.min(currentRound, timelineCount));
+  const timelineMinWidth = Math.max(timelineCount * 64, 300);
 
   return (
     <div className="space-y-3">
@@ -23,32 +24,34 @@ export function GroupProgress({ currentRound, totalRounds, memberOrder, nextPayo
       </div>
 
       <div className="grid gap-2">
-        <div className="grid" style={{ gridTemplateColumns: `repeat(${timelineCount}, minmax(0, 1fr))` }}>
-          {rounds.map((round) => {
-            const isCompleted = round < normalizedCurrentRound;
-            const isCurrent = round === normalizedCurrentRound && normalizedCurrentRound < totalRounds;
-            const payoutWallet = memberOrder[round];
+        <div className="overflow-x-auto pb-1">
+          <div className="grid gap-0.5" style={{ minWidth: `${timelineMinWidth}px`, gridTemplateColumns: `repeat(${timelineCount}, minmax(0, 1fr))` }}>
+            {rounds.map((round) => {
+              const isCompleted = round < normalizedCurrentRound;
+              const isCurrent = round === normalizedCurrentRound && normalizedCurrentRound < totalRounds;
+              const payoutWallet = memberOrder[round];
 
-            return (
-              <div key={round} className="flex flex-col items-center gap-2">
-                <div
-                  className={[
-                    "relative flex h-7 w-7 items-center justify-center rounded-full border",
-                    isCompleted ? "border-emerald-600 bg-emerald-600" : "",
-                    isCurrent ? "border-emerald-600 bg-white ring-4 ring-emerald-200" : "",
-                    !isCompleted && !isCurrent ? "border-slate-300 bg-slate-100" : "",
-                  ].join(" ")}
-                >
-                  {isCompleted ? <Check className="h-4 w-4 text-white" /> : null}
+              return (
+                <div key={round} className="flex flex-col items-center gap-2 px-1">
+                  <div
+                    className={[
+                      "relative flex h-7 w-7 items-center justify-center rounded-full border",
+                      isCompleted ? "border-emerald-600 bg-emerald-600" : "",
+                      isCurrent ? "border-emerald-600 bg-white ring-4 ring-emerald-200" : "",
+                      !isCompleted && !isCurrent ? "border-slate-300 bg-slate-100" : "",
+                    ].join(" ")}
+                  >
+                    {isCompleted ? <Check className="h-4 w-4 text-white" /> : null}
+                  </div>
+                  <p className="text-xs font-medium text-slate-500">{shortenAddress(payoutWallet)}</p>
                 </div>
-                <p className="text-[10px] font-medium text-slate-500">{shortenAddress(payoutWallet)}</p>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
         <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
-          Next payout to: {shortenAddress(nextPayoutTo)}
+          Next payout to: {nextPayoutTo ? shortenAddress(nextPayoutTo) : "TBD"}
         </p>
       </div>
     </div>

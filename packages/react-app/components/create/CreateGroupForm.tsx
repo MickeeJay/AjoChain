@@ -8,6 +8,7 @@ import { useMiniPay } from "@/hooks/useMiniPay";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
 
 type CreateGroupFormProps = {
+  template?: string;
   onSubmit?: (value: {
     name: string;
     contributionAmount: string;
@@ -16,15 +17,48 @@ type CreateGroupFormProps = {
   }) => void;
 };
 
-export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
+const TEMPLATE_PRESETS: Record<string, { label: string; name: string; contributionAmount: string; members: string; cycleDuration: string }> = {
+  "weekly-market": {
+    label: "Weekly Market Circle",
+    name: "Weekly Market Circle",
+    contributionAmount: "10",
+    members: "5",
+    cycleDuration: "7",
+  },
+  "daily-coop": {
+    label: "Daily Cooperative Pot",
+    name: "Daily Cooperative Pot",
+    contributionAmount: "5",
+    members: "7",
+    cycleDuration: "1",
+  },
+  "monthly-growth": {
+    label: "Monthly Growth Club",
+    name: "Monthly Growth Club",
+    contributionAmount: "20",
+    members: "10",
+    cycleDuration: "30",
+  },
+};
+
+function resolveTemplatePreset(template?: string) {
+  if (!template) {
+    return null;
+  }
+
+  return TEMPLATE_PRESETS[template] ?? null;
+}
+
+export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
   const router = useRouter();
   const { createGroup, isCreating, error: contractError } = useAjoFactory();
   const { isConnected, isWrongNetwork } = useMiniPay();
+  const preset = resolveTemplatePreset(template);
   const [step, setStep] = useState(1);
-  const [name, setName] = useState("Market Traders Circle");
-  const [contributionAmount, setContributionAmount] = useState("10");
-  const [members, setMembers] = useState("5");
-  const [cycleDuration, setCycleDuration] = useState("7");
+  const [name, setName] = useState(preset?.name ?? "Market Traders Circle");
+  const [contributionAmount, setContributionAmount] = useState(preset?.contributionAmount ?? "10");
+  const [members, setMembers] = useState(preset?.members ?? "5");
+  const [cycleDuration, setCycleDuration] = useState(preset?.cycleDuration ?? "7");
   const [formError, setFormError] = useState<string | null>(null);
   const [txState, setTxState] = useState<"idle" | "pending" | "success" | "error">("idle");
 
@@ -152,6 +186,12 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         <span>{Math.round((step / maxSteps) * 100)}%</span>
       </div>
 
+      {preset ? (
+        <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
+          Template loaded: {preset.label}
+        </p>
+      ) : null}
+
       {step === 1 ? (
         <label className="grid gap-2 text-sm font-medium text-slate-700">
           Name your group
@@ -160,7 +200,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
             onChange={(event) => setName(event.target.value.slice(0, 32))}
             maxLength={32}
             placeholder="e.g. Market Traders Circle"
-            className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
+            className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition focus:border-celo-green"
           />
           <span className="text-xs text-slate-500">{name.length}/32 characters</span>
         </label>
@@ -169,7 +209,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
       {step === 2 ? (
         <div className="grid gap-3">
           <p className="text-sm font-medium text-slate-700">Set contribution amount (cUSD)</p>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
             {["1", "5", "10", "20", "50"].map((amount) => (
               <button
                 key={amount}
@@ -196,7 +236,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
               }}
               inputMode="decimal"
               placeholder="Enter custom amount"
-              className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-celo-green"
+              className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition focus:border-celo-green"
             />
           </label>
           <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">

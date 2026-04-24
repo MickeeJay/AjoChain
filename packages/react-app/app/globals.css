@@ -40,6 +40,11 @@ body {
   font-family: var(--font-body), "Segoe UI", sans-serif;
 }
 
+:where(a, button, input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
 h1,
 h2,
 h3,
@@ -78,5 +83,19 @@ h6 {
   to {
     opacity: 0;
     transform: translateY(80px) rotate(320deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

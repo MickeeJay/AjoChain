@@ -3,7 +3,15 @@ import { CalendarDays, CircleDollarSign, Users } from "lucide-react";
 import { CreateGroupForm } from "@/components/create/CreateGroupForm";
 import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
 
-export default function CreateGroupPage() {
+type CreateGroupPageProps = {
+  searchParams?: {
+    template?: string;
+  };
+};
+
+export default function CreateGroupPage({ searchParams }: CreateGroupPageProps) {
+  const template = typeof searchParams?.template === "string" ? searchParams.template : undefined;
+
   return (
     <section className="flex flex-col gap-4 text-slate-900">
       <NetworkMismatchNotice />
@@ -41,7 +49,7 @@ export default function CreateGroupPage() {
         </section>
 
         <aside className="rounded-[1.5rem] bg-slate-950 p-5 text-white">
-          <CreateGroupForm />
+          <CreateGroupForm template={template} />
           <Link href="/groups" className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-50">
             Review groups
           </Link>

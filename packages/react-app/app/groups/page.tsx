@@ -1,6 +1,7 @@
 "use client";
 
 import { lazy, Suspense, useState } from "react";
+import { GroupsDiscoverBeta } from "@/components/groups/GroupsDiscoverBeta";
 import { GroupsListSkeleton } from "@/components/groups/GroupsListSkeleton";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
@@ -60,9 +61,7 @@ export default function GroupsPage() {
           </section>
         )
       ) : (
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600">
-          Discover will list all public savings groups in a future release.
-        </section>
+        <GroupsDiscoverBeta isConnected={isConnected} isMiniPay={isMiniPay} />
       )}
     </section>
   );
