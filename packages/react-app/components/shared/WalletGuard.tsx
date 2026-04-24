@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
 type WalletGuardProps = {
@@ -38,6 +39,7 @@ export function WalletGuard({ children }: WalletGuardProps) {
       <p className="mt-2 text-sm leading-6 text-slate-600">
         Use a supported wallet connection before creating or joining a savings group.
       </p>
+      <ConnectWalletButton isMiniPay={isMiniPay} fullWidth className="mt-5" />
       <Link href="/" className="mt-5 inline-flex min-h-12 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700">
         Back home
       </Link>
