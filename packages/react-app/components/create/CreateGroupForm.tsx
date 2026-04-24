@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { parseUnits } from "viem";
 import { useAjoFactory } from "@/hooks/useAjoFactory";
+import { useMiniPay } from "@/hooks/useMiniPay";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
 
 type CreateGroupFormProps = {
@@ -18,6 +19,7 @@ type CreateGroupFormProps = {
 export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
   const router = useRouter();
   const { createGroup, isCreating, error: contractError } = useAjoFactory();
+  const { isConnected, isWrongNetwork } = useMiniPay();
   const [step, setStep] = useState(1);
   const [name, setName] = useState("Market Traders Circle");
   const [contributionAmount, setContributionAmount] = useState("10");
@@ -88,6 +90,16 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         const validationError = validateStep(1) ?? validateStep(2) ?? validateStep(3) ?? validateStep(4);
         if (validationError) {
           setFormError(validationError);
+          return;
+        }
+
+        if (!isConnected) {
+          setFormError("Connect your wallet before creating a group.");
+          return;
+        }
+
+        if (isWrongNetwork) {
+          setFormError("Switch to Celo Mainnet (42220) before creating a group.");
           return;
         }
 
@@ -262,6 +274,8 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
 
       {formError ? <p className="text-sm font-medium text-rose-600">{formError}</p> : null}
       {!formError && contractError ? <p className="text-sm font-medium text-rose-600">{contractError}</p> : null}
+      {!formError && !isConnected ? <p className="text-sm font-medium text-amber-700">Connect your wallet to continue this setup.</p> : null}
+      {!formError && isConnected && isWrongNetwork ? <p className="text-sm font-medium text-amber-700">Switch wallet network to Celo Mainnet to create this group.</p> : null}
 
       <div className="flex items-center gap-2">
         <button
@@ -274,7 +288,7 @@ export function CreateGroupForm({ onSubmit }: CreateGroupFormProps) {
         </button>
         <button
           type="submit"
-          disabled={isCreating}
+          disabled={isCreating || !isConnected || isWrongNetwork}
           className="inline-flex min-h-12 flex-1 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
         >
           {isCreating ? "Creating..." : step === maxSteps ? "Create Group" : "Next"}
