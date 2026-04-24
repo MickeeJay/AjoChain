@@ -27,6 +27,9 @@ export async function generateMetadata({ params }: InviteLandingPageProps): Prom
   const description = inviteGroup
     ? `${inviteGroup.name}: contribute $${formatCusdFromWei(inviteGroup.contributionAmount)} ${formatFrequencyLabel(inviteGroup.frequencyInDays).toLowerCase()} on MiniPay.`
     : "Open this invite on MiniPay to join a rotating savings group on AjoChain.";
+  const inviteCodeForUrl = normalizedInviteCode ?? params.code;
+  const imageParams = new URLSearchParams({ title, subtitle: description });
+  const imageUrl = `/api/og?${imageParams.toString()}`;
 
   return {
     title,
@@ -35,11 +38,21 @@ export async function generateMetadata({ params }: InviteLandingPageProps): Prom
       title,
       description,
       type: "website",
+      url: `/invite/${inviteCodeForUrl}`,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [imageUrl],
     },
   };
 }
