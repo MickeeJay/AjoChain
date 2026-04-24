@@ -3,6 +3,7 @@
 import { lazy, Suspense, useState } from "react";
 import { GroupsListSkeleton } from "@/components/groups/GroupsListSkeleton";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
 const MyGroupsList = lazy(() => import("@/components/groups/MyGroupsList"));
@@ -13,6 +14,7 @@ export default function GroupsPage() {
 
   return (
     <section className="flex flex-col gap-4 text-slate-900">
+      <NetworkMismatchNotice />
       <div className="space-y-3">
         <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
           My groups
