@@ -10,7 +10,7 @@ const MyGroupsList = lazy(() => import("@/components/groups/MyGroupsList"));
 
 export default function GroupsPage() {
   const [activeTab, setActiveTab] = useState<"my-groups" | "discover">("my-groups");
-  const { isConnected } = useMiniPay();
+  const { isConnected, isMiniPay } = useMiniPay();
 
   return (
     <section className="flex flex-col gap-4 text-slate-900">
@@ -56,7 +56,7 @@ export default function GroupsPage() {
         ) : (
           <section className="space-y-3 rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600">
             <p>Connect your wallet to view your groups.</p>
-            <ConnectWalletButton isMiniPay={false} />
+            <ConnectWalletButton isMiniPay={isMiniPay} />
           </section>
         )
       ) : (
