@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { CalendarDays, CircleDollarSign, Users } from "lucide-react";
 import { CreateGroupForm } from "@/components/create/CreateGroupForm";
+import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
 
 export default function CreateGroupPage() {
   return (
     <section className="flex flex-col gap-4 text-slate-900">
+      <NetworkMismatchNotice />
       <div className="grid gap-5 rounded-[2rem] border border-slate-200/70 bg-white p-5 shadow-[0_20px_80px_rgba(16,42,44,0.12)] lg:grid-cols-[1.15fr_0.85fr]">
         <section className="space-y-5">
           <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
