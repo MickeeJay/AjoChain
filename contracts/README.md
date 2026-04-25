@@ -1,162 +1,154 @@
 # AjoChain Contracts
 
-Solidity smart contracts for AjoChain — on-chain rotating savings groups on Celo.
+This package contains the Solidity protocol for AjoChain savings groups and the Hardhat workspace used for build, test, deployment, and verification.
 
-## Deployed Contracts
+## Mainnet Deployments
 
-| Contract | Celo Mainnet | Alfajores Testnet |
-|----------|-------------|-------------------|
-| AjoCredential | [`0x70A8C3AbF529B26dB520a12ea63276cceb50bB30`](https://celoscan.io/address/0x70A8C3AbF529B26dB520a12ea63276cceb50bB30#code) | Set at deploy |
-| AjoGroupFactory | [`0xAb672F162220ebB17B82bBcf8823Cd0f141515b9`](https://celoscan.io/address/0xAb672F162220ebB17B82bBcf8823Cd0f141515b9#code) | Set at deploy |
+| Contract | Address | Explorer |
+|---|---|---|
+| AjoGroupFactory | `0xAb672F162220ebB17B82bBcf8823Cd0f141515b9` | https://celoscan.io/address/0xAb672F162220ebB17B82bBcf8823Cd0f141515b9#code |
+| AjoCredential | `0x70A8C3AbF529B26dB520a12ea63276cceb50bB30` | https://celoscan.io/address/0x70A8C3AbF529B26dB520a12ea63276cceb50bB30#code |
 
-## Contract Overview
+## Contract Boundaries
 
 ### AjoGroupFactory
 
-Entry point for the protocol. Creates new savings groups and manages the group registry.
+Responsibilities:
 
-- Deploys a new `AjoSavingsGroup` per `createGroup()` call.
-- Validates invite codes for `joinGroup()`.
-- Stores group metadata for frontend discovery.
-- Owns the `AjoCredential` contract and authorizes groups to mint.
+- Validates group creation constraints.
+- Deploys one `AjoSavingsGroup` instance per group.
+- Stores group addresses by `groupId`.
+- Stores hashed invite code per group.
+- Registers each deployed group as an authorized minter in `AjoCredential`.
+
+Creation constraints enforced by the factory:
+
+- Group size: 3 to 20 members.
+- Contribution amount: `0 < amount <= 50e18`.
+- Frequency in days: only `1`, `7`, or `30`.
+- Pot limit: `contributionAmount * maxMembers <= 500e18`.
 
 ### AjoSavingsGroup
 
-One instance per savings circle. Handles the full lifecycle of a group.
+One deployed instance per savings group.
 
-- **Forming** — Creator adds members via the factory. Members can exit freely.
-- **Active** — Members contribute cUSD each round. When all contribute, the round recipient receives the pot. Rounds repeat until every member has been paid out.
-- **Paused** — Members can vote to pause (60% threshold) and vote to resume.
-- **Completed** — All rounds finished. Soulbound credentials minted for every member.
+Lifecycle states:
 
-Key constraints:
-- Contribution amount: 1 wei to 50 cUSD per round.
-- Group size: 3 to 15 members.
-- Frequencies: daily (1), weekly (7), monthly (30).
-- Reentrancy-guarded on all state-changing external functions.
+- `FORMING`: members are added through the factory.
+- `ACTIVE`: members contribute each round and payouts execute.
+- `PAUSED`: contribution/payout flow is paused until resumed.
+- `COMPLETED`: all rounds finished and credentials minted.
+
+Core behavior:
+
+- Creator starts the group after minimum membership is reached.
+- Member order is shuffled at start and used for payout sequence.
+- Each active member contributes once per round.
+- Round can auto-payout when all members have contributed.
+- Members vote pause/resume and creator applies pause transitions once vote threshold is met.
+- `emergencyExit` is allowed only while forming.
 
 ### AjoCredential
 
-ERC-721 soulbound token (non-transferable). Minted when a group completes its full cycle.
+Soulbound completion credential:
 
-- On-chain SVG generation — no IPFS dependency.
-- Stores recipient, group address, total saved, and completion timestamp.
-- `tokenURI` returns base64-encoded JSON with embedded SVG image.
+- ERC-721 with transfer blocked post-mint.
+- Only authorized group contracts can mint.
+- Stores credential records on-chain.
+- `tokenURI` returns base64 JSON with embedded SVG image.
 
-## Project Structure
+## Workspace Structure
 
-```
+```text
 contracts/
 ├── contracts/
-│   ├── AjoGroupFactory.sol      # Factory and group registry
-│   ├── AjoSavingsGroup.sol      # Per-group savings logic
-│   ├── AjoCredential.sol        # Soulbound completion NFT
+│   ├── AjoGroupFactory.sol
+│   ├── AjoSavingsGroup.sol
+│   ├── AjoCredential.sol
 │   ├── interfaces/
-│   │   ├── IAjoFactory.sol      # Factory interface
-│   │   └── IAjoGroup.sol        # Group interface
 │   ├── libraries/
-│   │   └── Counters.sol         # Token ID counter
 │   └── mocks/
-│       ├── MockCUSD.sol          # Test ERC-20 token
-│       └── MockReentrantCredential.sol  # Reentrancy test helper
 ├── scripts/
-│   ├── deploy.ts                # Mainnet deployment
-│   ├── deploy-testnet.ts        # Alfajores deployment
-│   ├── verify.ts                # Celoscan verification
-│   ├── smoke-test.ts            # Post-deploy sanity check
-│   └── alfajores.ts             # Shared deploy utilities
 ├── test/
-│   ├── AjoSavingsGroup.test.ts  # Core unit tests
-│   ├── AjoGroupFactory.test.ts  # Factory unit tests
-│   ├── AjoCredential.test.ts    # Credential unit tests
-│   └── integration/             # Full-cycle and security tests
 ├── hardhat.config.ts
 └── .env.example
 ```
 
-## Setup
+## Local Setup
 
 ```bash
-# From the repo root
 cd contracts
 pnpm install
-
-# Copy env template and fill in your values
 cp .env.example .env
 ```
 
-Required values in `.env`:
+Required variables in `.env`:
 
-| Variable | Purpose |
-|----------|---------|
-| `PRIVATE_KEY` | Deployer wallet key (0x-prefixed, 32 bytes) |
-| `CELOSCAN_API_KEY` | For contract verification on Celoscan |
+- `PRIVATE_KEY`
+- `CELOSCAN_API_KEY`
+
+Optional:
+
+- `REPORT_GAS=true` to enable gas reporter.
 
 ## Build and Test
 
 ```bash
-# Compile
-npx hardhat compile
-
-# Run all tests (67 tests)
-npx hardhat test
-
-# Run with gas reporting
-REPORT_GAS=true npx hardhat test
-
-# Lint Solidity
-npx solhint "contracts/**/*.sol"
+pnpm run compile
+pnpm run test
+pnpm run lint
 ```
 
-## Deploy
-
-### Alfajores (testnet)
+With gas reporter:
 
 ```bash
-npx hardhat run scripts/deploy-testnet.ts --network alfajores
-npx hardhat run scripts/smoke-test.ts --network alfajores
+REPORT_GAS=true pnpm run test
 ```
 
-### Celo (mainnet)
+## Deployment and Verification
+
+Alfajores:
 
 ```bash
-npx hardhat run scripts/deploy.ts --network celo
+pnpm run deploy:testnet
+pnpm run smoke:testnet
+pnpm run verify:testnet
 ```
 
-The deploy script will:
-1. Deploy `AjoCredential`.
-2. Deploy `AjoGroupFactory` with cUSD and credential addresses.
-3. Transfer credential ownership to the factory.
-4. Update frontend address file.
-5. Verify both contracts on Celoscan.
+Celo mainnet:
 
-## Verify
+```bash
+pnpm run deploy
+pnpm run verify
+```
 
-If verification did not run during deployment:
+Manual verify fallback:
 
 ```bash
 npx hardhat verify --network celo <CredentialAddress>
-npx hardhat verify --network celo <FactoryAddress> <cUSD> <CredentialAddress>
+npx hardhat verify --network celo <FactoryAddress> <cUSDAddress> <CredentialAddress>
 ```
 
-## Gas Benchmarks
+## Test Coverage Focus
 
-Measured on Hardhat local network with optimizer enabled (200 runs, viaIR):
+The suite covers:
 
-| Operation | Gas |
-|-----------|-----|
-| `createGroup` | ~2,056,000 |
-| `joinGroup` | ~139,000 |
-| `contribute` | ~111,000 |
-| Full round payout | ~287,000 |
+- Group creation and invite joins.
+- Membership boundaries and invalid parameter handling.
+- Round contribution and payout flow.
+- Pause/resume governance.
+- Forming-only exits.
+- Reentrancy protections.
+- Unauthorized access attempts.
+- Invite-code validation checks.
+- Gas benchmark assertions.
 
-At Celo's typical base fee (~25 gwei), a full group lifecycle for 5 members costs roughly 0.08 CELO in total gas.
+## Security Notes for Contract Operators
 
-## Dependencies
-
-- [OpenZeppelin Contracts v4.9.6](https://docs.openzeppelin.com/contracts/4.x/) — ERC-721, Ownable, ReentrancyGuard, Strings, Base64
-- [Hardhat v2.28](https://hardhat.org/) — Compilation, testing, deployment
-- [@nomicfoundation/hardhat-verify](https://www.npmjs.com/package/@nomicfoundation/hardhat-verify) — Celoscan source verification
+- Keep deployer keys and verification keys out of version control.
+- Run `bash ../scripts/check-secrets.sh` before pushing deployment changes.
+- Verify deployed bytecode and constructor arguments on Celoscan.
+- Treat any leaked deployer key as compromised and rotate immediately.
 
 ## License
 
