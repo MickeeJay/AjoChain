@@ -1,70 +1,100 @@
 # Security Policy
 
-## Responsible Disclosure
+## Reporting a Vulnerability
 
-Report security issues privately through a GitHub Security Advisory for this repository.
-If email is preferred, contact `security@ajochain.dev`.
+Please report security issues privately through GitHub Security Advisories for this repository.
 
-Do not open public issues or pull requests for vulnerabilities until a fix has been coordinated.
+If advisory flow is unavailable, contact `security@ajochain.dev`.
 
-## Audit Status
+Please do not open public issues or pull requests for unpatched vulnerabilities.
 
-An internal pre-deployment audit was completed in April 2026, covering all three contracts. The audit identified and fixed 13 issues across logic, gas efficiency, interface correctness, and configuration. All 67 tests pass after the fixes.
+## Scope
 
-AjoChain has not been reviewed by a third-party audit firm. Use it at your own risk until an independent review is completed.
+In scope:
 
-## Contract Safety Limits
+- Solidity contracts under `contracts/contracts`.
+- Contract deployment and verification scripts.
+- Frontend API routes that read contract state.
+- Repository secret handling controls (`.gitignore`, secret scan script, env patterns).
 
-The contracts enforce conservative limits for initial deployment:
+Out of scope:
 
-| Parameter | Limit |
-|-----------|-------|
-| Max contribution per round | 50 cUSD |
-| Max pot value (contribution × members) | 750 cUSD |
-| Group size | 3 to 15 members |
-| Frequencies | Daily, weekly, monthly |
+- Third-party infrastructure outages.
+- Vulnerabilities in external dependencies without a project-specific exploit path.
 
-These limits are compiled as constants. Changing them requires a new contract deployment.
+## Security Model
 
-## Known Accepted Risks
+### Contract-level assumptions
 
-- **Shuffle randomness**: Payout order is shuffled using `blockhash` and `block.timestamp`. Celo validators can influence the timestamp within a ~5 second window. For a social savings group with small pot sizes, the economic incentive to manipulate order is negligible. This is not suitable for high-stakes lotteries.
+- cUSD token contract behaves as standard ERC-20.
+- Group participants accept fixed parameters at creation time.
+- Group creator is expected to manage lifecycle actions such as `startGroup` and pause transitions.
 
-- **No active-phase exit**: Once a group moves from FORMING to ACTIVE, members cannot leave. This is by design — the savings circle depends on all members completing every round. Members accept this by joining.
+### Guardrails implemented on-chain
 
-- **Emergency exit only during FORMING**: Members can exit freely while the group is still forming. No cUSD has been deposited at that stage, so no refund logic is needed.
+- Reentrancy protection on state-changing flows where relevant.
+- Group size, contribution amount, frequency, and max-pot constraints validated by factory.
+- Invite-code matching required for joins.
+- One-contribution-per-member-per-round logic.
+- Unauthorized credential mint prevention through explicit group authorization.
 
-## Secrets and Private Keys
+## Known Limitations
 
-Never share private keys, seed phrases, mnemonic files, or keystore contents in issues, pull requests, logs, screenshots, or chat messages.
+1. Payout shuffle entropy is blockchain-derived and not suitable for high-stakes randomness requirements.
+2. Members cannot exit after group activation by design.
+3. Emergency exit exists only during forming phase because no pooled funds are expected yet.
 
-The following files are gitignored and must never be committed:
+## Secret Handling Requirements
 
-- `.env` (all directories)
-- `*.key`, `*.pem`
-- `mnemonic.txt`
-- `keystore/`
+Never commit or disclose:
 
-If a secret is exposed:
+- Private keys.
+- Mnemonic/seed phrases.
+- Keystore files.
+- Populated `.env` files.
+- API keys tied to privileged operations.
 
-1. Rotate or revoke the compromised key immediately.
-2. Notify the maintainer privately.
-3. Provide only the minimum reproduction details needed to investigate.
+Repository controls:
 
-## What To Include In A Report
+- `.gitignore` blocks common secret-bearing file patterns.
+- `scripts/check-secrets.sh` scans tracked files for secret-like material.
 
-When reporting a vulnerability, include:
+Run before every push:
 
-- Network used (mainnet or Alfajores)
-- Contract address
-- Transaction hash if available
-- Steps to reproduce
-- Expected vs actual behavior
-- Any relevant screenshots or logs with secrets removed
+```bash
+bash scripts/check-secrets.sh
+```
 
-## Deployed Contracts
+## Incident Response
 
-| Contract | Celo Mainnet |
-|----------|-------------|
-| AjoCredential | `0x70A8C3AbF529B26dB520a12ea63276cceb50bB30` |
+If credentials are exposed:
+
+1. Revoke/rotate compromised keys immediately.
+2. Pause affected deployment operations.
+3. Re-deploy from clean credentials if signer trust is impacted.
+4. Publish user-facing mitigation notes after immediate containment.
+
+If a contract vulnerability is confirmed:
+
+1. Reproduce with a deterministic test.
+2. Assess exploitability and blast radius.
+3. Prepare and review patch.
+4. Coordinate fix disclosure with clear upgrade/migration guidance.
+
+## Submission Guidelines for Reports
+
+Include:
+
+- Network (`celo` or `alfajores`).
+- Contract address and function(s) involved.
+- Transaction hash(es), if applicable.
+- Reproduction steps.
+- Expected vs actual behavior.
+- Estimated impact.
+
+## Current Mainnet Contracts
+
+| Contract | Address |
+|---|---|
 | AjoGroupFactory | `0xAb672F162220ebB17B82bBcf8823Cd0f141515b9` |
+| AjoCredential | `0x70A8C3AbF529B26dB520a12ea63276cceb50bB30` |
