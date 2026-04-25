@@ -1,26 +1,23 @@
-# AjoChain Frontend Deployment via GitHub -> Vercel
+# AjoChain Frontend Deployment (GitHub -> Vercel)
 
-This guide is for production deployment of the Next.js MiniPay mini app using GitHub integration.
+This runbook covers production deployment of the Next.js frontend in this monorepo.
 
-## 1) Vercel project creation
+## 1. Create the Vercel Project
 
-1. Sign in to Vercel.
-2. Click **Add New Project** and import the AjoChain GitHub repository.
-3. In project settings, keep the root as repository root.
-4. Vercel will read `vercel.json` from the repository root.
+1. Import the repository into Vercel.
+2. Keep the repository root as project root.
+3. Confirm Vercel reads root `vercel.json`.
 
-## 2) Confirm build settings
+Configured build settings:
 
-These values are already declared in `vercel.json`:
+- `framework`: `nextjs`
+- `installCommand`: `npm install`
+- `buildCommand`: `cd packages/react-app && npm run build`
+- `outputDirectory`: `packages/react-app/.next`
 
-- framework: `nextjs`
-- installCommand: `npm install`
-- buildCommand: `cd packages/react-app && npm run build`
-- outputDirectory: `packages/react-app/.next`
+## 2. Configure Production Environment Variables
 
-## 3) Configure production environment variables
-
-Set the following variables in Vercel for **Production** (and Preview if needed):
+Set these in Vercel Project Settings for Production:
 
 - `NEXT_PUBLIC_CELO_RPC_URL=https://forno.celo.org`
 - `NEXT_PUBLIC_ALFAJORES_RPC_URL=https://alfajores-forno.celo-testnet.org`
@@ -30,48 +27,50 @@ Set the following variables in Vercel for **Production** (and Preview if needed)
 - `NEXT_PUBLIC_CELO_CHAIN_ID=42220`
 - `NEXT_PUBLIC_APP_URL=https://ajochain.vercel.app`
 
-Optional:
+Optional testnet values:
 
 - `NEXT_PUBLIC_ALFAJORES_CHAIN_ID=44787`
 - `NEXT_PUBLIC_CUSD_ALFAJORES=0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1`
 
-## 4) Deploy
+Notes:
 
-1. Push commits to your selected branch (for example `main`).
-2. Vercel auto-builds from GitHub webhook.
-3. Wait for build status to become **Ready**.
-4. Open the public deployment URL.
+- `NEXT_PUBLIC_*` values are public runtime config.
+- Do not place private keys or backend credentials in frontend env vars.
 
-## 5) Validate headers for MiniPay iframe
+## 3. Deploy
 
-The app sends:
+1. Push to the connected branch.
+2. Wait for Vercel build to complete.
+3. Confirm deployment status is `Ready`.
+
+## 4. Validate Runtime Security Headers
+
+Expected headers from `vercel.json` include:
 
 - `X-Frame-Options: SAMEORIGIN`
-- `Content-Security-Policy` with `frame-ancestors` for `minipay.xyz`
+- CSP with `frame-ancestors` including `https://minipay.xyz` and `https://*.minipay.xyz`
 
-Important note: strict browser handling can favor CSP `frame-ancestors` over X-Frame-Options behavior in some embedded contexts. If MiniPay production app blocks framing, keep CSP and remove `X-Frame-Options` in a follow-up deploy.
+If MiniPay embedding is blocked by browser policy handling, retain CSP `frame-ancestors` and evaluate removal of `X-Frame-Options` in a controlled follow-up release.
 
-## 6) Post-deployment test checklist
+## 5. Post-Deployment Verification Checklist
 
-1. Home page loads with no runtime console error.
-2. MiniPay Developer Mode opens production URL (no ngrok).
-3. Wallet auto-connect works in MiniPay.
-4. Create group flow completes end-to-end.
-5. Invite page `/invite/<code>` renders group details without wallet connect.
-6. OG preview image resolves for invite links and appears in WhatsApp link preview.
+1. Home page loads without client runtime errors.
+2. Create flow loads and completes expected transaction prompts.
+3. Invite route renders metadata from API without wallet connection.
+4. Share flow returns valid payload from `POST /api/share`.
+5. Open Graph preview resolves on invite links.
 
-## 7) Optional custom domain
+## 6. Operational Rollback Plan
 
-1. Add `ajochain.xyz` or `ajochain.app` in Vercel domain settings.
-2. Configure DNS records as instructed by Vercel.
-3. Update `NEXT_PUBLIC_APP_URL` to custom domain URL.
-4. Trigger redeploy.
+If a production regression is detected:
 
-## 8) MiniPay submission readiness
+1. Promote previous known-good Vercel deployment.
+2. Re-validate homepage, create flow, invite flow, and share payload endpoints.
+3. Open incident issue with root cause, impacted surface, and preventive action.
 
-Before submission, verify in MiniPay production app (not only Developer Mode):
+## 7. Custom Domain (Optional)
 
-1. App opens in iframe.
-2. Wallet connection and transaction prompts work.
-3. Group creation and invite join paths function on mainnet.
-4. All links use production domain.
+1. Add domain in Vercel settings.
+2. Configure DNS as instructed by Vercel.
+3. Update `NEXT_PUBLIC_APP_URL` to domain URL.
+4. Redeploy and verify canonical links and OG metadata.
