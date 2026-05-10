@@ -1,12 +1,17 @@
 "use client";
 
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
+import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 
 type HomeLandingProps = {
   isMiniPay: boolean;
 };
 
 export function HomeLanding({ isMiniPay }: HomeLandingProps) {
+  const { status, isSignedIn, userLabel } = useAuthStatus();
+
   return (
     <section className="space-y-4 text-slate-900">
       <div className="relative overflow-hidden rounded-[2rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-lime-50 to-white p-6 shadow-[0_20px_60px_rgba(7,149,95,0.14)]">
@@ -27,7 +32,15 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
             Rotating savings groups secured by transparent smart contracts, with cUSD contributions and predictable payouts.
           </p>
 
-          <ConnectWalletButton isMiniPay={isMiniPay} />
+          <div className="grid gap-3 sm:max-w-[280px]">
+            {status !== "loading" && isSignedIn ? (
+              <AuthStatusPill className="border-emerald-200 bg-white/80" userLabel={userLabel} />
+            ) : (
+              <GoogleSignInButton fullWidth />
+            )}
+            <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
+            <p className="text-xs text-slate-500">Wallet required to create, join, and contribute.</p>
+          </div>
         </div>
       </div>
     </section>
