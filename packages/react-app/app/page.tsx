@@ -3,13 +3,17 @@
 import { lazy, Suspense } from "react";
 import { HomeDashboardSkeleton } from "@/components/home/HomeDashboardSkeleton";
 import { HomeLanding } from "@/components/home/HomeLanding";
+import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
 const HomeDashboardContent = lazy(() => import("@/components/home/HomeDashboardContent").then((module) => ({ default: module.HomeDashboardContent })));
 
 export default function HomePage() {
   const { isMiniPay, isLoading, isConnected, chainId, isWrongNetwork, switchToCeloMainnet, error, isConnecting } = useMiniPay();
+  const { status, isSignedIn, userLabel } = useAuthStatus();
 
   if (isLoading) {
     return <HomeDashboardSkeleton />;
@@ -24,7 +28,12 @@ export default function HomePage() {
       <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_16px_40px_rgba(16,42,44,0.08)]">
         <p className="text-lg font-semibold">MiniPay detected</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">Connect your MiniPay wallet to load your dashboard groups and cUSD balance.</p>
-        <ConnectWalletButton isMiniPay fullWidth className="mt-5" />
+        {status !== "loading" && isSignedIn ? (
+          <AuthStatusPill className="mt-4" userLabel={userLabel} />
+        ) : (
+          <GoogleSignInButton fullWidth className="mt-4" />
+        )}
+        <ConnectWalletButton isMiniPay fullWidth className="mt-4" />
         {error ? <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{error}</p> : null}
       </section>
     );
