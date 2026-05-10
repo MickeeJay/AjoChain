@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Sora, Space_Grotesk } from "next/font/google";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { Web3Provider } from "@/providers/Web3Provider";
+import { AppProviders } from "@/providers/AppProviders";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 
@@ -61,9 +61,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         />
       </head>
       <body className={`${bodyFont.className} ${displayFont.variable} bg-white text-gray-900`}>
-        <Web3Provider>
+        <AppProviders>
           <AppShell>{children}</AppShell>
-        </Web3Provider>
+        </AppProviders>
       </body>
     </html>
   );
