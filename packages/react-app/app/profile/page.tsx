@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { type Address } from "viem";
 import { useAccount } from "wagmi";
 import { CredentialsSection } from "@/components/profile/CredentialsSection";
+import { ProfileAuthPanel } from "@/components/profile/ProfileAuthPanel";
 import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
 import { ProfileIdentityHeader } from "@/components/profile/ProfileIdentityHeader";
 import { ProfileShareActions } from "@/components/profile/ProfileShareActions";
@@ -121,6 +122,7 @@ export default function ProfilePage() {
     <section className="flex flex-col gap-4 text-slate-900">
       <NetworkMismatchNotice />
       <ProfileIdentityHeader addressLabel={addressLabel} ensName={ensName} onCopyAddress={handleCopyAddress} copied={copiedAddress} />
+      <ProfileAuthPanel />
 
       <ReputationPanel score={cyclesCompleted} loading={isCyclesLoading} />
 
