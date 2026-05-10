@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { GoogleSignOutButton } from "@/components/shared/GoogleSignOutButton";
 import { useCUSD } from "@/hooks/useCUSD";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { formatCusdAmount } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
@@ -10,6 +13,8 @@ import { SHELL_HEADER_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constants";
 
 export function ShellHeader() {
   const { isMiniPay, isLoading, isConnected, address, chainId } = useMiniPay();
+  const { status, isSignedIn } = useAuthStatus();
+  const showAuthAction = status !== "loading";
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
   const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
   const showWalletStatus = !isMiniPay && !isLoading && isConnected;
@@ -24,36 +29,45 @@ export function ShellHeader() {
           AjoChain
         </Link>
 
-        {isConnected ? (
-          <div className="flex min-w-0 items-center gap-2">
-          {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
-          <span
-            className={cn(
-              "inline-flex min-h-10 max-w-[118px] items-center rounded-full px-3 text-[14px] font-medium whitespace-nowrap",
-              !isLoading ? "border border-slate-200 bg-slate-50 text-slate-700" : "border border-slate-200 bg-white text-slate-400",
-            )}
-            title={networkLabel}
-          >
-            <span className="truncate">{networkLabel}</span>
-          </span>
-          <span
-            className={cn(
-              "inline-flex min-h-10 max-w-[132px] items-center rounded-full px-3 text-[14px] font-semibold whitespace-nowrap",
-              !isLoading ? "border border-celo-green/20 bg-white text-slate-900 shadow-sm" : "border border-slate-200 bg-white text-slate-400",
-            )}
-            title={balanceLabel}
-          >
-            <span className="truncate">{balanceLabel}</span>
-          </span>
-          </div>
-        ) : (
-          <ConnectWalletButton
-            isMiniPay={isMiniPay}
-            className="min-h-10 px-4 py-2 text-xs font-semibold"
-            miniPayLabel="Open MiniPay"
-            defaultLabel="Connect"
-          />
-        )}
+        <div className="flex min-w-0 items-center gap-2">
+          {isConnected ? (
+            <div className="flex min-w-0 items-center gap-2">
+              {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
+              <span
+                className={cn(
+                  "inline-flex min-h-10 max-w-[118px] items-center rounded-full px-3 text-[14px] font-medium whitespace-nowrap",
+                  !isLoading ? "border border-slate-200 bg-slate-50 text-slate-700" : "border border-slate-200 bg-white text-slate-400",
+                )}
+                title={networkLabel}
+              >
+                <span className="truncate">{networkLabel}</span>
+              </span>
+              <span
+                className={cn(
+                  "inline-flex min-h-10 max-w-[132px] items-center rounded-full px-3 text-[14px] font-semibold whitespace-nowrap",
+                  !isLoading ? "border border-celo-green/20 bg-white text-slate-900 shadow-sm" : "border border-slate-200 bg-white text-slate-400",
+                )}
+                title={balanceLabel}
+              >
+                <span className="truncate">{balanceLabel}</span>
+              </span>
+            </div>
+          ) : (
+            <ConnectWalletButton
+              isMiniPay={isMiniPay}
+              className="min-h-10 px-4 py-2 text-xs font-semibold"
+              miniPayLabel="Open MiniPay"
+              defaultLabel="Connect"
+            />
+          )}
+          {showAuthAction ? (
+            isSignedIn ? (
+              <GoogleSignOutButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign out" />
+            ) : (
+              <GoogleSignInButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign in" />
+            )
+          ) : null}
+        </div>
       </div>
     </header>
   );
