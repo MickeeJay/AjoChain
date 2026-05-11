@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
@@ -43,6 +44,7 @@ export function WalletGuard({ children }: WalletGuardProps) {
       <p className="mt-2 text-sm leading-6 text-slate-600">
         Use Google to explore groups and profiles. A wallet is required for creating, joining, and contributing.
       </p>
+      <AuthErrorBanner className="mt-3" />
       <div className="mt-5 grid gap-3">
         <GoogleSignInButton fullWidth />
         <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
