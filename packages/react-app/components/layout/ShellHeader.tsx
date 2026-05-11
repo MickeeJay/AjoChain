@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { Avatar } from "@/components/shared/Avatar";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { SHELL_HEADER_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constants";
 
 export function ShellHeader() {
+  const pathname = usePathname();
   const { isMiniPay, isLoading, isConnected, address, chainId } = useMiniPay();
   const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
   const showAuthAction = status !== "loading";
@@ -65,7 +67,11 @@ export function ShellHeader() {
             isSignedIn ? (
               <div className="flex items-center gap-2">
                 <Avatar name={userLabel} imageUrl={userImage} size="sm" />
-                <GoogleSignOutButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign out" />
+                <GoogleSignOutButton
+                  className="min-h-10 px-3 py-2 text-xs font-semibold"
+                  label="Sign out"
+                  callbackUrl={pathname ?? "/"}
+                />
               </div>
             ) : (
               <GoogleSignInButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign in" />
