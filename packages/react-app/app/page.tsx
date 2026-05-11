@@ -3,6 +3,7 @@
 import { lazy, Suspense } from "react";
 import { HomeDashboardSkeleton } from "@/components/home/HomeDashboardSkeleton";
 import { HomeLanding } from "@/components/home/HomeLanding";
+import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
@@ -28,6 +29,7 @@ export default function HomePage() {
       <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_16px_40px_rgba(16,42,44,0.08)]">
         <p className="text-lg font-semibold">MiniPay detected</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">Connect your MiniPay wallet to load your dashboard groups and cUSD balance.</p>
+        <AuthErrorBanner className="mt-3" />
         {status !== "loading" && isSignedIn ? (
           <AuthStatusPill className="mt-4" userLabel={userLabel} userImage={userImage} />
         ) : (
