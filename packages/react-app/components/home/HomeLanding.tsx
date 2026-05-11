@@ -1,6 +1,7 @@
 "use client";
 
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
@@ -31,6 +32,8 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           <p className="max-w-[30ch] text-sm leading-6 text-slate-600">
             Rotating savings groups secured by transparent smart contracts, with cUSD contributions and predictable payouts.
           </p>
+
+          <AuthErrorBanner />
 
           <div className="grid gap-3 sm:max-w-[280px]">
             {status !== "loading" && isSignedIn ? (
