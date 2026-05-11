@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
+import appIcon from "@/app/assets/android-chrome-192x192.png";
 
 type HomeLandingProps = {
   isMiniPay: boolean;
@@ -20,6 +22,12 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
         <div className="absolute -bottom-10 -left-6 h-24 w-24 rounded-full bg-lime-200/40 blur-2xl" aria-hidden="true" />
 
         <div className="relative space-y-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/90 shadow-sm ring-1 ring-emerald-200/60">
+              <Image src={appIcon} alt="AjoChain" width={32} height={32} className="h-8 w-8 rounded-xl" priority />
+            </div>
+            <span className="text-xs font-semibold uppercase tracking-[0.32em] text-emerald-700">AjoChain</span>
+          </div>
           <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
             <span className="rounded-full border border-emerald-300 bg-emerald-100 px-3 py-1">Celo</span>
             <span className="rounded-full border border-lime-300 bg-lime-100 px-3 py-1">MiniPay</span>
