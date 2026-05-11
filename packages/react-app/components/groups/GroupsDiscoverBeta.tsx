@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Compass, Sparkles, UserPlus2, WandSparkles } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { WalletRequiredCard } from "@/components/shared/WalletRequiredCard";
 import { useDashboardData } from "@/hooks/useDashboardData";
 
 type GroupsDiscoverBetaProps = {
@@ -149,10 +149,12 @@ export function GroupsDiscoverBeta({ isConnected, isMiniPay }: GroupsDiscoverBet
               )}
             </div>
           ) : (
-            <div className="mt-3 space-y-3">
-              <p className="text-lg font-semibold text-slate-950">Connect your wallet for personalized discovery</p>
-              <p className="text-sm leading-6 text-slate-600">We will recommend the right next action based on your active contributions and group cycle status.</p>
-              <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
+            <div className="mt-3">
+              <WalletRequiredCard
+                title="Connect your wallet for personalized discovery"
+                description="We will recommend the right next action based on your active contributions and group cycle status."
+                className="border-0 bg-transparent p-0"
+              />
             </div>
           )}
         </article>
