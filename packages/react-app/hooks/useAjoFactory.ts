@@ -141,7 +141,7 @@ export function useAjoFactory() {
 
   const createGroup = async (params: CreateGroupParams) => {
     if (!accountAddress) {
-      throw new Error("Connect a wallet before creating a group.");
+      throw new Error("Connect a wallet to create a group. Google sign-in cannot approve transactions.");
     }
 
     try {
@@ -194,7 +194,7 @@ export function useAjoFactory() {
 
   const joinGroup = async (groupId: bigint | number, inviteCode: `0x${string}`) => {
     if (!accountAddress) {
-      throw new Error("Connect a wallet before joining a group.");
+      throw new Error("Connect a wallet to join a group. Google sign-in cannot approve transactions.");
     }
 
     try {
