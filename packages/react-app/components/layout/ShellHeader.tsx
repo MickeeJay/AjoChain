@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { Avatar } from "@/components/shared/Avatar";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { GoogleSignOutButton } from "@/components/shared/GoogleSignOutButton";
 import { useCUSD } from "@/hooks/useCUSD";
@@ -13,7 +14,7 @@ import { SHELL_HEADER_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constants";
 
 export function ShellHeader() {
   const { isMiniPay, isLoading, isConnected, address, chainId } = useMiniPay();
-  const { status, isSignedIn } = useAuthStatus();
+  const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
   const showAuthAction = status !== "loading";
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
   const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
@@ -62,7 +63,10 @@ export function ShellHeader() {
           )}
           {showAuthAction ? (
             isSignedIn ? (
-              <GoogleSignOutButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign out" />
+              <div className="flex items-center gap-2">
+                <Avatar name={userLabel} imageUrl={userImage} size="sm" />
+                <GoogleSignOutButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign out" />
+              </div>
             ) : (
               <GoogleSignInButton className="min-h-10 px-3 py-2 text-xs font-semibold" label="Sign in" />
             )
