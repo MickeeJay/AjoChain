@@ -5,7 +5,7 @@ import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 
 export function ProfileAuthPanel() {
-  const { status, isSignedIn, userLabel } = useAuthStatus();
+  const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
 
   return (
     <section className="rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-[0_16px_40px_rgba(16,42,44,0.08)]">
@@ -14,7 +14,7 @@ export function ProfileAuthPanel() {
         <p className="mt-3 text-sm text-slate-500">Checking sign-in status...</p>
       ) : isSignedIn ? (
         <div className="mt-3">
-          <AuthStatusPill userLabel={userLabel} />
+          <AuthStatusPill userLabel={userLabel} userImage={userImage} />
         </div>
       ) : (
         <div className="mt-3 space-y-3">
