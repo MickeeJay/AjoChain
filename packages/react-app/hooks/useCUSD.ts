@@ -53,6 +53,10 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
       throw new Error("Spender address is not configured.");
     }
 
+    if (!connectedAddress) {
+      throw new Error("Connect a wallet to approve cUSD. Google sign-in cannot approve transactions.");
+    }
+
     if (tokenAddress === ZERO_ADDRESS) {
       throw new Error("cUSD address is not configured.");
     }
