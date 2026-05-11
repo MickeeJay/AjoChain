@@ -10,7 +10,7 @@ type HomeLandingProps = {
 };
 
 export function HomeLanding({ isMiniPay }: HomeLandingProps) {
-  const { status, isSignedIn, userLabel } = useAuthStatus();
+  const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
 
   return (
     <section className="space-y-4 text-slate-900">
@@ -34,7 +34,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
 
           <div className="grid gap-3 sm:max-w-[280px]">
             {status !== "loading" && isSignedIn ? (
-              <AuthStatusPill className="border-emerald-200 bg-white/80" userLabel={userLabel} />
+              <AuthStatusPill className="border-emerald-200 bg-white/80" userLabel={userLabel} userImage={userImage} />
             ) : (
               <GoogleSignInButton fullWidth />
             )}
