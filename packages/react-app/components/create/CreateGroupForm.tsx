@@ -6,6 +6,7 @@ import { parseUnits } from "viem";
 import { useAjoFactory } from "@/hooks/useAjoFactory";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
+import { WalletRequiredCard } from "@/components/shared/WalletRequiredCard";
 
 type CreateGroupFormProps = {
   template?: string;
@@ -180,6 +181,12 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
                 : "Ready to create"
         }
       />
+
+        <WalletRequiredCard
+          title="Wallet required to create"
+          description="Connect a wallet to create a savings group on-chain. Google sign-in is for exploring only."
+          className="bg-slate-50"
+        />
 
       <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
         <span>Step {step} of {maxSteps}</span>
