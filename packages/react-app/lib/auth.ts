@@ -11,6 +11,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: googleClientSecret,
     }),
   ],
+  pages: {
+    signIn: "/",
+    error: "/",
+  },
   session: {
     strategy: "jwt",
   },
