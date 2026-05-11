@@ -27,7 +27,11 @@ export function GoogleSignInButton({
 
     setIsLoading(true);
     const callbackUrl = pathname ?? "/";
-    await signIn("google", { callbackUrl });
+    try {
+      await signIn("google", { callbackUrl });
+    } catch {
+      setIsLoading(false);
+    }
   };
 
   const buttonLabel = isLoading ? "Redirecting..." : label;
