@@ -9,12 +9,14 @@ type GoogleSignOutButtonProps = {
   className?: string;
   fullWidth?: boolean;
   label?: string;
+  callbackUrl?: string;
 };
 
 export function GoogleSignOutButton({
   className,
   fullWidth = false,
   label = "Sign out",
+  callbackUrl = "/",
 }: GoogleSignOutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +28,7 @@ export function GoogleSignOutButton({
     setIsLoading(true);
 
     try {
-      await signOut({ callbackUrl: "/" });
+      await signOut({ callbackUrl });
     } catch {
       setIsLoading(false);
     }
