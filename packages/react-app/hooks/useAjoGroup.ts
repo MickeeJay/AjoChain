@@ -304,7 +304,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
   const contribute = async () => {
     if (!accountAddress) {
-      throw new Error("Connect a wallet before contributing.");
+      throw new Error("Connect a wallet to contribute. Google sign-in cannot approve transactions.");
     }
 
     if (!groupStateData) {
@@ -390,7 +390,7 @@ export function useAjoGroup(groupAddress: `0x${string}`) {
 
   const startGroup = async () => {
     if (!accountAddress) {
-      throw new Error("Connect a wallet before starting the group.");
+      throw new Error("Connect a wallet to start the group. Google sign-in cannot approve transactions.");
     }
 
     if (groupStateData?.creator && groupStateData.creator !== accountAddress) {
