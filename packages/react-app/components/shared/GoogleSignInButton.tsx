@@ -10,12 +10,14 @@ type GoogleSignInButtonProps = {
   className?: string;
   fullWidth?: boolean;
   label?: string;
+  callbackUrl?: string;
 };
 
 export function GoogleSignInButton({
   className,
   fullWidth = false,
   label = "Sign in with Google",
+  callbackUrl,
 }: GoogleSignInButtonProps) {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
@@ -26,9 +28,9 @@ export function GoogleSignInButton({
     }
 
     setIsLoading(true);
-    const callbackUrl = pathname ?? "/";
+    const resolvedCallbackUrl = callbackUrl ?? pathname ?? "/";
     try {
-      await signIn("google", { callbackUrl });
+      await signIn("google", { callbackUrl: resolvedCallbackUrl });
     } catch {
       setIsLoading(false);
     }
