@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
@@ -12,6 +13,7 @@ import { useMiniPay } from "@/hooks/useMiniPay";
 import { formatCusdAmount } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { SHELL_HEADER_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constants";
+import appIcon from "@/app/assets/android-chrome-192x192.png";
 
 export function ShellHeader() {
   const pathname = usePathname();
@@ -28,8 +30,9 @@ export function ShellHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur" style={{ height: SHELL_HEADER_HEIGHT_PX }}>
       <div className="mx-auto flex h-full w-full items-center justify-between gap-3 px-4" style={{ maxWidth: SHELL_MAX_WIDTH_PX }}>
-        <Link href="/" className="text-lg font-bold tracking-tight text-[#35D07F]">
-          AjoChain
+        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight text-slate-900">
+          <Image src={appIcon} alt="AjoChain" width={28} height={28} className="h-7 w-7 rounded-xl" priority />
+          <span className="text-[#35D07F]">AjoChain</span>
         </Link>
 
         <div className="flex min-w-0 items-center gap-2">
