@@ -1,7 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { Avatar } from "@/components/shared/Avatar";
 import { GoogleSignOutButton } from "@/components/shared/GoogleSignOutButton";
+import { cn } from "@/lib/utils";
 
 type AuthStatusPillProps = {
   userLabel: string;
@@ -9,15 +10,6 @@ type AuthStatusPillProps = {
   className?: string;
   actionClassName?: string;
 };
-
-function getInitial(userLabel: string) {
-  const trimmed = userLabel.trim();
-  if (!trimmed) {
-    return "U";
-  }
-
-  return trimmed[0]?.toUpperCase() ?? "U";
-}
 
 export function AuthStatusPill({ userLabel, userImage, className, actionClassName }: AuthStatusPillProps) {
   return (
@@ -27,9 +19,7 @@ export function AuthStatusPill({ userLabel, userImage, className, actionClassNam
         className,
       )}
     >
-      <span className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-emerald-100 text-[11px] font-bold text-emerald-700">
-        {userImage ? <img src={userImage} alt={userLabel} className="h-full w-full object-cover" /> : getInitial(userLabel)}
-      </span>
+      <Avatar name={userLabel} imageUrl={userImage} size="sm" />
       <span className="max-w-[180px] truncate">Signed in as {userLabel}</span>
       <GoogleSignOutButton className={cn("min-h-8 px-3 py-1 text-xs", actionClassName)} label="Sign out" />
     </div>
