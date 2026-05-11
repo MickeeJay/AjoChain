@@ -24,6 +24,31 @@ export const metadata: Metadata = {
   metadataBase: new URL(appBaseUrl),
   title: "AjoChain",
   description: "MiniPay-native rotating savings groups on Celo.",
+  icons: {
+    icon: [
+      {
+        url: new URL("./assets/favicon-32x32.png", import.meta.url),
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: new URL("./assets/favicon-16x16.png", import.meta.url),
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: new URL("./assets/favicon.ico", import.meta.url),
+      },
+    ],
+    apple: [
+      {
+        url: new URL("./assets/apple-touch-icon.png", import.meta.url),
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: "AjoChain",
     description: "MiniPay-native rotating savings groups on Celo.",
