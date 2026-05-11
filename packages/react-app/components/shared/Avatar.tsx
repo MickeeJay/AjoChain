@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type AvatarSize = "sm" | "md";
@@ -16,6 +17,11 @@ const sizeClasses: Record<AvatarSize, string> = {
   md: "h-8 w-8 text-sm",
 };
 
+const sizePixels: Record<AvatarSize, number> = {
+  sm: 24,
+  md: 32,
+};
+
 function getInitial(name: string) {
   const trimmed = name.trim();
   if (!trimmed) {
@@ -26,6 +32,8 @@ function getInitial(name: string) {
 }
 
 export function Avatar({ name, imageUrl, size = "sm", className }: AvatarProps) {
+  const pixelSize = sizePixels[size];
+
   return (
     <span
       className={cn(
@@ -35,7 +43,11 @@ export function Avatar({ name, imageUrl, size = "sm", className }: AvatarProps) 
       )}
       aria-label={name}
     >
-      {imageUrl ? <img src={imageUrl} alt={name} className="h-full w-full object-cover" /> : getInitial(name)}
+      {imageUrl ? (
+        <Image src={imageUrl} alt={name} width={pixelSize} height={pixelSize} className="h-full w-full object-cover" />
+      ) : (
+        getInitial(name)
+      )}
     </span>
   );
 }
