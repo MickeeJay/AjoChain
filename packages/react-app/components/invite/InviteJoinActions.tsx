@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Hex } from "viem";
-import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { WalletRequiredCard } from "@/components/shared/WalletRequiredCard";
 import { useAjoFactory } from "@/hooks/useAjoFactory";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
@@ -48,7 +48,13 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
     <div className="space-y-3">
       {isMiniPay ? <p className="text-sm font-semibold text-emerald-700">Join with your MiniPay wallet</p> : null}
 
-      {!isConnected ? <ConnectWalletButton isMiniPay={isMiniPay} fullWidth /> : null}
+      {!isConnected ? (
+        <WalletRequiredCard
+          title="Connect your wallet to join"
+          description="Joining a savings group requires a wallet signature on-chain."
+          className="bg-white"
+        />
+      ) : null}
 
       {isWrongNetwork && chainId !== undefined ? (
         <button
