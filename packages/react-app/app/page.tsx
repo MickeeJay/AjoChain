@@ -13,7 +13,7 @@ const HomeDashboardContent = lazy(() => import("@/components/home/HomeDashboardC
 
 export default function HomePage() {
   const { isMiniPay, isLoading, isConnected, chainId, isWrongNetwork, switchToCeloMainnet, error, isConnecting } = useMiniPay();
-  const { status, isSignedIn, userLabel } = useAuthStatus();
+  const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
 
   if (isLoading) {
     return <HomeDashboardSkeleton />;
@@ -29,7 +29,7 @@ export default function HomePage() {
         <p className="text-lg font-semibold">MiniPay detected</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">Connect your MiniPay wallet to load your dashboard groups and cUSD balance.</p>
         {status !== "loading" && isSignedIn ? (
-          <AuthStatusPill className="mt-4" userLabel={userLabel} />
+          <AuthStatusPill className="mt-4" userLabel={userLabel} userImage={userImage} />
         ) : (
           <GoogleSignInButton fullWidth className="mt-4" />
         )}
