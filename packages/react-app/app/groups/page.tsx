@@ -3,8 +3,8 @@
 import { lazy, Suspense, useState } from "react";
 import { GroupsDiscoverBeta } from "@/components/groups/GroupsDiscoverBeta";
 import { GroupsListSkeleton } from "@/components/groups/GroupsListSkeleton";
-import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
+import { WalletRequiredCard } from "@/components/shared/WalletRequiredCard";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
 const MyGroupsList = lazy(() => import("@/components/groups/MyGroupsList"));
@@ -55,10 +55,13 @@ export default function GroupsPage() {
             <MyGroupsList />
           </Suspense>
         ) : (
-          <section className="space-y-3 rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600">
-            <p>Connect your wallet to view your groups.</p>
-            <ConnectWalletButton isMiniPay={isMiniPay} />
-          </section>
+          <WalletRequiredCard
+            title="Connect your wallet to view your groups"
+            description="Your groups and contribution history are linked to your wallet address."
+            className="bg-white"
+            buttonClassName="w-fit"
+            fullWidthButton={false}
+          />
         )
       ) : (
         <GroupsDiscoverBeta isConnected={isConnected} isMiniPay={isMiniPay} />
