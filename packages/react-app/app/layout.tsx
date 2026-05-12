@@ -22,8 +22,12 @@ const appBaseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://ajochain.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appBaseUrl),
-  title: "AjoChain",
-  description: "MiniPay-native rotating savings groups on Celo.",
+  title: {
+    default: "AjoChain — Community Savings on Celo",
+    template: "%s | AjoChain",
+  },
+  description:
+    "Create and join rotating savings circles with cUSD on Celo. Automated payouts, on-chain credentials, and MiniPay-native UX for community-driven finance.",
   icons: {
     icon: [
       {

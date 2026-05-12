@@ -6,6 +6,9 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "AjoChain",
     short_name: "AjoChain",
+    description: "Community rotating savings circles on Celo with automated payouts and on-chain credentials.",
+    start_url: "/",
+    scope: "/",
     icons: [
       {
         src: icon192.src,
@@ -18,8 +21,9 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-    theme_color: "#ffffff",
-    background_color: "#ffffff",
+    theme_color: "#07955f",
+    background_color: "#f8fffb",
     display: "standalone",
+    orientation: "portrait",
   };
 }
