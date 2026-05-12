@@ -31,7 +31,9 @@ const TEMPLATES = [
     subtitle: "Lower frequency for predictable long-term saving.",
     details: "10 members · 20 cUSD · Monthly",
   },
-] as const;
+ ] as const;
+
+const INVITE_CODE_PATTERN = /^0x[a-fA-F0-9]{64}$/;
 
 function normalizeInviteCode(rawCode: string) {
   const compact = rawCode.trim().replace(/\s+/g, "");
@@ -40,7 +42,7 @@ function normalizeInviteCode(rawCode: string) {
   }
 
   const prefixed = compact.startsWith("0x") ? compact : `0x${compact}`;
-  return prefixed;
+  return prefixed.toLowerCase();
 }
 
 export function GroupsDiscoverBeta({ isConnected, isMiniPay }: GroupsDiscoverBetaProps) {
@@ -58,8 +60,8 @@ export function GroupsDiscoverBeta({ isConnected, isMiniPay }: GroupsDiscoverBet
       return;
     }
 
-    if (!/^0x[0-9a-fA-F]+$/.test(normalized)) {
-      setInviteError("Invite code must be a valid hexadecimal value.");
+    if (!INVITE_CODE_PATTERN.test(normalized)) {
+      setInviteError("Invite code must be 64 hex characters starting with 0x.");
       return;
     }
 
