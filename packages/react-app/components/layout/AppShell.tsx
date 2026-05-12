@@ -7,7 +7,7 @@ import { MINIPAY_VIEWPORT_HEIGHT_PX, SHELL_HEADER_OFFSET_CLASS, SHELL_MAIN_BOTTO
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div
-      className="mx-auto flex min-h-dvh w-full flex-col overflow-hidden bg-[radial-gradient(circle_at_top_right,rgba(53,208,127,0.15),rgba(255,255,255,0.95)_28%),linear-gradient(180deg,#f8fffb_0%,#ffffff_58%)] text-gray-900"
+      className="mx-auto flex min-h-dvh w-full flex-col overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.16),rgba(255,255,255,0.96)_32%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_55%),linear-gradient(180deg,#f8fffb_0%,#ffffff_60%)] text-gray-900"
       style={{ maxWidth: SHELL_MAX_WIDTH_PX, minHeight: `max(100dvh, ${MINIPAY_VIEWPORT_HEIGHT_PX}px)` }}
     >
       <ShellHeader />

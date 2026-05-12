@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Sora, Space_Grotesk } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { AppProviders } from "@/providers/AppProviders";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 
-const bodyFont = Sora({
+const bodyFont = Manrope({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-body",
 });
 
-const displayFont = Space_Grotesk({
+const displayFont = Fraunces({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-display",
