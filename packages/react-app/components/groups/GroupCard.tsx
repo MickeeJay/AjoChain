@@ -21,7 +21,7 @@ type GroupCardProps = {
 const STATUS_STYLES: Record<GroupStatus, string> = {
   FORMING: "border-amber-200 bg-amber-50 text-amber-700",
   ACTIVE: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  COMPLETED: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  COMPLETED: "border-cyan-200 bg-cyan-50 text-cyan-700",
   PAUSED: "border-slate-300 bg-slate-100 text-slate-700",
 };
 
