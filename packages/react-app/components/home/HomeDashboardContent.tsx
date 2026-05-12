@@ -44,7 +44,7 @@ export function HomeDashboardContent() {
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [nextActionGroup?.groupAddress]);
+  }, [nextActionGroup]);
 
   const greetingName = useMemo(() => shortenAddress(address), [address]);
   const greetingPrefix = resolveGreeting();
