@@ -34,7 +34,7 @@ export function HomeDashboardContent() {
   }, [nextActionGroup?.remainingTime]);
 
   useEffect(() => {
-    if (!nextActionGroup || secondsLeft <= 0) {
+    if (!nextActionGroup) {
       return;
     }
 
@@ -43,7 +43,7 @@ export function HomeDashboardContent() {
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [nextActionGroup, secondsLeft]);
+  }, [nextActionGroup?.groupAddress]);
 
   const greetingName = useMemo(() => shortenAddress(address), [address]);
   const greetingPrefix = useMemo(() => resolveGreeting(), []);
