@@ -296,7 +296,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
           />
           <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">
             <span>{members} members</span>
-            <span>pot = ${estimatedPot.toFixed(2)} per person</span>
+            <span>Total pot: ${estimatedPot.toFixed(2)}</span>
           </div>
           {estimatedPot >= 450 ? (
             <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
