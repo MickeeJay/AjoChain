@@ -47,8 +47,7 @@ export function HomeDashboardContent() {
   }, [nextActionGroup?.groupAddress]);
 
   const greetingName = useMemo(() => shortenAddress(address), [address]);
-  const currentHour = new Date().getHours();
-  const greetingPrefix = useMemo(() => resolveGreeting(), [currentHour]);
+  const greetingPrefix = resolveGreeting();
 
   return (
     <section className="space-y-4 text-slate-900">
