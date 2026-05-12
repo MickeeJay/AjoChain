@@ -188,9 +188,23 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
           className="bg-slate-50"
         />
 
-      <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-        <span>Step {step} of {maxSteps}</span>
-        <span>{Math.round((step / maxSteps) * 100)}%</span>
+      <div className="space-y-2">
+        <div className="flex gap-1">
+          {Array.from({ length: maxSteps }, (_, index) => (
+            <div
+              key={index}
+              className="h-1.5 flex-1 rounded-full transition-colors duration-300"
+              style={{ backgroundColor: index < step ? "#059669" : "#e2e8f0" }}
+            />
+          ))}
+        </div>
+        <div className="flex items-center justify-between text-[10px] font-medium text-slate-400">
+          <span className={step >= 1 ? "text-emerald-700" : ""}>Name</span>
+          <span className={step >= 2 ? "text-emerald-700" : ""}>Amount</span>
+          <span className={step >= 3 ? "text-emerald-700" : ""}>Schedule</span>
+          <span className={step >= 4 ? "text-emerald-700" : ""}>Size</span>
+          <span className={step >= 5 ? "text-emerald-700" : ""}>Review</span>
+        </div>
       </div>
 
       {preset ? (
