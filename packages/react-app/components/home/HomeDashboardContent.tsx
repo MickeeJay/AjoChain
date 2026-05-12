@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { PiggyBank, Trophy, Users } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useDashboardData } from "@/hooks/useDashboardData";
@@ -46,7 +47,8 @@ export function HomeDashboardContent() {
   }, [nextActionGroup?.groupAddress]);
 
   const greetingName = useMemo(() => shortenAddress(address), [address]);
-  const greetingPrefix = useMemo(() => resolveGreeting(), []);
+  const currentHour = new Date().getHours();
+  const greetingPrefix = useMemo(() => resolveGreeting(), [currentHour]);
 
   return (
     <section className="space-y-4 text-slate-900">
@@ -58,18 +60,27 @@ export function HomeDashboardContent() {
           </section>
 
           <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <article className="rounded-2xl border border-slate-200 bg-white p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Active Groups</p>
+            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-emerald-50/40 p-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100"><Users className="h-3.5 w-3.5 text-emerald-700" /></span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Active Groups</p>
+              </div>
               <p className="mt-2 text-2xl font-semibold text-slate-950">{isGroupsLoading ? "--" : activeGroupCount}</p>
             </article>
 
-            <article className="rounded-2xl border border-slate-200 bg-white p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total Saved</p>
-              <p className="mt-2 text-2xl font-semibold text-slate-950">{isGroupsLoading ? "--" : formatCusdFromWei(totalSaved)}</p>
+            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-lime-50/40 p-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-lime-100"><PiggyBank className="h-3.5 w-3.5 text-lime-700" /></span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total Saved</p>
+              </div>
+              <p className="mt-2 text-2xl font-semibold text-slate-950">{isGroupsLoading ? "--" : `${formatCusdFromWei(totalSaved)} cUSD`}</p>
             </article>
 
-            <article className="rounded-2xl border border-slate-200 bg-white p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Cycles Completed</p>
+            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-amber-50/40 p-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100"><Trophy className="h-3.5 w-3.5 text-amber-700" /></span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Cycles Completed</p>
+              </div>
               <p className="mt-2 text-2xl font-semibold text-slate-950">{isCyclesLoading ? "--" : Number(cyclesCompleted)}</p>
             </article>
           </section>
