@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +21,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   Default: "Sign-in failed. Please try again.",
 };
 
-export function AuthErrorBanner({ className }: AuthErrorBannerProps) {
+function AuthErrorBannerInner({ className }: AuthErrorBannerProps) {
   const searchParams = useSearchParams();
   const errorCode = searchParams?.get("error");
 
@@ -34,5 +35,13 @@ export function AuthErrorBanner({ className }: AuthErrorBannerProps) {
     <div className={cn("rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700", className)}>
       {message}
     </div>
+  );
+}
+
+export function AuthErrorBanner({ className }: AuthErrorBannerProps) {
+  return (
+    <Suspense fallback={null}>
+      <AuthErrorBannerInner className={className} />
+    </Suspense>
   );
 }
