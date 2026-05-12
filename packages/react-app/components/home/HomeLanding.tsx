@@ -34,11 +34,11 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           </div>
 
           <h1 className="text-3xl font-semibold leading-tight tracking-tight text-slate-950">
-            Africa&apos;s Savings Tradition, Now Unstealable
+            Community savings, secured by code.
           </h1>
 
-          <p className="max-w-[30ch] text-sm leading-6 text-slate-600">
-            Rotating savings groups secured by transparent smart contracts, with cUSD contributions and predictable payouts.
+          <p className="max-w-[32ch] text-sm leading-6 text-slate-600">
+            Save together in rotating circles with cUSD contributions, automated payouts, and on-chain receipts anyone can verify.
           </p>
 
           <AuthErrorBanner />
@@ -50,7 +50,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
               <GoogleSignInButton fullWidth />
             )}
             <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
-            <p className="text-xs text-slate-500">Wallet required to create, join, and contribute.</p>
+            <p className="text-xs text-slate-500">Wallet required for on-chain actions. Google sign-in lets you explore.</p>
           </div>
         </div>
       </div>
