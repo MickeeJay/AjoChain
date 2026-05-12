@@ -39,11 +39,14 @@ export function BottomNav() {
               aria-current={active ? "page" : undefined}
               aria-label={item.label}
               className={cn(
-                "flex min-h-12 flex-col items-center justify-center gap-1 rounded-2xl px-2 text-[14px] font-medium transition",
-                active ? "bg-celo-green/10 text-[#35D07F]" : "text-[#9CA3AF] hover:bg-slate-50 hover:text-slate-700",
+                "flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 text-[11px] font-medium transition-colors",
+                active ? "text-[#35D07F]" : "text-[#9CA3AF] hover:bg-slate-50 hover:text-slate-700",
               )}
             >
-              <Icon className={cn("h-5 w-5", active ? "text-[#35D07F]" : "text-[#9CA3AF]")} strokeWidth={2.25} />
+              {active ? (
+                <span className="mb-0.5 h-1 w-1 rounded-full bg-[#35D07F]" aria-hidden="true" />
+              ) : null}
+              <Icon className={cn("h-5 w-5", active ? "text-[#35D07F]" : "text-[#9CA3AF]")} strokeWidth={active ? 2.5 : 1.75} />
               <span>{item.label}</span>
             </Link>
           );
@@ -53,3 +56,4 @@ export function BottomNav() {
     </nav>
   );
 }
+
