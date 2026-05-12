@@ -241,7 +241,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
                   contributionAmount === amount ? "border-emerald-600 bg-emerald-50 text-emerald-700" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300",
                 ].join(" ")}
               >
-                ${amount}
+                {amount} cUSD
               </button>
             ))}
           </div>
@@ -310,7 +310,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
           />
           <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">
             <span>{members} members</span>
-            <span>Total pot: ${estimatedPot.toFixed(2)}</span>
+            <span>Total pot: {estimatedPot.toFixed(2)} cUSD</span>
           </div>
           {estimatedPot >= 450 ? (
             <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
@@ -324,11 +324,11 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
         <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
           <p className="font-semibold text-slate-900">Review</p>
           <p>Group: {name.trim()}</p>
-          <p>Contribution: ${Number(contributionAmount || 0).toFixed(2)} cUSD</p>
+          <p>Contribution: {Number(contributionAmount || 0).toFixed(2)} cUSD</p>
           <p>Frequency: {frequencyLabelMap[selectedFrequency] ?? `Every ${selectedFrequency} day(s)`}</p>
           <p>Size: {members} members</p>
-          <p className="font-semibold text-emerald-700">Payout pot: ${estimatedPot.toFixed(2)}</p>
-          <p className="text-xs font-medium text-slate-500">Estimated gas cost: ~$0.001 on Celo</p>
+          <p className="font-semibold text-emerald-700">Payout pot: {estimatedPot.toFixed(2)} cUSD</p>
+          <p className="text-xs font-medium text-slate-500">Estimated gas cost: ~0.001 cUSD on Celo</p>
           {estimatedPot >= 450 ? <p className="text-xs font-semibold text-amber-700">Heads up: this setup is close to the $500 cap.</p> : null}
         </div>
       ) : null}

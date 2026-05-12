@@ -33,8 +33,8 @@ export function ContributeButton({
   onClick,
 }: ContributeButtonProps) {
   const requiresApproval = allowance < contributionAmount;
-  const allowanceLabel = `$${formatCusdFromWei(allowance)}`;
-  const requiredLabel = `$${formatCusdFromWei(contributionAmount)}`;
+  const allowanceLabel = `${formatCusdFromWei(allowance)} cUSD`;
+  const requiredLabel = `${formatCusdFromWei(contributionAmount)} cUSD`;
   const isBusy = isContributing || flowStep === "approving" || flowStep === "contributing" || flowStep === "confirming";
   const txHash = flowStep === "approving" ? approveTxHash : contributeTxHash ?? approveTxHash;
 

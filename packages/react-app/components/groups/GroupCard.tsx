@@ -90,7 +90,7 @@ export function GroupCard({
 
       {highlightContribution ? (
         <span className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white">
-          Contribute ${formatCusdFromWei(contributionAmount)}
+          Contribute {formatCusdFromWei(contributionAmount)} cUSD
         </span>
       ) : null}
     </Link>
