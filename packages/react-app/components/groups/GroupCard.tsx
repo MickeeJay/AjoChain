@@ -64,7 +64,7 @@ export function GroupCard({
       <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600">
         <p>Contribution: {formatCusdFromWei(contributionAmount)} cUSD</p>
         <p>
-          Round: {Math.min(currentRound, totalRounds)}/{totalRounds}
+          Round: {Math.min(currentRound + 1, totalRounds)}/{totalRounds}
         </p>
       </div>
 
