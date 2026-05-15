@@ -7,6 +7,7 @@ import { useAjoFactory } from "@/hooks/useAjoFactory";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
 import { WalletRequiredCard } from "@/components/shared/WalletRequiredCard";
+import { cn } from "@/lib/utils";
 
 type CreateGroupFormProps = {
   template?: string;
@@ -113,7 +114,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
 
   return (
     <form
-      className="grid gap-3 rounded-[1.5rem] border border-slate-200 bg-white p-4 text-slate-900 shadow-[0_16px_50px_rgba(16,42,44,0.08)]"
+      className="grid gap-3 rounded-[1.5rem] border border-slate-200 bg-white p-4 text-slate-900 shadow-[0_16px_50px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100"
       onSubmit={(event) => {
         event.preventDefault();
 
@@ -182,54 +183,56 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
         }
       />
 
-        <WalletRequiredCard
-          title="Wallet required to create"
-          description="Connect a wallet to create a savings group on-chain. Google sign-in is for exploring only."
-          className="bg-slate-50"
-        />
+      <WalletRequiredCard
+        title="Wallet required to create"
+        description="Connect a wallet to create a savings group on-chain. Google sign-in is for exploring only."
+        className="bg-slate-50 dark:bg-slate-900/60"
+      />
 
       <div className="space-y-2">
         <div className="flex gap-1">
           {Array.from({ length: maxSteps }, (_, index) => (
             <div
               key={index}
-              className="h-1.5 flex-1 rounded-full transition-colors duration-300"
-              style={{ backgroundColor: index < step ? "#059669" : "#e2e8f0" }}
+              className={cn(
+                "h-1.5 flex-1 rounded-full transition-colors duration-300",
+                index < step ? "bg-emerald-600" : "bg-slate-200 dark:bg-slate-700",
+              )}
             />
           ))}
         </div>
-        <div className="flex items-center justify-between text-[10px] font-medium text-slate-400">
-          <span className={step >= 1 ? "text-emerald-700" : ""}>Name</span>
-          <span className={step >= 2 ? "text-emerald-700" : ""}>Amount</span>
-          <span className={step >= 3 ? "text-emerald-700" : ""}>Schedule</span>
-          <span className={step >= 4 ? "text-emerald-700" : ""}>Size</span>
-          <span className={step >= 5 ? "text-emerald-700" : ""}>Review</span>
+        <div className="flex items-center justify-between text-[10px] font-medium text-slate-400 dark:text-slate-500">
+          <span className={step >= 1 ? "text-emerald-700 dark:text-emerald-300" : ""}>Name</span>
+          <span className={step >= 2 ? "text-emerald-700 dark:text-emerald-300" : ""}>Amount</span>
+          <span className={step >= 3 ? "text-emerald-700 dark:text-emerald-300" : ""}>Schedule</span>
+          <span className={step >= 4 ? "text-emerald-700 dark:text-emerald-300" : ""}>Size</span>
+          <span className={step >= 5 ? "text-emerald-700 dark:text-emerald-300" : ""}>Review</span>
         </div>
       </div>
 
       {preset ? (
-        <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
+        <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
           Template loaded: {preset.label}
         </p>
       ) : null}
 
       {step === 1 ? (
-        <label className="grid gap-2 text-sm font-medium text-slate-700">
+        <label className="grid gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
           Name your group
           <input
             value={name}
             onChange={(event) => setName(event.target.value.slice(0, 32))}
             maxLength={32}
             placeholder="e.g. Market Traders Circle"
-            className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition focus:border-celo-green"
+            className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition placeholder:text-slate-400 focus:border-celo-green dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
           />
-          <span className="text-xs text-slate-500">{name.length}/32 characters</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{name.length}/32 characters</span>
         </label>
       ) : null}
 
       {step === 2 ? (
         <div className="grid gap-3">
-          <p className="text-sm font-medium text-slate-700">Set contribution amount (cUSD)</p>
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Set contribution amount (cUSD)</p>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
             {["1", "5", "10", "20", "50"].map((amount) => (
               <button
@@ -238,14 +241,16 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
                 onClick={() => setContributionAmount(amount)}
                 className={[
                   "min-h-11 rounded-xl border px-2 text-sm font-semibold transition",
-                  contributionAmount === amount ? "border-emerald-600 bg-emerald-50 text-emerald-700" : "border-slate-200 bg-white text-slate-700 hover:border-slate-300",
+                  contributionAmount === amount
+                    ? "border-emerald-600 bg-emerald-50 text-emerald-700 dark:border-emerald-400 dark:bg-emerald-500/15 dark:text-emerald-200"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-slate-500",
                 ].join(" ")}
               >
                 {amount} cUSD
               </button>
             ))}
           </div>
-          <label className="grid gap-2 text-sm font-medium text-slate-700">
+          <label className="grid gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
             Custom amount
             <input
               value={contributionAmount}
@@ -257,14 +262,14 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
               }}
               inputMode="decimal"
               placeholder="Enter custom amount"
-              className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition focus:border-celo-green"
+              className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition placeholder:text-slate-400 focus:border-celo-green dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
           </label>
-          <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
+          <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200">
             Estimated pot size: ${estimatedPot.toFixed(2)}
           </p>
           {estimatedPot >= 450 ? (
-            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
               Warning: payout pot is approaching the $500 reward cap.
             </p>
           ) : null}
@@ -273,7 +278,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
 
       {step === 3 ? (
         <div className="grid gap-3">
-          <p className="text-sm font-medium text-slate-700">Set schedule</p>
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Set schedule</p>
           <div className="grid gap-2 sm:grid-cols-3">
             {[
               { label: "Daily", days: "1" },
@@ -286,11 +291,13 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
                 onClick={() => setCycleDuration(option.days)}
                 className={[
                   "min-h-16 rounded-2xl border px-3 py-3 text-left transition",
-                  cycleDuration === option.days ? "border-emerald-600 bg-emerald-50" : "border-slate-200 bg-white hover:border-slate-300",
+                  cycleDuration === option.days
+                    ? "border-emerald-600 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-500/15"
+                    : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:hover:border-slate-500",
                 ].join(" ")}
               >
-                <p className="text-base font-semibold text-slate-900">{option.label}</p>
-                <p className="text-xs font-medium text-slate-500">{option.days} day(s) between payouts</p>
+                <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{option.label}</p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{option.days} day(s) between payouts</p>
               </button>
             ))}
           </div>
@@ -299,21 +306,21 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
 
       {step === 4 ? (
         <div className="grid gap-3">
-          <p className="text-sm font-medium text-slate-700">Set size</p>
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Set size</p>
           <input
             type="range"
             min={3}
             max={20}
             value={members}
             onChange={(event) => setMembers(event.target.value)}
-            className="w-full accent-emerald-600"
+            className="w-full accent-emerald-600 dark:accent-emerald-400"
           />
-          <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">
+          <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
             <span>{members} members</span>
             <span>Total pot: {estimatedPot.toFixed(2)} cUSD</span>
           </div>
           {estimatedPot >= 450 ? (
-            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
               Warning: payout pot is approaching the $500 reward cap.
             </p>
           ) : null}
@@ -321,36 +328,44 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
       ) : null}
 
       {step === 5 ? (
-        <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
-          <p className="font-semibold text-slate-900">Review</p>
+        <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+          <p className="font-semibold text-slate-900 dark:text-slate-100">Review</p>
           <p>Group: {name.trim()}</p>
           <p>Contribution: {Number(contributionAmount || 0).toFixed(2)} cUSD</p>
           <p>Frequency: {frequencyLabelMap[selectedFrequency] ?? `Every ${selectedFrequency} day(s)`}</p>
           <p>Size: {members} members</p>
-          <p className="font-semibold text-emerald-700">Payout pot: {estimatedPot.toFixed(2)} cUSD</p>
-          <p className="text-xs font-medium text-slate-500">Estimated gas cost: ~0.001 cUSD on Celo</p>
-          {estimatedPot >= 450 ? <p className="text-xs font-semibold text-amber-700">Heads up: this setup is close to the $500 cap.</p> : null}
+          <p className="font-semibold text-emerald-700 dark:text-emerald-300">Payout pot: {estimatedPot.toFixed(2)} cUSD</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Estimated gas cost: ~0.001 cUSD on Celo</p>
+          {estimatedPot >= 450 ? (
+            <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">Heads up: this setup is close to the $500 cap.</p>
+          ) : null}
         </div>
       ) : null}
 
-      {formError ? <p className="text-sm font-medium text-rose-600">{formError}</p> : null}
-      {!formError && contractError ? <p className="text-sm font-medium text-rose-600">{contractError}</p> : null}
-      {!formError && !isConnected ? <p className="text-sm font-medium text-amber-700">Connect your wallet to continue this setup.</p> : null}
-      {!formError && isConnected && isWrongNetwork ? <p className="text-sm font-medium text-amber-700">Switch wallet network to Celo Mainnet to create this group.</p> : null}
+      {formError ? <p className="text-sm font-medium text-rose-600 dark:text-rose-300">{formError}</p> : null}
+      {!formError && contractError ? <p className="text-sm font-medium text-rose-600 dark:text-rose-300">{contractError}</p> : null}
+      {!formError && !isConnected ? (
+        <p className="text-sm font-medium text-amber-700 dark:text-amber-300">Connect your wallet to continue this setup.</p>
+      ) : null}
+      {!formError && isConnected && isWrongNetwork ? (
+        <p className="text-sm font-medium text-amber-700 dark:text-amber-300">
+          Switch wallet network to Celo Mainnet to create this group.
+        </p>
+      ) : null}
 
       <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={previousStep}
           disabled={step === 1 || isCreating}
-          className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={isCreating || !isConnected || isWrongNetwork}
-          className="inline-flex min-h-12 flex-1 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="inline-flex min-h-12 flex-1 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-emerald-400 dark:text-slate-950 dark:hover:bg-emerald-300 dark:disabled:bg-slate-700"
         >
           {isCreating ? "Creating..." : step === maxSteps ? "Create Group" : "Next"}
         </button>
