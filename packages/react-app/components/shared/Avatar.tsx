@@ -37,7 +37,7 @@ export function Avatar({ name, imageUrl, size = "sm", className }: AvatarProps) 
   return (
     <span
       className={cn(
-        "flex items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-bold text-emerald-700",
+        "flex items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-100",
         sizeClasses[size],
         className,
       )}
