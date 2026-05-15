@@ -70,7 +70,7 @@ export function ContributeButton({
 
   return (
     <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
         Allowance {allowanceLabel} / Required {requiredLabel}
       </p>
 
@@ -95,7 +95,7 @@ export function ContributeButton({
           type="button"
           disabled={disabled || isBusy}
           onClick={onClick}
-          className={`inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-base font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-emerald-300 ${buttonTone}`}
+          className={`inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-base font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-emerald-300 dark:disabled:bg-emerald-800/60 ${buttonTone}`}
         >
           {isBusy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
           {flowStep === "success" ? <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> : null}
@@ -104,13 +104,18 @@ export function ContributeButton({
       </div>
 
       {txHash && isBusy ? (
-        <a href={getCeloscanTxUrl(txHash)} target="_blank" rel="noreferrer" className="inline-flex text-xs font-semibold text-celo-green underline-offset-2 hover:underline">
+        <a
+          href={getCeloscanTxUrl(txHash)}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex text-xs font-semibold text-celo-green underline-offset-2 hover:underline dark:text-emerald-300"
+        >
           View transaction on Celoscan
         </a>
       ) : null}
 
       {flowStep === "success" ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200">
           Contributed! 🎉
           {lastPayoutRecipient ? ` Payout executed to ${shortenAddress(lastPayoutRecipient)}!` : " Your member status is updated."}
         </div>
