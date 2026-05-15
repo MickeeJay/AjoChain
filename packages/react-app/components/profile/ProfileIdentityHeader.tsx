@@ -11,18 +11,28 @@ type ProfileIdentityHeaderProps = {
 
 export function ProfileIdentityHeader({ addressLabel, ensName, onCopyAddress, copied }: ProfileIdentityHeaderProps) {
   return (
-    <header className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_42px_rgba(16,42,44,0.1)]">
+    <header className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_42px_rgba(16,42,44,0.1)] dark:border-slate-800 dark:bg-slate-950/90">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-celo-green">Profile</span>
-        {ensName ? <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700">{ensName}</span> : null}
+        <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-celo-green">
+          Profile
+        </span>
+        {ensName ? (
+          <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+            {ensName}
+          </span>
+        ) : null}
       </div>
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">Your savings identity on Celo.</h1>
+      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl dark:text-slate-100">
+        Your savings identity on Celo.
+      </h1>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <p className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700">{addressLabel}</p>
+        <p className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+          {addressLabel}
+        </p>
         <button
           type="button"
           onClick={onCopyAddress}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:border-slate-300"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? "Copied" : "Copy"}
