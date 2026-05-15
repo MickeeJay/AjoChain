@@ -46,13 +46,13 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
 
   return (
     <div className="space-y-3">
-      {isMiniPay ? <p className="text-sm font-semibold text-emerald-700">Join with your MiniPay wallet</p> : null}
+      {isMiniPay ? <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-200">Join with your MiniPay wallet</p> : null}
 
       {!isConnected ? (
         <WalletRequiredCard
           title="Connect your wallet to join"
           description="Joining a savings group requires a wallet signature on-chain."
-          className="bg-white"
+          className="bg-white dark:bg-slate-950/90"
         />
       ) : null}
 
@@ -61,7 +61,7 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
           type="button"
           onClick={() => void switchToCeloMainnet()}
           disabled={isConnecting}
-          className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-amber-300 bg-amber-50 px-5 py-3 text-sm font-semibold text-amber-900 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-amber-300 bg-amber-50 px-5 py-3 text-sm font-semibold text-amber-900 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-70 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100 dark:hover:bg-amber-500/20"
         >
           {isConnecting ? "Switching network" : "Switch to Celo Mainnet"}
         </button>
@@ -71,7 +71,7 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
         type="button"
         onClick={() => void handleJoin()}
         disabled={isJoining || isWrongNetwork || !isConnected}
-        className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-celo-green px-5 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300"
+        className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-celo-green px-5 py-3 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300 dark:disabled:bg-emerald-800/60"
       >
         {isJoining ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
         {isMiniPay ? "Join with your MiniPay wallet" : "Join this group"}
@@ -81,21 +81,34 @@ export function InviteJoinActions({ groupId, groupAddress, inviteCode }: InviteJ
         href={MINIPAY_ANDROID_URL}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400"
+        className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
       >
         Download MiniPay
       </a>
 
-      <p className="text-center text-xs text-slate-500">
+      <p className="text-center text-xs text-slate-500 dark:text-slate-400">
         On iOS? Download MiniPay from the
-        <a href={MINIPAY_IOS_URL} target="_blank" rel="noreferrer" className="ml-1 font-semibold text-celo-green underline-offset-2 hover:underline">
+        <a
+          href={MINIPAY_IOS_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="ml-1 font-semibold text-celo-green underline-offset-2 hover:underline dark:text-emerald-300"
+        >
           App Store
         </a>
         .
       </p>
 
-      {walletError ? <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{walletError}</p> : null}
-      {errorMessage ? <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700">{errorMessage}</p> : null}
+      {walletError ? (
+        <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200">
+          {walletError}
+        </p>
+      ) : null}
+      {errorMessage ? (
+        <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200">
+          {errorMessage}
+        </p>
+      ) : null}
     </div>
   );
 }
