@@ -24,14 +24,14 @@ export default function GroupsPage() {
     : "Join with an invite code, use a proven template, and jump to the right next action.";
 
   return (
-    <section className="flex flex-col gap-4 text-slate-900">
+    <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
       <NetworkMismatchNotice />
       <div className="space-y-3">
         <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
           {headerLabel}
         </span>
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">{headerTitle}</h1>
-        <p className="max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl dark:text-slate-100">{headerTitle}</h1>
+        <p className="max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7 dark:text-slate-400">
           {headerDescription}
         </p>
         {status !== "loading" && isSignedIn ? (
@@ -39,7 +39,11 @@ export default function GroupsPage() {
         ) : null}
       </div>
 
-      <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-1" role="tablist" aria-label="Groups view">
+      <div
+        className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-950/90"
+        role="tablist"
+        aria-label="Groups view"
+      >
         <button
           type="button"
           onClick={() => setActiveTab("my-groups")}
@@ -49,7 +53,9 @@ export default function GroupsPage() {
           aria-controls="panel-my-groups"
           className={[
             "min-h-10 rounded-xl px-4 text-sm font-semibold transition",
-            activeTab === "my-groups" ? "bg-celo-green text-white" : "text-slate-600 hover:bg-slate-50",
+            activeTab === "my-groups"
+              ? "bg-celo-green text-white"
+              : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900",
           ].join(" ")}
         >
           My Groups
@@ -63,7 +69,9 @@ export default function GroupsPage() {
           aria-controls="panel-discover"
           className={[
             "min-h-10 rounded-xl px-4 text-sm font-semibold transition",
-            activeTab === "discover" ? "bg-celo-green text-white" : "text-slate-600 hover:bg-slate-50",
+            activeTab === "discover"
+              ? "bg-celo-green text-white"
+              : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900",
           ].join(" ")}
         >
           Discover
@@ -82,7 +90,7 @@ export default function GroupsPage() {
             <WalletRequiredCard
               title="Connect your wallet to view your groups"
               description="Your groups and contribution history are linked to your wallet address."
-              className="bg-white"
+              className="bg-white dark:bg-slate-950/90"
               buttonClassName="w-fit"
               fullWidthButton={false}
             />

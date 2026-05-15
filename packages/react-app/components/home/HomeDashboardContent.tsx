@@ -50,47 +50,61 @@ export function HomeDashboardContent() {
   const greetingPrefix = resolveGreeting();
 
   return (
-    <section className="space-y-4 text-slate-900">
+    <section className="space-y-4 text-slate-900 dark:text-slate-100">
       <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr] xl:items-start">
         <div className="space-y-4">
-          <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(16,42,44,0.1)]">
-            <p className="text-sm font-medium text-slate-500">{greetingPrefix}, {greetingName}</p>
-            <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">cUSD {formatCusdFromWei(balance?.value)}</p>
+          <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(16,42,44,0.1)] dark:border-slate-800 dark:bg-slate-950/90">
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{greetingPrefix}, {greetingName}</p>
+            <p className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-slate-100">
+              cUSD {formatCusdFromWei(balance?.value)}
+            </p>
           </section>
 
           <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-emerald-50/40 p-4">
+            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-emerald-50/40 p-4 dark:border-slate-800 dark:from-slate-950 dark:to-emerald-900/30">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100"><Users className="h-3.5 w-3.5 text-emerald-700" /></span>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Active Groups</p>
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-500/20">
+                  <Users className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-200" />
+                </span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Active Groups</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-slate-950">{isGroupsLoading ? "--" : activeGroupCount}</p>
+              <p className="mt-2 text-2xl font-semibold text-slate-950 dark:text-slate-100">
+                {isGroupsLoading ? "--" : activeGroupCount}
+              </p>
             </article>
 
-            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-lime-50/40 p-4">
+            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-lime-50/40 p-4 dark:border-slate-800 dark:from-slate-950 dark:to-lime-900/30">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-lime-100"><PiggyBank className="h-3.5 w-3.5 text-lime-700" /></span>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Total Saved</p>
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-lime-100 dark:bg-lime-500/20">
+                  <PiggyBank className="h-3.5 w-3.5 text-lime-700 dark:text-lime-200" />
+                </span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Total Saved</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-slate-950">{isGroupsLoading ? "--" : `${formatCusdFromWei(totalSaved)} cUSD`}</p>
+              <p className="mt-2 text-2xl font-semibold text-slate-950 dark:text-slate-100">
+                {isGroupsLoading ? "--" : `${formatCusdFromWei(totalSaved)} cUSD`}
+              </p>
             </article>
 
-            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-amber-50/40 p-4">
+            <article className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-amber-50/40 p-4 dark:border-slate-800 dark:from-slate-950 dark:to-amber-900/30">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100"><Trophy className="h-3.5 w-3.5 text-amber-700" /></span>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Cycles Completed</p>
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/20">
+                  <Trophy className="h-3.5 w-3.5 text-amber-700 dark:text-amber-200" />
+                </span>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Cycles Completed</p>
               </div>
-              <p className="mt-2 text-2xl font-semibold text-slate-950">{isCyclesLoading ? "--" : Number(cyclesCompleted)}</p>
+              <p className="mt-2 text-2xl font-semibold text-slate-950 dark:text-slate-100">
+                {isCyclesLoading ? "--" : Number(cyclesCompleted)}
+              </p>
             </article>
           </section>
         </div>
 
-        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_30px_rgba(16,42,44,0.08)]">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Next Action</p>
+        <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_30px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Next Action</p>
           {nextActionGroup ? (
             <div className="mt-3 space-y-3">
-              <p className="text-lg font-semibold text-slate-950">Contribute to {nextActionGroup.name}</p>
-              <p className="text-sm text-slate-600">Round timer: {formatCountdown(secondsLeft)}</p>
+              <p className="text-lg font-semibold text-slate-950 dark:text-slate-100">Contribute to {nextActionGroup.name}</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Round timer: {formatCountdown(secondsLeft)}</p>
               <Link
                 href={`/groups/${nextActionGroup.groupAddress}`}
                 className="inline-flex min-h-11 items-center justify-center rounded-full bg-celo-green px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
@@ -100,7 +114,7 @@ export function HomeDashboardContent() {
             </div>
           ) : (
             <div className="mt-3 space-y-3">
-              <p className="text-sm text-slate-600">You are not in an active group yet.</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">You are not in an active group yet.</p>
               <div className="flex flex-wrap gap-2">
                 <Link
                   href="/create"
@@ -110,7 +124,7 @@ export function HomeDashboardContent() {
                 </Link>
                 <Link
                   href="/groups"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:border-slate-300"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-600"
                 >
                   Browse Groups
                 </Link>
@@ -120,28 +134,30 @@ export function HomeDashboardContent() {
         </section>
       </div>
 
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_30px_rgba(16,42,44,0.08)]">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Recent Activity</p>
+      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_30px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Recent Activity</p>
         <div className="mt-4 space-y-2">
           {isActivityLoading ? (
-            <p className="text-sm text-slate-600">Loading recent activity...</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">Loading recent activity...</p>
           ) : activity.length > 0 ? (
             activity.map((item) => (
-              <article key={item.id} className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5">
-                <p className="text-sm font-semibold text-slate-900">{item.label}</p>
-                <p className="text-xs text-slate-600">
+              <article key={item.id} className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 dark:border-slate-800 dark:bg-slate-900">
+                <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.label}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   {item.groupName} • {new Date(item.timestamp * 1000).toLocaleString()}
                 </p>
               </article>
             ))
           ) : (
-            <p className="text-sm text-slate-600">No transaction events yet for your groups.</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400">No transaction events yet for your groups.</p>
           )}
         </div>
       </section>
 
       {userGroups.length === 0 ? null : (
-        <p className="text-center text-xs text-slate-500">Your groups are synced from on-chain factory and group state reads.</p>
+        <p className="text-center text-xs text-slate-500 dark:text-slate-400">
+          Your groups are synced from on-chain factory and group state reads.
+        </p>
       )}
     </section>
   );

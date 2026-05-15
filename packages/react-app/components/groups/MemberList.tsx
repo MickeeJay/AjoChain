@@ -14,8 +14,11 @@ export function MemberList({ members }: MemberListProps) {
   return (
     <div className="space-y-3">
       {members.map((member) => (
-        <div key={member.address} className="flex min-h-12 items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3">
-          <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-900">
+        <div
+          key={member.address}
+          className="flex min-h-12 items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950/90"
+        >
+          <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
             {shortenAddress(member.address)}
           </span>
           {member.contributed ? (
@@ -24,7 +27,7 @@ export function MemberList({ members }: MemberListProps) {
               Contributed
             </span>
           ) : (
-            <span className="text-sm font-medium text-slate-500">Pending</span>
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Pending</span>
           )}
         </div>
       ))}

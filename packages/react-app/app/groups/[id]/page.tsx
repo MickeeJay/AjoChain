@@ -108,10 +108,13 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
 
   if (!isValidGroupAddress) {
     return (
-      <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-8 text-slate-900 lg:px-10">
-        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
-          <p className="text-sm font-semibold text-rose-600">Invalid group address.</p>
-          <Link href="/groups" className="mt-4 inline-flex rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-300">
+      <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-8 text-slate-900 lg:px-10 dark:text-slate-100">
+        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800 dark:bg-slate-950/90">
+          <p className="text-sm font-semibold text-rose-600 dark:text-rose-300">Invalid group address.</p>
+          <Link
+            href="/groups"
+            className="mt-4 inline-flex rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:text-slate-100 dark:hover:border-slate-500"
+          >
             Back to groups
           </Link>
         </section>
@@ -121,9 +124,11 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
 
   if (!groupState) {
     return (
-      <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-8 text-slate-900 lg:px-10">
-        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
-          <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold text-amber-800">Loading group state...</div>
+      <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-8 text-slate-900 lg:px-10 dark:text-slate-100">
+        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800 dark:bg-slate-950/90">
+          <div className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1.5 text-sm font-semibold text-amber-800 dark:bg-amber-500/20 dark:text-amber-100">
+            Loading group state...
+          </div>
         </section>
       </main>
     );
@@ -148,16 +153,16 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
   };
 
   return (
-    <section className="flex flex-col gap-4 text-slate-900">
+    <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
       <NetworkMismatchNotice />
       {!isConnected ? (
         <WalletRequiredCard
           title="Connect your wallet to contribute"
           description="You can view group details while signed in, but contributions require a wallet signature."
-          className="bg-white"
+          className="bg-white dark:bg-slate-950/90"
         />
       ) : null}
-      <div className="space-y-4 rounded-[2rem] border border-slate-200/70 bg-white p-5 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
+      <div className="space-y-4 rounded-[2rem] border border-slate-200/70 bg-white p-5 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:bg-slate-950/90">
         <GroupDetailHeader
           name={groupState.name}
           status={groupState.status}
@@ -166,16 +171,16 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
         />
 
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-3xl bg-slate-950 p-5 text-white">
-            <p className="text-sm text-slate-400">Current round</p>
+          <div className="rounded-3xl bg-slate-950 p-5 text-white dark:bg-slate-900">
+            <p className="text-sm text-slate-400 dark:text-slate-300">Current round</p>
             <p className="mt-2 text-3xl font-semibold">{Number(groupState.currentRound) + 1}</p>
           </div>
-          <div className="rounded-3xl bg-emerald-600 p-5 text-white">
-            <p className="text-sm text-emerald-100">Contributions received</p>
+          <div className="rounded-3xl bg-emerald-600 p-5 text-white dark:bg-emerald-500 dark:text-slate-950">
+            <p className="text-sm text-emerald-100 dark:text-emerald-50">Contributions received</p>
             <p className="mt-2 text-3xl font-semibold">{paidCount} / {memberCount}</p>
           </div>
-          <div className="rounded-3xl bg-slate-100 p-5 text-slate-900">
-            <p className="text-sm text-slate-500">Contribution amount</p>
+          <div className="rounded-3xl bg-slate-100 p-5 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+            <p className="text-sm text-slate-500 dark:text-slate-400">Contribution amount</p>
             <p className="mt-2 text-2xl font-semibold">{contributionLabel}</p>
           </div>
         </div>
@@ -216,7 +221,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
         {error && contributionFlowStep === "idle" ? <TransactionStatus status="error" label={error} /> : null}
 
         <div className="space-y-3">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Members</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Members</p>
           <MemberList
             members={groupState.members.map((member) => ({
               address: member.wallet,
@@ -226,7 +231,10 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Link href="/groups" className="inline-flex min-h-12 items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300">
+          <Link
+            href="/groups"
+            className="inline-flex min-h-12 items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
+          >
             Back to groups
           </Link>
         </div>

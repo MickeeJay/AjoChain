@@ -45,9 +45,9 @@ export function RoundCountdown({ secondsLeft }: RoundCountdownProps) {
   const label = formatCountdownLabel(secondsLeft);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Round countdown</p>
-      <p className="mt-1 text-base font-semibold text-slate-900">{label}</p>
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Round countdown</p>
+      <p className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100">{label}</p>
     </div>
   );
 }

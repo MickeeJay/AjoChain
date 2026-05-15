@@ -119,7 +119,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <section className="flex flex-col gap-4 text-slate-900">
+    <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
       <NetworkMismatchNotice />
       <ProfileIdentityHeader addressLabel={addressLabel} ensName={ensName} onCopyAddress={handleCopyAddress} copied={copiedAddress} />
       <ProfileAuthPanel />
@@ -142,7 +142,7 @@ export default function ProfilePage() {
         onShare={handleShareCredential}
       />
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
         Reputation reflects on-chain savings completions and can be queried by partners for creditworthiness.
       </p>
     </section>

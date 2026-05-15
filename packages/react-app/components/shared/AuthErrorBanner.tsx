@@ -32,7 +32,12 @@ function AuthErrorBannerInner({ className }: AuthErrorBannerProps) {
   const message = ERROR_MESSAGES[errorCode] ?? ERROR_MESSAGES.Default;
 
   return (
-    <div className={cn("rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700", className)}>
+    <div
+      className={cn(
+        "rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-200",
+        className,
+      )}
+    >
       {message}
     </div>
   );

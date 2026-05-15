@@ -45,13 +45,13 @@ export function InviteActions({ inviteCode }: InviteActionsProps) {
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Invite members</p>
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Invite members</p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => void copyInviteLink()}
-          className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-900 transition hover:border-slate-400"
+          className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-900 transition hover:border-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
         >
           {copied ? "Invite link copied" : "Copy invite link"}
         </button>
