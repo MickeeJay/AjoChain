@@ -21,10 +21,10 @@ type DrawerTransactionStatusProps = {
 type TransactionStatusProps = LegacyTransactionStatusProps | DrawerTransactionStatusProps;
 
 const legacyStyles: Record<LegacyTransactionStatusProps["status"], string> = {
-  idle: "bg-slate-100 text-slate-700",
-  pending: "bg-amber-100 text-amber-800",
-  success: "bg-emerald-100 text-emerald-800",
-  error: "bg-rose-100 text-rose-800",
+  idle: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200",
+  pending: "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-100",
+  success: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-100",
+  error: "bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-100",
 };
 
 function DrawerStateIcon({ state }: { state: TransactionStatusItem["state"] }) {
@@ -72,24 +72,28 @@ export function TransactionStatus(props: TransactionStatusProps) {
 
     return (
       <div className="pointer-events-none fixed inset-x-0 bottom-3 z-50 flex justify-center px-4 sm:bottom-5">
-        <div className="pointer-events-auto w-full max-w-md animate-[slide-up_220ms_ease-out] rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_-10px_60px_rgba(15,23,42,0.2)]">
+        <div className="pointer-events-auto w-full max-w-md animate-[slide-up_220ms_ease-out] rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_-10px_60px_rgba(15,23,42,0.2)] dark:border-slate-800 dark:bg-slate-950/90">
           <div className="flex items-start gap-3">
             <DrawerStateIcon state={item.state} />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-semibold text-slate-900">{item.label}</p>
-              {item.state === "pending" ? <p className="text-xs text-slate-500">Transaction submitted and waiting to be mined.</p> : null}
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.label}</p>
+              {item.state === "pending" ? (
+                <p className="text-xs text-slate-500 dark:text-slate-400">Transaction submitted and waiting to be mined.</p>
+              ) : null}
               {item.state === "confirming" ? (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   {Math.min(confirmations, requiredConfirmations)} of {requiredConfirmations} confirmations
                 </p>
               ) : null}
-              {item.state === "failed" && item.errorMessage ? <p className="text-xs text-rose-600">{item.errorMessage}</p> : null}
+              {item.state === "failed" && item.errorMessage ? (
+                <p className="text-xs text-rose-600 dark:text-rose-200">{item.errorMessage}</p>
+              ) : null}
               {txUrl ? (
                 <a
                   href={txUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex text-xs font-semibold text-celo-green underline-offset-2 hover:underline"
+                  className="inline-flex text-xs font-semibold text-celo-green underline-offset-2 hover:underline dark:text-emerald-300"
                 >
                   View on Celoscan
                 </a>
@@ -99,7 +103,7 @@ export function TransactionStatus(props: TransactionStatusProps) {
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                className="rounded-full border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900"
               >
                 Close
               </button>
