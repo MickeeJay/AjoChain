@@ -63,11 +63,15 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
 
   if (!inviteGroup) {
     return (
-      <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 text-slate-900">
-        <div className="rounded-[2rem] border border-slate-200/70 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
-          <span className="inline-flex rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-rose-700">Invite not found</span>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">This invite link is invalid or expired.</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7">
+      <section className="mx-auto flex w-full max-w-4xl flex-col gap-4 text-slate-900 dark:text-slate-100">
+        <div className="rounded-[2rem] border border-slate-200/70 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:bg-slate-950/90">
+          <span className="inline-flex rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">
+            Invite not found
+          </span>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl dark:text-slate-100">
+            This invite link is invalid or expired.
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7 dark:text-slate-400">
             Ask your group organizer to share a new invite link, then open it in MiniPay to join the savings circle.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
@@ -79,7 +83,10 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
             >
               Download MiniPay
             </a>
-            <Link href="/" className="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300">
+            <Link
+              href="/"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
+            >
               Back home
             </Link>
           </div>
@@ -91,32 +98,32 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
   const contributionLabel = `$${formatCusdFromWei(inviteGroup.contributionAmount)}`;
 
   return (
-    <section className="mx-auto flex w-full max-w-5xl flex-col gap-5 text-slate-900">
-      <div className="rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white via-emerald-50/70 to-cyan-50/70 p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
+    <section className="mx-auto flex w-full max-w-5xl flex-col gap-5 text-slate-900 dark:text-slate-100">
+      <div className="rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white via-emerald-50/70 to-cyan-50/70 p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:from-slate-950 dark:via-emerald-900/30 dark:to-cyan-900/30">
         <span className="inline-flex rounded-full bg-celo-green/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-celo-green">Invite link</span>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">Join {inviteGroup.name}</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7">
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl dark:text-slate-100">Join {inviteGroup.name}</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7 dark:text-slate-400">
           Start contributing in minutes with your MiniPay wallet. This invite works without connecting first.
         </p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Contribution</p>
-            <p className="mt-1 text-xl font-semibold text-slate-950">{contributionLabel} cUSD</p>
+          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Contribution</p>
+            <p className="mt-1 text-xl font-semibold text-slate-950 dark:text-slate-100">{contributionLabel} cUSD</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Frequency</p>
-            <p className="mt-1 text-xl font-semibold text-slate-950">{formatFrequencyLabel(inviteGroup.frequencyInDays)}</p>
+          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Frequency</p>
+            <p className="mt-1 text-xl font-semibold text-slate-950 dark:text-slate-100">{formatFrequencyLabel(inviteGroup.frequencyInDays)}</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Members</p>
-            <p className="mt-1 text-xl font-semibold text-slate-950">
+          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Members</p>
+            <p className="mt-1 text-xl font-semibold text-slate-950 dark:text-slate-100">
               {inviteGroup.memberCount} / {inviteGroup.maxMembers.toString()}
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Group address</p>
-            <p className="mt-1 truncate text-sm font-semibold text-slate-900">{inviteGroup.groupAddress}</p>
+          <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Group address</p>
+            <p className="mt-1 truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{inviteGroup.groupAddress}</p>
           </div>
         </div>
 
@@ -125,20 +132,26 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
         </div>
       </div>
 
-      <div className="rounded-[2rem] border border-slate-200/70 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)]">
+      <div className="rounded-[2rem] border border-slate-200/70 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:bg-slate-950/90">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-celo-green">How AjoChain works</p>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
-          <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
             <p className="text-sm font-semibold text-celo-green">1) Contribute weekly</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Members contribute {contributionLabel} cUSD each round through MiniPay.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              Members contribute {contributionLabel} cUSD each round through MiniPay.
+            </p>
           </article>
-          <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
             <p className="text-sm font-semibold text-celo-green">2) Smart contract pays out each turn</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">When all members contribute, payout runs automatically to the next member.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              When all members contribute, payout runs automatically to the next member.
+            </p>
           </article>
-          <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
             <p className="text-sm font-semibold text-celo-green">3) Complete cycle, earn certificate</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Finish all rounds and each member receives an on-chain completion credential.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              Finish all rounds and each member receives an on-chain completion credential.
+            </p>
           </article>
         </div>
       </div>
