@@ -26,9 +26,14 @@ export function WalletRequiredCard({
   }
 
   return (
-    <section className={cn("rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600", className)}>
-      <p className="text-sm font-semibold text-slate-900">{title}</p>
-      <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+    <section
+      className={cn(
+        "rounded-[1.5rem] border border-slate-200 bg-white p-5 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-400",
+        className,
+      )}
+    >
+      <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</p>
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{description}</p>
       <ConnectWalletButton isMiniPay={isMiniPay} fullWidth={fullWidthButton} className={cn("mt-4", buttonClassName)} />
     </section>
   );
