@@ -7,6 +7,7 @@ import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { Avatar } from "@/components/shared/Avatar";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { GoogleSignOutButton } from "@/components/shared/GoogleSignOutButton";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useMiniPay } from "@/hooks/useMiniPay";
@@ -36,6 +37,7 @@ export function ShellHeader() {
         </Link>
 
         <div className="flex min-w-0 items-center gap-2">
+          <ThemeToggle className="shrink-0" />
           {isConnected ? (
             <div className="flex min-w-0 items-center gap-2">
               {showWalletStatus ? <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" /> : null}
