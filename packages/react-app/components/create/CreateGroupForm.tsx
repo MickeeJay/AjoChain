@@ -349,7 +349,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
       ) : null}
       {!formError && isConnected && isWrongNetwork ? (
         <p className="text-sm font-medium text-amber-700 dark:text-amber-300">
-          Switch wallet network to Celo Mainnet to create this group.
+          Switch wallet network to Celo Mainnet or Alfajores testnet to create this group.
         </p>
       ) : null}
 
