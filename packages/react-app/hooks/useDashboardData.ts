@@ -23,6 +23,13 @@ function toReadableAddress(address: string) {
   return address.toLowerCase();
 }
 
+interface RawActivityItem {
+  id: string;
+  label: string;
+  groupAddress: string;
+  timestamp: number;
+}
+
 export function useDashboardData() {
   const { address: accountAddress } = useAccount();
   const chainId = useChainId();
@@ -39,91 +46,67 @@ export function useDashboardData() {
     chainId,
     query: {
       enabled: Boolean(accountAddress && hasFactory),
-      staleTime: 15_000,
+      staleTime: 20_000,
     },
   });
 
-  const userGroupIds = useMemo(() => Array.from(userGroupIdsData ?? []), [userGroupIdsData]);
+  const userGroupIds = useMemo(() => {
+    return (userGroupIdsData as bigint[]) ?? [];
+  }, [userGroupIdsData]);
 
-  const groupInfoContracts = useMemo(
-    () =>
-      userGroupIds.map((groupId) => ({
-        address: factoryAddress,
-        abi: AJO_FACTORY_ABI,
-        functionName: "getGroupInfo" as const,
-        args: [groupId],
-        chainId,
-      })),
-    [chainId, factoryAddress, userGroupIds],
-  );
-
-  const { data: groupInfoResults, isLoading: isGroupInfoLoading } = useReadContracts({
-    contracts: groupInfoContracts,
+  const { data: groupStateResults, isLoading: isGroupStateLoading } = useReadContracts({
+    contracts: userGroupIds.map((groupId) => ({
+      address: factoryAddress,
+      abi: AJO_FACTORY_ABI,
+      functionName: "getGroupInfo",
+      args: [groupId],
+      chainId,
+    })),
     query: {
-      enabled: groupInfoContracts.length > 0,
-      staleTime: 15_000,
+      enabled: userGroupIds.length > 0,
+      staleTime: 20_000,
     },
   });
 
   const groupAddresses = useMemo(() => {
-    return (groupInfoResults ?? [])
-      .map((result) => result.result)
-      .filter((groupAddress): groupAddress is Address => Boolean(groupAddress && groupAddress !== zeroAddress));
-  }, [groupInfoResults]);
-
-  const groupStateContracts = useMemo(
-    () =>
-      groupAddresses.map((groupAddress) => ({
-        address: groupAddress,
-        abi: AJO_GROUP_ABI,
-        functionName: "getGroupState" as const,
-        chainId,
-      })),
-    [chainId, groupAddresses],
-  );
-
-  const { data: groupStateResults, isLoading: isGroupStateLoading } = useReadContracts({
-    contracts: groupStateContracts,
-    query: {
-      enabled: groupStateContracts.length > 0,
-      staleTime: 15_000,
-    },
-  });
-
-  const memberContracts = useMemo(() => {
-    if (!accountAddress) {
+    if (!groupStateResults) {
       return [];
     }
 
-    return groupAddresses.map((groupAddress) => ({
-      address: groupAddress,
+    return groupStateResults
+      .map((result) => result.result as Address)
+      .filter((address): address is Address => Boolean(address && address !== zeroAddress));
+  }, [groupStateResults]);
+
+  const { data: groupDetailsResults, isLoading: isGroupDetailsLoading } = useReadContracts({
+    contracts: groupAddresses.map((address) => ({
+      address,
       abi: AJO_GROUP_ABI,
-      functionName: "members" as const,
-      args: [accountAddress],
+      functionName: "getGroupState",
       chainId,
-    }));
-  }, [accountAddress, chainId, groupAddresses]);
+    })),
+    query: {
+      enabled: groupAddresses.length > 0,
+      staleTime: 10_000,
+    },
+  });
 
   const { data: memberResults, isLoading: isMemberDetailsLoading } = useReadContracts({
-    contracts: memberContracts,
+    contracts: groupAddresses.map((address) => ({
+      address,
+      abi: AJO_GROUP_ABI,
+      functionName: "getMemberInfo",
+      args: accountAddress ? [accountAddress] : [zeroAddress],
+      chainId,
+    })),
     query: {
-      enabled: Boolean(accountAddress && memberContracts.length > 0),
-      staleTime: 15_000,
+      enabled: Boolean(accountAddress && groupAddresses.length > 0),
+      staleTime: 10_000,
     },
   });
 
-  const { data: credentialFromFactory, isLoading: isCredentialAddressLoading } = useReadContract({
-    address: factoryAddress,
-    abi: AJO_FACTORY_ABI,
-    functionName: "credentialContract",
-    chainId,
-    query: {
-      enabled: hasFactory,
-      staleTime: 15_000,
-    },
-  });
-
-  const credentialAddress = (credentialFromFactory ?? addresses[networkId].credential) as Address;
+  const credentialAddress = addresses[networkId].credential;
+  const hasCredential = credentialAddress !== zeroAddress;
 
   const { data: cyclesCompletedData, isLoading: isCyclesLoading } = useReadContract({
     address: credentialAddress,
@@ -132,31 +115,31 @@ export function useDashboardData() {
     args: accountAddress ? [accountAddress] : undefined,
     chainId,
     query: {
-      enabled: Boolean(accountAddress && credentialAddress !== zeroAddress),
-      staleTime: 15_000,
+      enabled: Boolean(accountAddress && hasCredential),
+      staleTime: 30_000,
     },
   });
 
-  const userGroups = useMemo<UserGroupDashboardItem[]>(() => {
-    return groupAddresses.map((groupAddress, index) => {
-      const groupId = userGroupIds[index] ?? 0n;
-      const groupState = groupStateResults?.[index]?.result;
-      const memberRecord = memberResults?.[index]?.result as
-        | readonly [Address, boolean, boolean, bigint, bigint]
-        | undefined;
+  const userGroups = useMemo(() => {
+    if (!groupDetailsResults) {
+      return [];
+    }
 
-      if (!groupState) {
+    return groupAddresses.map((groupAddress, index) => {
+      const stateResult = groupDetailsResults[index];
+
+      if (stateResult.status !== "success") {
         return {
-          groupId,
+          groupId: 0n,
           groupAddress,
-          name: `Group ${Number(groupId) + 1}`,
-          status: "FORMING",
+          name: "Savings Circle",
+          status: "FORMING" as GroupStatus,
           memberCount: 0,
           maxMembers: 0,
           contributionAmount: 0n,
           currentRound: 0n,
           totalRounds: 0n,
-          memberOrder: [],
+          memberOrder: [] as Address[],
           remainingTime: 0,
           needsContribution: false,
           nextPayoutTo: zeroAddress,
@@ -164,17 +147,39 @@ export function useDashboardData() {
         };
       }
 
+      const groupState = stateResult.result as {
+        status: number;
+        factory: Address;
+        creator: Address;
+        cUSDToken: Address;
+        name: string;
+        contributionAmount: bigint;
+        frequencyInDays: bigint;
+        maxMembers: bigint;
+        currentRound: bigint;
+        roundStartTime: bigint;
+        payoutIndex: bigint;
+        inviteCode: `0x${string}`;
+        memberOrder: readonly Address[];
+        activeMembers: readonly Address[];
+        pauseSupportVotes: bigint;
+        pauseOppositionVotes: bigint;
+        remainingTime: bigint;
+      };
+
+      const memberOrder = [...(groupState.memberOrder ?? [])];
+      const totalRounds = memberOrder.length > 0 ? BigInt(memberOrder.length) : groupState.maxMembers;
       const status = resolveGroupStatus(groupState.status);
-      const memberOrder = [...groupState.memberOrder];
-      const payoutIndex = Number(groupState.payoutIndex ?? 0n);
-      const nextPayoutTo = memberOrder[payoutIndex] ?? zeroAddress;
-      const memberCount = groupState.activeMembers.length;
-      const totalRounds = BigInt(memberOrder.length > 0 ? memberOrder.length : Number(groupState.maxMembers));
-      const hasContributedThisRound = memberRecord?.[1] ?? false;
-      const isActiveMember = memberRecord?.[2] ?? false;
+      const memberCount = groupState.activeMembers?.length ?? 0;
+      const nextPayoutTo = memberOrder[Number(groupState.payoutIndex)] ?? zeroAddress;
+
+      const memberInfoResult = memberResults?.[index];
+      const memberRecord = memberInfoResult?.result as [Address, boolean, boolean, bigint, bigint] | undefined;
+      const isActiveMember = memberRecord?.[1] ?? false;
+      const hasContributedThisRound = memberRecord?.[2] ?? false;
 
       return {
-        groupId,
+        groupId: userGroupIds[index] ?? 0n,
         groupAddress,
         name: groupState.name,
         status,
@@ -190,7 +195,7 @@ export function useDashboardData() {
         userTotalContributed: memberRecord?.[3] ?? 0n,
       };
     });
-  }, [groupAddresses, groupStateResults, memberResults, userGroupIds]);
+  }, [groupAddresses, groupDetailsResults, memberResults, userGroupIds]);
 
   const groupNameByAddress = useMemo(() => {
     return userGroups.reduce<Record<string, string>>((accumulator, group) => {
@@ -199,13 +204,13 @@ export function useDashboardData() {
     }, {});
   }, [userGroups]);
 
-  const activityQuery = useQuery<ActivityItem[]>({
+  const activityQuery = useQuery<RawActivityItem[]>({
     queryKey: ["dashboard-activity", chainId, accountAddress, groupAddresses],
     enabled: Boolean(accountAddress && publicClient && groupAddresses.length > 0),
     staleTime: 15_000,
     queryFn: async () => {
       if (!publicClient || groupAddresses.length === 0) {
-        return [] as ActivityItem[];
+        return [] as RawActivityItem[];
       }
 
       const latestBlock = await publicClient.getBlockNumber();
@@ -277,11 +282,21 @@ export function useDashboardData() {
       return mergedLogs.map((entry) => ({
         id: entry.id,
         label: entry.label,
-        groupName: groupNameByAddress[entry.groupAddress] ?? "Savings group",
+        groupAddress: entry.groupAddress,
         timestamp: blockTimestampByNumber[entry.blockNumber.toString()] ?? 0,
       }));
     },
   });
+
+  const activity = useMemo(() => {
+    const rawItems = activityQuery.data ?? [];
+    return rawItems.map((item) => ({
+      id: item.id,
+      label: item.label,
+      groupName: groupNameByAddress[item.groupAddress] ?? "Savings group",
+      timestamp: item.timestamp,
+    }));
+  }, [activityQuery.data, groupNameByAddress]);
 
   const activeGroups = userGroups.filter((group) => group.status === "ACTIVE");
   const nextActionGroup = activeGroups.find((group) => group.needsContribution) ?? activeGroups[0];
@@ -291,16 +306,15 @@ export function useDashboardData() {
     userGroups,
     isGroupsLoading:
       isUserGroupsLoading ||
-      isGroupInfoLoading ||
       isGroupStateLoading ||
-      isMemberDetailsLoading ||
-      isCredentialAddressLoading,
+      isGroupDetailsLoading ||
+      isMemberDetailsLoading,
     isActivityLoading: activityQuery.isLoading,
     isCyclesLoading,
     activeGroupCount: activeGroups.length,
     totalSaved: userGroups.reduce((total, group) => total + group.userTotalContributed, 0n),
     cyclesCompleted: cyclesCompletedData ?? 0n,
     nextActionGroup,
-    activity: activityQuery.data ?? [],
+    activity,
   };
 }
