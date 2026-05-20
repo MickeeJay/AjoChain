@@ -25,6 +25,7 @@ type GroupActionPanelProps = {
   onContribute: () => void;
   canDownloadCertificate: boolean;
   certificateHref: string;
+  chainId?: number;
 };
 
 export function GroupActionPanel({
@@ -48,6 +49,7 @@ export function GroupActionPanel({
   onContribute,
   canDownloadCertificate,
   certificateHref,
+  chainId,
 }: GroupActionPanelProps) {
   if (status === "FORMING" && isCreator) {
     return (
@@ -92,6 +94,7 @@ export function GroupActionPanel({
         contributeTxHash={contributeTxHash}
         lastPayoutRecipient={lastPayoutRecipient}
         onClick={onContribute}
+        chainId={chainId}
       />
     );
   }

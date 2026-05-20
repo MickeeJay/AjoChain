@@ -16,6 +16,7 @@ type DrawerTransactionStatusProps = {
   open: boolean;
   item: TransactionStatusItem | null;
   onClose?: () => void;
+  chainId?: number;
 };
 
 type TransactionStatusProps = LegacyTransactionStatusProps | DrawerTransactionStatusProps;
@@ -60,7 +61,7 @@ export function TransactionStatus(props: TransactionStatusProps) {
   }, [drawerItem, drawerOnClose, drawerOpen]);
 
   if (isDrawerMode) {
-    const { open, item, onClose } = props;
+    const { open, item, onClose, chainId } = props;
 
     if (!open || !item) {
       return null;
@@ -68,7 +69,7 @@ export function TransactionStatus(props: TransactionStatusProps) {
 
     const confirmations = item.confirmations ?? 0;
     const requiredConfirmations = item.requiredConfirmations ?? 2;
-    const txUrl = getCeloscanTxUrl(item.txHash);
+    const txUrl = getCeloscanTxUrl(item.txHash, chainId);
 
     return (
       <div className="pointer-events-none fixed inset-x-0 bottom-3 z-50 flex justify-center px-4 sm:bottom-5">

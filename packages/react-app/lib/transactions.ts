@@ -1,11 +1,10 @@
 import type { Hash } from "viem";
 
-const CELOSCAN_BASE_URL = "https://celoscan.io";
-
-export function getCeloscanTxUrl(txHash: Hash | undefined) {
+export function getCeloscanTxUrl(txHash: Hash | undefined, chainId?: number) {
   if (!txHash) {
     return "";
   }
 
-  return `${CELOSCAN_BASE_URL}/tx/${txHash}`;
+  const baseUrl = chainId === 44787 ? "https://alfajores.celoscan.io" : "https://celoscan.io";
+  return `${baseUrl}/tx/${txHash}`;
 }

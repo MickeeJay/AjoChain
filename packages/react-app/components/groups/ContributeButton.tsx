@@ -19,6 +19,7 @@ type ContributeButtonProps = {
   contributeTxHash?: Hash;
   lastPayoutRecipient?: Address | null;
   onClick: () => void;
+  chainId?: number;
 };
 
 export function ContributeButton({
@@ -31,6 +32,7 @@ export function ContributeButton({
   contributeTxHash,
   lastPayoutRecipient,
   onClick,
+  chainId,
 }: ContributeButtonProps) {
   const requiresApproval = allowance < contributionAmount;
   const allowanceLabel = `${formatCusdFromWei(allowance)} cUSD`;
@@ -105,7 +107,7 @@ export function ContributeButton({
 
       {txHash && isBusy ? (
         <a
-          href={getCeloscanTxUrl(txHash)}
+          href={getCeloscanTxUrl(txHash, chainId)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex text-xs font-semibold text-celo-green underline-offset-2 hover:underline dark:text-emerald-300"

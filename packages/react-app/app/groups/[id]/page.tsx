@@ -27,7 +27,7 @@ type GroupDetailPageProps = {
 
 export default function GroupDetailPage({ params }: GroupDetailPageProps) {
   const { address: accountAddress } = useAccount();
-  const { isConnected } = useMiniPay();
+  const { isConnected, chainId } = useMiniPay();
   const inputAddress = params.id;
   const isValidGroupAddress = isAddress(inputAddress);
   const groupAddress = (isValidGroupAddress ? inputAddress : "0x0000000000000000000000000000000000000000") as `0x${string}`;
@@ -215,6 +215,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
           onContribute={onContribute}
           canDownloadCertificate={isMember}
           certificateHref="/profile"
+          chainId={chainId}
         />
 
         {groupState.status === "FORMING" ? <InviteActions inviteCode={groupState.inviteCode} /> : null}
@@ -240,7 +241,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
         </div>
       </div>
 
-      <TransactionStatus mode="drawer" open={Boolean(drawerStatusItem)} item={drawerStatusItem} onClose={dismissContributionStatus} />
+      <TransactionStatus mode="drawer" open={Boolean(drawerStatusItem)} item={drawerStatusItem} onClose={dismissContributionStatus} chainId={chainId} />
     </section>
   );
 }
