@@ -35,15 +35,17 @@ export function GroupProgress({ currentRound, totalRounds, memberOrder, nextPayo
                 <div key={round} className="flex flex-col items-center gap-2 px-1">
                   <div
                     className={[
-                      "relative flex h-7 w-7 items-center justify-center rounded-full border",
-                      isCompleted ? "border-emerald-600 bg-emerald-600" : "",
-                      isCurrent ? "border-emerald-600 bg-white ring-4 ring-emerald-200 dark:bg-slate-950 dark:ring-emerald-500/30" : "",
-                      !isCompleted && !isCurrent ? "border-slate-300 bg-slate-100 dark:border-slate-700 dark:bg-slate-800" : "",
+                      "relative flex h-7 w-7 items-center justify-center rounded-full border text-[10px] font-bold",
+                      isCompleted ? "border-emerald-600 bg-emerald-600 text-white" : "",
+                      isCurrent ? "border-emerald-600 bg-white text-emerald-600 ring-4 ring-emerald-200 dark:bg-slate-950 dark:ring-emerald-500/30" : "",
+                      !isCompleted && !isCurrent ? "border-slate-200 bg-slate-50 text-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-500" : "",
                     ].join(" ")}
                   >
-                    {isCompleted ? <Check className="h-4 w-4 text-white" /> : null}
+                    {isCompleted ? <Check className="h-4 w-4 text-white" /> : <span>{round + 1}</span>}
                   </div>
-                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{shortenAddress(payoutWallet)}</p>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                    {payoutWallet ? shortenAddress(payoutWallet) : "TBD"}
+                  </p>
                 </div>
               );
             })}
