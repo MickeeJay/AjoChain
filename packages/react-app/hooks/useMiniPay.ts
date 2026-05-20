@@ -179,7 +179,12 @@ export function useMiniPay() {
   const resolvedAddress = address ?? wagmiAddress;
   const resolvedChainId = chainId ?? wagmiChainId;
   const isConnected = Boolean(resolvedAddress);
-  const isWrongNetwork = Boolean(isConnected && resolvedChainId !== undefined && resolvedChainId !== CELO_MAINNET_CHAIN_ID);
+  const isWrongNetwork = Boolean(
+    isConnected &&
+      resolvedChainId !== undefined &&
+      resolvedChainId !== CELO_MAINNET_CHAIN_ID &&
+      resolvedChainId !== 44787
+  );
 
   return {
     isMiniPay,
