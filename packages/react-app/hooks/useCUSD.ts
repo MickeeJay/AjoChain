@@ -3,13 +3,9 @@
 import type { Address } from "viem";
 import { useAccount, useBalance, useReadContract, useWriteContract } from "wagmi";
 import { IERC20_ABI } from "@/lib/contracts/abis";
+import { addresses } from "@/lib/contracts/addresses";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000" as const;
-
-const CUSD_ADDRESSES: Record<42220 | 44787, Address> = {
-  42220: (process.env.NEXT_PUBLIC_CUSD_ADDRESS ?? ZERO_ADDRESS) as Address,
-  44787: (process.env.NEXT_PUBLIC_CUSD_ALFAJORES ?? ZERO_ADDRESS) as Address,
-};
 
 type UseCUSDParams = {
   owner?: Address;
@@ -21,7 +17,7 @@ export function useCUSD({ owner, spender, chainId }: UseCUSDParams = {}) {
   const { address: connectedAddress, chainId: connectedChainId } = useAccount();
   const resolvedOwner = owner ?? connectedAddress;
   const resolvedChainId = chainId ?? (connectedChainId === 44787 ? 44787 : 42220);
-  const tokenAddress = CUSD_ADDRESSES[resolvedChainId];
+  const tokenAddress = addresses[resolvedChainId].cUSD;
 
   const { data: balance } = useBalance({
     address: resolvedOwner,
