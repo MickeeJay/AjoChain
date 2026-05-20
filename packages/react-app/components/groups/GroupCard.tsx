@@ -44,21 +44,23 @@ export function GroupCard({
     <Link
       href={`/groups/${groupAddress}`}
       className={[
-        "group block rounded-[1.5rem] border bg-white p-4 shadow-[0_16px_50px_rgba(16,42,44,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_60px_rgba(16,42,44,0.12)] dark:bg-slate-950/90",
-        highlightContribution ? "border-emerald-300 dark:border-emerald-400/60" : "border-slate-200 dark:border-slate-800",
+        "group block rounded-[1.5rem] border bg-white p-4 shadow-[0_16px_50px_rgba(16,42,44,0.08)] transition-all duration-300 ease-out hover:-translate-y-1 dark:bg-slate-950/90 glass-card",
+        highlightContribution
+          ? "border-emerald-300 dark:border-emerald-400/60 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-[0_20px_50px_rgba(16,185,129,0.12)]"
+          : "border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700 hover:shadow-[0_20px_50px_rgba(16,42,44,0.12)]",
       ].join(" ")}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-base font-semibold text-slate-950 dark:text-slate-100">{name}</p>
+          <p className="text-base font-semibold text-slate-950 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">{name}</p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className={["rounded-full border px-2.5 py-1 font-semibold", STATUS_STYLES[status]].join(" ")}>{status}</span>
-            <span className="text-slate-500 dark:text-slate-400">
+            <span className={["rounded-full border px-2.5 py-1 font-semibold transition-colors duration-300", STATUS_STYLES[status]].join(" ")}>{status}</span>
+            <span className="text-slate-500 dark:text-slate-400 transition-colors duration-300">
               {memberCount}/{maxMembers} members
             </span>
           </div>
         </div>
-        <ArrowUpRight className="h-5 w-5 text-slate-400 transition group-hover:text-emerald-600 dark:text-slate-500" />
+        <ArrowUpRight className="h-5 w-5 text-slate-400 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 dark:text-slate-500" />
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-400">
