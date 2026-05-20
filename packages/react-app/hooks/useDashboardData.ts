@@ -214,19 +214,19 @@ export function useDashboardData() {
       const [contributionLogs, roundLogs, groupCompletedLogs] = await Promise.all([
         publicClient.getLogs({
           address: groupAddresses,
-          event: parseAbiItem("event ContributionReceived(address indexed member, uint256 indexed round, uint256 indexed amount)"),
+          event: parseAbiItem("event ContributionReceived(address member, uint256 round, uint256 amount)"),
           fromBlock,
           toBlock: "latest",
         }),
         publicClient.getLogs({
           address: groupAddresses,
-          event: parseAbiItem("event RoundCompleted(uint256 indexed round, address indexed recipient, uint256 indexed amount)"),
+          event: parseAbiItem("event RoundCompleted(uint256 round, address recipient, uint256 amount)"),
           fromBlock,
           toBlock: "latest",
         }),
         publicClient.getLogs({
           address: groupAddresses,
-          event: parseAbiItem("event GroupCompleted(uint256 indexed totalCycles, uint256 indexed completedAt)"),
+          event: parseAbiItem("event GroupCompleted(uint256 totalCycles, uint256 completedAt)"),
           fromBlock,
           toBlock: "latest",
         }),
