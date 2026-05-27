@@ -63,7 +63,7 @@ export function GroupCard({
         <ArrowUpRight className="h-5 w-5 text-slate-400 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 dark:text-slate-500" />
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-400">
+      <div className="mt-3 grid grid-cols-1 minipay:grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-400">
         <p>Contribution: {formatCusdFromWei(contributionAmount)} cUSD</p>
         <p>
           Round: {Math.min(currentRound + 1, totalRounds)}/{totalRounds}
@@ -93,7 +93,7 @@ export function GroupCard({
       ) : null}
 
       {highlightContribution ? (
-        <span className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white dark:bg-emerald-500 dark:text-slate-950">
+        <span className="mt-4 inline-flex min-h-10 w-full items-center justify-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white dark:bg-emerald-500 dark:text-slate-950">
           Contribute {formatCusdFromWei(contributionAmount)} cUSD
         </span>
       ) : null}
