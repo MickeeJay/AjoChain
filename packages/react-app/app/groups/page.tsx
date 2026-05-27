@@ -40,7 +40,7 @@ export default function GroupsPage() {
       </div>
 
       <div
-        className="inline-flex rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-950/90"
+        className="flex w-full sm:inline-flex rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-950/90"
         role="tablist"
         aria-label="Groups view"
       >
@@ -52,7 +52,7 @@ export default function GroupsPage() {
           aria-selected={isMyGroupsTab}
           aria-controls="panel-my-groups"
           className={[
-            "min-h-10 rounded-xl px-4 text-sm font-semibold transition",
+            "flex-1 sm:flex-none min-h-10 rounded-xl px-4 text-sm font-semibold transition",
             activeTab === "my-groups"
               ? "bg-celo-green text-white"
               : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900",
@@ -68,7 +68,7 @@ export default function GroupsPage() {
           aria-selected={!isMyGroupsTab}
           aria-controls="panel-discover"
           className={[
-            "min-h-10 rounded-xl px-4 text-sm font-semibold transition",
+            "flex-1 sm:flex-none min-h-10 rounded-xl px-4 text-sm font-semibold transition",
             activeTab === "discover"
               ? "bg-celo-green text-white"
               : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900",
