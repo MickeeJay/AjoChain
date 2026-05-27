@@ -29,13 +29,13 @@ export function CredentialCard({ credential, onShare, isSharing }: CredentialCar
         </div>
 
         <div className="grid grid-cols-2 gap-3 rounded-2xl border border-emerald-600/15 bg-white/70 p-3 text-sm dark:border-emerald-500/20 dark:bg-slate-950/70">
-          <div>
+          <div className="overflow-hidden">
             <p className="text-xs uppercase tracking-[0.12em] text-emerald-800/80 dark:text-emerald-200/80">Cycles</p>
-            <p className="mt-1 text-lg font-semibold">{credential.cyclesCompleted.toString()}</p>
+            <p className="mt-1 text-base minipay:text-lg font-semibold truncate">{credential.cyclesCompleted.toString()}</p>
           </div>
-          <div>
+          <div className="overflow-hidden">
             <p className="text-xs uppercase tracking-[0.12em] text-emerald-800/80 dark:text-emerald-200/80">Total Saved</p>
-            <p className="mt-1 text-lg font-semibold">{formatCusdCurrency(credential.totalSaved)}</p>
+            <p className="mt-1 text-base minipay:text-lg font-semibold truncate">{formatCusdCurrency(credential.totalSaved)}</p>
           </div>
           <div className="col-span-2">
             <p className="text-xs uppercase tracking-[0.12em] text-emerald-800/80 dark:text-emerald-200/80">Completion Date</p>

@@ -27,7 +27,7 @@ export function CredentialsSection({ credentials, isLoading, sharingTokenId, onS
           Complete a savings cycle to earn your first certificate
         </p>
       ) : (
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {credentials.map((credential) => (
             <CredentialCard
               key={credential.tokenId.toString()}
