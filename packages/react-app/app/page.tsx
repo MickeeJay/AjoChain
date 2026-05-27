@@ -26,10 +26,10 @@ export default function HomePage() {
 
   if (!isConnected && isMiniPay) {
     return (
-      <section className="rounded-[1.5rem] border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_16px_40px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100">
-        <p className="text-lg font-semibold">MiniPay detected</p>
+      <section className="rounded-[1.25rem] sm:rounded-[1.5rem] border border-slate-200 bg-white p-4 sm:p-5 text-slate-900 shadow-[0_16px_40px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100">
+        <p className="text-lg font-semibold">MiniPay wallet detected</p>
         <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
-          Connect your MiniPay wallet to load your dashboard groups and cUSD balance.
+          Tap the button below to connect your MiniPay wallet. This lets AjoChain read your cUSD balance and display your savings groups.
         </p>
         <AuthErrorBanner className="mt-3" />
         {status !== "loading" && isSignedIn ? (
@@ -49,16 +49,16 @@ export default function HomePage() {
 
   if (isMiniPay && isConnected && isWrongNetwork && chainId !== undefined) {
     return (
-      <section className="rounded-[1.5rem] border border-amber-200 bg-amber-50 p-5 text-amber-900 shadow-[0_16px_40px_rgba(146,64,14,0.08)] dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-        <p className="text-lg font-semibold">Switch MiniPay to Celo Mainnet</p>
+      <section className="rounded-[1.25rem] sm:rounded-[1.5rem] border border-amber-200 bg-amber-50 p-4 sm:p-5 text-amber-900 shadow-[0_16px_40px_rgba(146,64,14,0.08)] dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+        <p className="text-lg font-semibold">Switch to Celo Mainnet</p>
         <p className="mt-2 text-sm leading-6">
-          AjoChain transactions are configured for Celo Mainnet (42220). Accept the wallet prompt to switch networks and continue.
+          AjoChain runs on the Celo network. Tap the button below and accept the prompt in your wallet to switch to the correct network.
         </p>
         <button
           type="button"
           onClick={() => void switchToCeloMainnet()}
           disabled={isConnecting}
-          className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
+          className="mt-5 inline-flex min-h-11 w-full sm:w-auto items-center justify-center rounded-full bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
         >
           {isConnecting ? "Switching network" : "Switch to Celo Mainnet"}
         </button>
