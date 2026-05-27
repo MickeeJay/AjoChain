@@ -40,9 +40,12 @@ export function WalletGuard({ children }: WalletGuardProps) {
 
   return (
     <div className="mx-auto mt-6 flex w-full max-w-[360px] flex-col justify-center rounded-[1.5rem] border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_20px_80px_rgba(16,42,44,0.12)] minipay:min-h-[520px] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100">
-      <p className="text-lg font-semibold">Sign in or connect your wallet</p>
-      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
-        Use Google to explore groups and profiles. A wallet is required for creating, joining, and contributing.
+      <h2 className="text-xl font-semibold tracking-tight text-slate-950 dark:text-slate-100">Sign in to AjoChain</h2>
+      <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+        Welcome! Sign in with Google to explore saving circles and view your profile.
+      </p>
+      <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-500">
+        To start saving funds, create/join circles, or withdraw payouts, connect your digital wallet (like Valora or MiniPay) to authorize transactions.
       </p>
       <AuthErrorBanner className="mt-3" />
       <div className="mt-5 grid gap-3">
@@ -51,7 +54,7 @@ export function WalletGuard({ children }: WalletGuardProps) {
       </div>
       <Link
         href="/"
-        className="mt-5 inline-flex min-h-12 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400"
+        className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400"
       >
         Back home
       </Link>
