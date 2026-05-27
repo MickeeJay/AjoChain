@@ -51,7 +51,7 @@ export function HomeDashboardContent() {
 
   return (
     <section className="space-y-4 text-slate-900 dark:text-slate-100">
-      <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr] xl:items-start">
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
         <div className="space-y-4">
           <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_40px_rgba(16,42,44,0.1)] dark:border-slate-800 dark:bg-slate-950/90">
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{greetingPrefix}, {greetingName}</p>
@@ -107,7 +107,7 @@ export function HomeDashboardContent() {
               <p className="text-sm text-slate-600 dark:text-slate-400">Round timer: {formatCountdown(secondsLeft)}</p>
               <Link
                 href={`/groups/${nextActionGroup.groupAddress}`}
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-celo-green px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-celo-green px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 sm:w-auto"
               >
                 Contribute {formatCusdFromWei(nextActionGroup.contributionAmount)} cUSD
               </Link>
@@ -115,16 +115,16 @@ export function HomeDashboardContent() {
           ) : (
             <div className="mt-3 space-y-3">
               <p className="text-sm text-slate-600 dark:text-slate-400">You are not in an active group yet.</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <Link
                   href="/create"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-celo-green px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                  className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-celo-green px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 sm:w-auto"
                 >
                   Start or Join a Group
                 </Link>
                 <Link
                   href="/groups"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-600"
+                  className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-600 sm:w-auto"
                 >
                   Browse Groups
                 </Link>
