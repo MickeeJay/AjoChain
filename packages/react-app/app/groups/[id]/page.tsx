@@ -170,7 +170,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
           isCreator={isCreator}
         />
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 minipay:grid-cols-2 sm:grid-cols-3 gap-3">
           <div className="rounded-3xl bg-slate-950 p-5 text-white dark:bg-slate-900">
             <p className="text-sm text-slate-400 dark:text-slate-300">Current round</p>
             <p className="mt-2 text-3xl font-semibold">{Number(groupState.currentRound) + 1}</p>
@@ -179,7 +179,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
             <p className="text-sm text-emerald-100 dark:text-emerald-50">Contributions received</p>
             <p className="mt-2 text-3xl font-semibold">{paidCount} / {memberCount}</p>
           </div>
-          <div className="rounded-3xl bg-slate-100 p-5 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+          <div className="rounded-3xl bg-slate-100 p-5 text-slate-900 dark:bg-slate-900 dark:text-slate-100 minipay:col-span-2 sm:col-span-1">
             <p className="text-sm text-slate-500 dark:text-slate-400">Contribution amount</p>
             <p className="mt-2 text-2xl font-semibold">{contributionLabel}</p>
           </div>
@@ -234,7 +234,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/groups"
-            className="inline-flex min-h-12 items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
+            className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
           >
             Back to groups
           </Link>
