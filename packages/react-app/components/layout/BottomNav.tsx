@@ -39,7 +39,7 @@ export function BottomNav() {
               aria-current={active ? "page" : undefined}
               aria-label={item.label}
               className={cn(
-                "flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-2xl px-2 text-[11px] font-medium transition-colors",
+                "flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-2xl px-2 text-[11px] sm:text-xs font-medium transition-colors btn-active",
                 active
                   ? "text-[#35D07F]"
                   : "text-[#9CA3AF] hover:bg-slate-50 hover:text-slate-700 dark:text-slate-500 dark:hover:bg-slate-900/70 dark:hover:text-slate-200",
