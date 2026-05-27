@@ -201,7 +201,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
             />
           ))}
         </div>
-        <div className="flex items-center justify-between text-[10px] font-medium text-slate-400 dark:text-slate-500">
+        <div className="flex items-center justify-between text-[9px] minipay:text-[10px] xs:text-xs font-medium text-slate-400 dark:text-slate-500">
           <span className={step >= 1 ? "text-emerald-700 dark:text-emerald-300" : ""}>Name</span>
           <span className={step >= 2 ? "text-emerald-700 dark:text-emerald-300" : ""}>Amount</span>
           <span className={step >= 3 ? "text-emerald-700 dark:text-emerald-300" : ""}>Schedule</span>
@@ -233,7 +233,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
       {step === 2 ? (
         <div className="grid gap-3">
           <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Set contribution amount (cUSD)</p>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+          <div className="grid grid-cols-3 gap-2 minipay:grid-cols-5">
             {["1", "5", "10", "20", "50"].map((amount) => (
               <button
                 key={amount}
@@ -279,7 +279,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
       {step === 3 ? (
         <div className="grid gap-3">
           <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Set schedule</p>
-          <div className="grid gap-2 sm:grid-cols-3">
+          <div className="grid grid-cols-1 minipay:grid-cols-3 gap-2">
             {[
               { label: "Daily", days: "1" },
               { label: "Weekly", days: "7" },
@@ -353,19 +353,19 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
         </p>
       ) : null}
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col-reverse minipay:flex-row items-center gap-2">
         <button
           type="button"
           onClick={previousStep}
           disabled={step === 1 || isCreating}
-          className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
+          className="inline-flex min-h-12 w-full minipay:flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={isCreating || !isConnected || isWrongNetwork}
-          className="inline-flex min-h-12 flex-1 justify-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-emerald-400 dark:text-slate-950 dark:hover:bg-emerald-300 dark:disabled:bg-slate-700"
+          className="inline-flex min-h-12 w-full minipay:flex-1 justify-center items-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-emerald-400 dark:text-slate-950 dark:hover:bg-emerald-300 dark:disabled:bg-slate-700"
         >
           {isCreating ? "Creating..." : step === maxSteps ? "Create Group" : "Next"}
         </button>
