@@ -6,7 +6,7 @@ export function HomeDashboardSkeleton() {
         <div className="mt-3 h-10 w-44 rounded bg-slate-200 dark:bg-slate-800" />
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {[1, 2, 3].map((item) => (
           <div key={item} className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950/90">
             <div className="h-3 w-16 rounded bg-slate-200 dark:bg-slate-800" />
