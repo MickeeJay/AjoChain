@@ -74,18 +74,18 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7 dark:text-slate-400">
             Ask your group organizer to share a new invite link, then open it in MiniPay to join the savings circle.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-col minipay:flex-row gap-3">
             <a
               href="https://play.google.com/store/apps/details?id=com.opera.minipay"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-celo-green px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+              className="inline-flex min-h-12 w-full minipay:w-auto items-center justify-center rounded-full bg-celo-green px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
             >
               Download MiniPay
             </a>
             <Link
               href="/"
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
+              className="inline-flex min-h-12 w-full minipay:w-auto items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-300 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-500"
             >
               Back home
             </Link>
@@ -106,7 +106,7 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
           Start contributing in minutes with your MiniPay wallet. This invite works without connecting first.
         </p>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-5 grid grid-cols-1 minipay:grid-cols-2 lg:grid-cols-4 gap-3">
           <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-950/80">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Contribution</p>
             <p className="mt-1 text-xl font-semibold text-slate-950 dark:text-slate-100">{contributionLabel} cUSD</p>
@@ -134,7 +134,7 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
 
       <div className="rounded-[2rem] border border-slate-200/70 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:bg-slate-950/90">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-celo-green">How AjoChain works</p>
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
             <p className="text-sm font-semibold text-celo-green">1) Contribute weekly</p>
             <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
