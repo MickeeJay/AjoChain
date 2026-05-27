@@ -99,7 +99,7 @@ export function GroupsDiscoverBeta({ isConnected, isMiniPay }: GroupsDiscoverBet
                 value={inviteCodeInput}
                 onChange={(event) => setInviteCodeInput(event.target.value)}
                 placeholder="0x..."
-                className="min-h-12 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition placeholder:text-slate-400 focus:border-celo-green dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+                className="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm transition placeholder:text-slate-400 focus:border-celo-green dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
             </label>
             {inviteError ? <p className="text-sm font-medium text-rose-600 dark:text-rose-300">{inviteError}</p> : null}
