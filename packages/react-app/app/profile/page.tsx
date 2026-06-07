@@ -49,7 +49,7 @@ const MOCK_CREDENTIALS = [
   }
 ];
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const { address } = useAccount();
   const searchParams = useSearchParams();
   const isDemoMode = !address || searchParams.get("demo") === "true";
@@ -182,4 +182,8 @@ export default function ProfilePage() {
       </p>
     </section>
   );
+}
+
+export default function ProfilePage() {
+  return <ProfilePageContent />;
 }
