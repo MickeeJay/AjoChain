@@ -26,7 +26,7 @@ export function WalletGuard({ children }: WalletGuardProps) {
     pathname?.startsWith("/profile") ||
     false;
 
-  if (isPublicCredentialRoute || isPublicEntryRoute) {
+  if (isPublicCredentialRoute || isPublicEntryRoute || isPublicPreviewRoute) {
     return <>{children}</>;
   }
 
