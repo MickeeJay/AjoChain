@@ -337,6 +337,31 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           </div>
         </Link>
       </section>
+
+      {/* On-Chain Security Features */}
+      <section className="bg-slate-950 text-white rounded-3xl p-6 relative overflow-hidden dark:bg-slate-900">
+        <div className="absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-emerald-500/20 blur-2xl" />
+        <h3 className="font-bold text-sm uppercase tracking-widest text-emerald-400">Built for MiniPay and Celo</h3>
+        <p className="mt-2 text-xl font-bold tracking-tight">Financial inclusion through secure code.</p>
+        
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div>
+            <Fingerprint className="h-6 w-6 text-emerald-400" />
+            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Mento cUSD</h4>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Stablecoin pegged to the US Dollar. Avoid inflation and local currency volatility.</p>
+          </div>
+          <div>
+            <ShieldCheck className="h-6 w-6 text-emerald-400" />
+            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Soulbound Credential</h4>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Verify your record of timely contributions. Safe to share with lending partners.</p>
+          </div>
+          <div>
+            <TrendingUp className="h-6 w-6 text-emerald-400" />
+            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Automated Governance</h4>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Member-shuffled rounds and secure contract controls prevent any bad actor overrides.</p>
+          </div>
+        </div>
+      </section>
     </section>
   );
 }
