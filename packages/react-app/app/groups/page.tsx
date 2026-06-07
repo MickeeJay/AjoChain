@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
+import { AlertCircle } from "lucide-react";
 import { GroupsDiscoverBeta } from "@/components/groups/GroupsDiscoverBeta";
 import { GroupsListSkeleton } from "@/components/groups/GroupsListSkeleton";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
