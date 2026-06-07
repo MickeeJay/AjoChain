@@ -212,9 +212,46 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
         {/* Simulator Visualization */}
         <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 border border-slate-100 dark:border-slate-900 grid gap-6 md:grid-cols-[1fr_1.2fr] items-center">
           
-          {/* Visual Diagram Placeholder for now */}
+          {/* Visual Diagram */}
           <div className="flex flex-col items-center justify-center p-3 relative min-h-[190px]">
-            <span className="text-xs text-slate-500">Visualization Diagram</span>
+            {/* Center Pot */}
+            <div className="h-16 w-16 rounded-full bg-emerald-600 text-white flex flex-col items-center justify-center shadow-lg border border-emerald-500 z-10 transition-transform duration-500">
+              <Coins className="h-5 w-5 animate-pulse" />
+              <span className="text-[10px] font-extrabold uppercase mt-0.5">
+                {simStep === 0 ? "0 cUSD" : "30 cUSD"}
+              </span>
+            </div>
+            
+            {/* Members Circles */}
+            <div className="absolute top-2 flex flex-col items-center">
+              <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-extrabold shadow-sm border transition-all duration-300 ${simStep === 1 ? 'bg-emerald-100 border-emerald-500 text-emerald-800 scale-110' : 'bg-white border-slate-200 text-slate-700'}`}>
+                A
+              </div>
+              <span className="text-[10px] font-semibold mt-1">Alice</span>
+              <span className="text-[9px] text-slate-500">
+                {simStep === 0 ? "Pays $10" : simStep === 1 ? "+$30 Paid!" : "Settled"}
+              </span>
+            </div>
+
+            <div className="absolute bottom-2 left-6 flex flex-col items-center">
+              <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-extrabold shadow-sm border transition-all duration-300 ${simStep === 2 ? 'bg-emerald-100 border-emerald-500 text-emerald-800 scale-110' : 'bg-white border-slate-200 text-slate-700'}`}>
+                B
+              </div>
+              <span className="text-[10px] font-semibold mt-1">Bob</span>
+              <span className="text-[9px] text-slate-500">
+                {simStep === 0 ? "Pays $10" : simStep === 2 ? "+$30 Paid!" : "Settled"}
+              </span>
+            </div>
+
+            <div className="absolute bottom-2 right-6 flex flex-col items-center">
+              <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-extrabold shadow-sm border transition-all duration-300 ${simStep === 3 ? 'bg-emerald-100 border-emerald-500 text-emerald-800 scale-110 border-2' : simStep === 4 ? 'bg-amber-100 border-amber-500 text-amber-800 scale-110' : 'bg-white border-slate-200 text-slate-700'}`}>
+                You
+              </div>
+              <span className="text-[10px] font-semibold mt-1">You</span>
+              <span className="text-[9px] text-slate-500">
+                {simStep === 0 ? "Pays $10" : simStep === 3 ? "+$30 Paid!" : simStep === 4 ? "Earned Cert!" : "Settled"}
+              </span>
+            </div>
           </div>
 
           {/* Explanation text */}
