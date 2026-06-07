@@ -36,6 +36,12 @@ export default function GroupsPage() {
   return (
     <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
       <NetworkMismatchNotice />
+      {!isConnected ? (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 flex items-center gap-2 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
+          <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+          <span>Viewing in Preview Mode. You can browse templates and invite codes, but connecting a wallet is required to join, create, or contribute to groups.</span>
+        </div>
+      ) : null}
       <div className="space-y-3">
         <span className="inline-flex rounded-full bg-celo-green/10 px-4 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-celo-green">
           {headerLabel}
