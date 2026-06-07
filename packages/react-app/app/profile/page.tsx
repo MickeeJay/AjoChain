@@ -156,6 +156,13 @@ function ProfilePageContent() {
   return (
     <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
       <NetworkMismatchNotice />
+
+      {isDemoMode ? (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 flex items-center gap-2 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
+          <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+          <span>Viewing in Demo Preview Mode. Connect a wallet to view your own on-chain savings score and achievements.</span>
+        </div>
+      ) : null}
       <ProfileIdentityHeader addressLabel={addressLabel} ensName={ensName} onCopyAddress={handleCopyAddress} copied={copiedAddress} />
       <ProfileAuthPanel />
 
