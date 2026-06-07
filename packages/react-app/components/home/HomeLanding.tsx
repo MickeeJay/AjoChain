@@ -127,6 +127,68 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           </div>
         </div>
       </div>
+
+      {/* The Problem & Solution Section */}
+      <section className="space-y-4">
+        <div className="text-center sm:text-left">
+          <h2 className="text-xl font-bold tracking-tight text-slate-950 dark:text-white">Why use AjoChain?</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Comparing traditional savings groups with our secured protocol.</p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Traditional Way */}
+          <article className="rounded-2xl border border-rose-100 bg-rose-50/20 p-5 dark:border-rose-950/20 dark:bg-rose-950/5">
+            <div className="flex items-center gap-2 text-rose-700 dark:text-rose-400">
+              <AlertCircle className="h-5 w-5" />
+              <h3 className="font-bold">Traditional Ajo & Chama Circles</h3>
+            </div>
+            <ul className="mt-4 space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+              <li className="flex gap-2">
+                <span className="font-semibold text-rose-500">✕</span>
+                <span><strong>Risk of Theft:</strong> An organizer can run away with the pooled funds.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-rose-500">✕</span>
+                <span><strong>Manual Ledgers:</strong> Record keeping on paper/WhatsApp leads to disputes.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-rose-500">✕</span>
+                <span><strong>Order Disputes:</strong> Conflict over who gets the payout pot first.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-rose-500">✕</span>
+                <span><strong>No Credit History:</strong> Your reliable savings habits are never recorded for banks.</span>
+              </li>
+            </ul>
+          </article>
+
+          {/* AjoChain Way */}
+          <article className="rounded-2xl border border-emerald-200 bg-emerald-50/10 p-5 dark:border-emerald-950/20 dark:bg-emerald-950/5">
+            <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+              <ShieldCheck className="h-5 w-5" />
+              <h3 className="font-bold">AjoChain On-Chain Savings</h3>
+            </div>
+            <ul className="mt-4 space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+              <li className="flex gap-2">
+                <span className="font-semibold text-emerald-500">✓</span>
+                <span><strong>Secure Escrow:</strong> Smart contracts hold the funds safely. No middleman can run off.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-emerald-500">✓</span>
+                <span><strong>Real-time Ledger:</strong> Anyone can verify contribution state directly on-chain.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-emerald-500">✓</span>
+                <span><strong>Automated Order:</strong> Payout order is randomized and enforced by verified contract code.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-emerald-500">✓</span>
+                <span><strong>On-Chain Reputation:</strong> Completed cycles earn a Soulbound Certificate to show credit reliability.</span>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
     </section>
   );
 }
