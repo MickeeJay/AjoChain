@@ -189,6 +189,66 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           </article>
         </div>
       </section>
+
+      {/* Interactive Savings Simulation Widget */}
+      <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(16,42,44,0.06)] dark:border-slate-800 dark:bg-slate-950/90 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-bold text-slate-950 dark:text-white flex items-center gap-2">
+              <Coins className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              Interactive Savings Simulator
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">See how rotating savings circles work on AjoChain in 30 seconds.</p>
+          </div>
+          <button
+            onClick={() => setSimStep(0)}
+            className="flex items-center gap-1.5 self-start text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            Reset Demo
+          </button>
+        </div>
+
+        {/* Simulator Visualization */}
+        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 border border-slate-100 dark:border-slate-900 grid gap-6 md:grid-cols-[1fr_1.2fr] items-center">
+          
+          {/* Visual Diagram Placeholder for now */}
+          <div className="flex flex-col items-center justify-center p-3 relative min-h-[190px]">
+            <span className="text-xs text-slate-500">Visualization Diagram</span>
+          </div>
+
+          {/* Explanation text */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <ChevronRight className="h-4 w-4 text-emerald-600" />
+                {SIMULATION_STEPS[simStep].title}
+              </h4>
+              <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-350 min-h-[60px]">
+                {SIMULATION_STEPS[simStep].description}
+              </p>
+            </div>
+
+            {/* Stepper controls */}
+            <button
+              onClick={nextSimStep}
+              className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400 w-full justify-center"
+            >
+              {simStep === 4 ? (
+                <>
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  {SIMULATION_STEPS[simStep].actionText}
+                </>
+              ) : (
+                <>
+                  <Play className="h-3.5 w-3.5 fill-current" />
+                  {SIMULATION_STEPS[simStep].actionText}
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </section>
     </section>
   );
 }
