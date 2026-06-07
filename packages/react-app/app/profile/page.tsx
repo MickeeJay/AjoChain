@@ -66,31 +66,46 @@ function ProfilePageContent() {
     setBaseUrl(window.location.origin);
   }, []);
 
-  const groupsCompleted = useMemo(() => userGroups.filter((group) => group.status === "COMPLETED").length, [userGroups]);
+  // Compute values based on whether we are in demo mode or real mode
+  const displayAddress = isDemoMode
+    ? ("0x70A8C3AbF529B26dB520a12ea63276cceb50bB30" as Address)
+    : (address as Address);
 
-  const addressLabel = useMemo(() => (address ? shortenAddress(address) : "No wallet connected"), [address]);
+  const displayEns = isDemoMode ? "demo.ajochain.eth" : ensName;
+  const displayCycles = isDemoMode ? 4n : cyclesCompleted;
+  const displayTotalSaved = isDemoMode ? 225000000000000000000n : totalSaved; // 225 cUSD total
+  const displayGroupsCompleted = isDemoMode
+    ? 3
+    : userGroups.filter((group) => group.status === "COMPLETED").length;
+  const displayActiveGroupsCount = isDemoMode ? 1 : activeGroupCount;
+  const displayCredentials = isDemoMode ? MOCK_CREDENTIALS : credentials;
+
+  const addressLabel = useMemo(() => {
+    if (isDemoMode) {
+      return `${shortenAddress(displayAddress)} (Demo Mode)`;
+    }
+    return address ? shortenAddress(address) : "No wallet connected";
+  }, [address, displayAddress, isDemoMode]);
 
   const profileUrl = useMemo(() => {
-    if (!baseUrl || !address) {
+    if (!baseUrl || !displayAddress) {
       return "";
     }
-
-    return `${baseUrl}/profile?address=${address}`;
-  }, [address, baseUrl]);
+    return `${baseUrl}/profile?address=${displayAddress}`;
+  }, [displayAddress, baseUrl]);
 
   const latestCredentialLink = useMemo(() => {
-    if (!baseUrl || credentials.length === 0) {
+    if (!baseUrl || displayCredentials.length === 0) {
       return profileUrl;
     }
-
-    return `${baseUrl}/credentials/${credentials[0].tokenId.toString()}`;
-  }, [baseUrl, credentials, profileUrl]);
+    return `${baseUrl}/credentials/${displayCredentials[0].tokenId.toString()}`;
+  }, [baseUrl, displayCredentials, profileUrl]);
 
   const whatsappMessage = useMemo(() => {
-    const saved = formatCusdCurrency(totalSaved);
+    const saved = formatCusdCurrency(displayTotalSaved);
     const link = latestCredentialLink || profileUrl || "https://ajochain.app";
     return `I completed a savings cycle on AjoChain! Total saved: ${saved}. Verify: ${link}`;
-  }, [latestCredentialLink, profileUrl, totalSaved]);
+  }, [latestCredentialLink, profileUrl, displayTotalSaved]);
 
   const whatsappHref = useMemo(() => `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`, [whatsappMessage]);
 
@@ -108,11 +123,11 @@ function ProfilePageContent() {
   };
 
   const handleCopyAddress = () => {
-    if (!address) {
+    if (!displayAddress) {
       return;
     }
 
-    void copyToClipboard(address).then((success) => {
+    void copyToClipboard(displayAddress).then((success) => {
       if (!success) {
         return;
       }
@@ -163,23 +178,28 @@ function ProfilePageContent() {
           <span>Viewing in Demo Preview Mode. Connect a wallet to view your own on-chain savings score and achievements.</span>
         </div>
       ) : null}
-      <ProfileIdentityHeader addressLabel={addressLabel} ensName={ensName} onCopyAddress={handleCopyAddress} copied={copiedAddress} />
+      <ProfileIdentityHeader
+        addressLabel={addressLabel}
+        ensName={displayEns}
+        onCopyAddress={handleCopyAddress}
+        copied={copiedAddress}
+      />
       <ProfileAuthPanel />
 
-      <ReputationPanel score={cyclesCompleted} loading={isCyclesLoading} />
+      <ReputationPanel score={displayCycles} loading={!isDemoMode && isCyclesLoading} />
 
       <ProfileStatsRow
-        totalSaved={totalSaved}
-        groupsCompleted={groupsCompleted}
-        activeGroups={activeGroupCount}
-        loading={isGroupsLoading}
+        totalSaved={displayTotalSaved}
+        groupsCompleted={displayGroupsCompleted}
+        activeGroups={displayActiveGroupsCount}
+        loading={!isDemoMode && isGroupsLoading}
       />
 
       <ProfileShareActions onCopyProfile={handleCopyProfile} copiedProfile={copiedProfile} whatsappHref={whatsappHref} />
 
       <CredentialsSection
-        credentials={credentials}
-        isLoading={isCredentialsLoading}
+        credentials={displayCredentials}
+        isLoading={!isDemoMode && isCredentialsLoading}
         sharingTokenId={sharingTokenId}
         onShare={handleShareCredential}
       />
