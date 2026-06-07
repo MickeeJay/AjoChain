@@ -285,6 +285,18 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
             </button>
           </div>
         </div>
+
+        {/* Stepper Dots */}
+        <div className="flex items-center justify-center gap-1.5">
+          {SIMULATION_STEPS.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setSimStep(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${simStep === index ? 'w-6 bg-emerald-600' : 'w-2 bg-slate-200 dark:bg-slate-800'}`}
+              aria-label={`Go to step ${index + 1}`}
+            />
+          ))}
+        </div>
       </section>
     </section>
   );
