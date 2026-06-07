@@ -58,6 +58,11 @@ const SIMULATION_STEPS = [
 
 export function HomeLanding({ isMiniPay }: HomeLandingProps) {
   const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
+  const [simStep, setSimStep] = useState(0);
+
+  const nextSimStep = () => {
+    setSimStep((current) => (current + 1) % SIMULATION_STEPS.length);
+  };
 
   return (
     <section className="space-y-4 text-slate-900 dark:text-slate-100">
