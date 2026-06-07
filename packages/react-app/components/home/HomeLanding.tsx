@@ -1,6 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { 
+  ShieldCheck, 
+  AlertCircle, 
+  Coins, 
+  Users, 
+  Award, 
+  ArrowRight, 
+  Play, 
+  RefreshCw, 
+  CheckCircle2,
+  ChevronRight,
+  TrendingUp,
+  Fingerprint
+} from "lucide-react";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
