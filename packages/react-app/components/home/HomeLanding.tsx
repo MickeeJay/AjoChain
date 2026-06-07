@@ -28,6 +28,34 @@ type HomeLandingProps = {
   isMiniPay: boolean;
 };
 
+const SIMULATION_STEPS = [
+  {
+    title: "1. Create & Shuffle",
+    description: "Alice, Bob, and You form a group contributing 10 cUSD. The blockchain shuffles the payout order: Alice gets Round 1, Bob Round 2, You Round 3.",
+    actionText: "Start Savings Round 1",
+  },
+  {
+    title: "2. Round 1 Payout",
+    description: "Everyone contributes 10 cUSD (Total: 30 cUSD). The smart contract automatically transfers the full 30 cUSD pot to Alice.",
+    actionText: "Advance to Round 2",
+  },
+  {
+    title: "3. Round 2 Payout",
+    description: "Everyone contributes another 10 cUSD. The contract automatically pays 30 cUSD to Bob. No coordinator delay or disputes.",
+    actionText: "Advance to Round 3",
+  },
+  {
+    title: "4. Round 3 (Your Turn)",
+    description: "Everyone contributes 10 cUSD. You receive the 30 cUSD payout pot directly to your wallet.",
+    actionText: "Finish & Mint Credential",
+  },
+  {
+    title: "5. Cycle Complete!",
+    description: "All rounds settled. Everyone gets their initial capital back in payouts. Each member earns an on-chain Credential to build credit history.",
+    actionText: "Reset Simulation",
+  }
+];
+
 export function HomeLanding({ isMiniPay }: HomeLandingProps) {
   const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
 
