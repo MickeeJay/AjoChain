@@ -13,9 +13,18 @@ import { useMiniPay } from "@/hooks/useMiniPay";
 const MyGroupsList = lazy(() => import("@/components/groups/MyGroupsList"));
 
 export default function GroupsPage() {
-  const [activeTab, setActiveTab] = useState<"my-groups" | "discover">("my-groups");
   const { isConnected, isMiniPay } = useMiniPay();
+  const [activeTab, setActiveTab] = useState<"my-groups" | "discover">("discover");
+  const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
   const { status, isSignedIn, userLabel, userImage } = useAuthStatus();
+
+  useEffect(() => {
+    if (isConnected && !hasSetDefaultTab) {
+      setActiveTab("my-groups");
+      setHasSetDefaultTab(true);
+    }
+  }, [isConnected, hasSetDefaultTab]);
+
   const isMyGroupsTab = activeTab === "my-groups";
 
   const headerLabel = isMyGroupsTab ? "My groups" : "Discover";
