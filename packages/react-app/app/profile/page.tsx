@@ -212,5 +212,13 @@ function ProfilePageContent() {
 }
 
 export default function ProfilePage() {
-  return <ProfilePageContent />;
+  return (
+    <Suspense fallback={
+      <div className="flex h-48 items-center justify-center rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/90">
+        <p className="text-sm font-semibold text-slate-500">Loading profile data...</p>
+      </div>
+    }>
+      <ProfilePageContent />
+    </Suspense>
+  );
 }
