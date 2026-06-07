@@ -298,6 +298,45 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           ))}
         </div>
       </section>
+
+      {/* Exploration Links */}
+      <section className="grid gap-4 sm:grid-cols-2">
+        <Link
+          href="/groups"
+          className="group block p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-950/80"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40">
+                <Users className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-slate-950 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition">Browse Savings Groups</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">See forming and active circles, use quick templates.</p>
+              </div>
+            </div>
+            <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-600 transition group-hover:translate-x-1" />
+          </div>
+        </Link>
+
+        <Link
+          href="/profile?demo=true"
+          className="group block p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-950/80"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40">
+                <Award className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-slate-950 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition">View Demo Profile</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">See completed achievements, reputation points, & certs.</p>
+              </div>
+            </div>
+            <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-600 transition group-hover:translate-x-1" />
+          </div>
+        </Link>
+      </section>
     </section>
   );
 }
