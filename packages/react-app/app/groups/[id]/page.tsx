@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { isAddress } from "viem";
 import { useAccount } from "wagmi";
+import { AlertCircle } from "lucide-react";
 import { GroupActionPanel } from "@/components/groups/GroupActionPanel";
 import { GroupDetailHeader } from "@/components/groups/GroupDetailHeader";
 import { GroupProgress } from "@/components/groups/GroupProgress";
