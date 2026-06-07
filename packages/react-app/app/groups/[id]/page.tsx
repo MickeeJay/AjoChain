@@ -157,6 +157,12 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
     <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
       <NetworkMismatchNotice />
       {!isConnected ? (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 flex items-center gap-2 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
+          <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+          <span>Viewing in Preview Mode. You can read the current cycle status, member order, and contributions. To start participating, connect your wallet.</span>
+        </div>
+      ) : null}
+      {!isConnected ? (
         <WalletRequiredCard
           title="Connect your wallet to contribute"
           description="You can view group details while signed in, but contributions require a wallet signature."
