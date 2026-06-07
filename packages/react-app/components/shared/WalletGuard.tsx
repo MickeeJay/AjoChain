@@ -20,6 +20,11 @@ export function WalletGuard({ children }: WalletGuardProps) {
   const isAuthLoading = status === "loading";
   const isPublicCredentialRoute = pathname?.startsWith("/credentials/") ?? false;
   const isPublicEntryRoute = pathname === "/" || (pathname?.startsWith("/invite/") ?? false);
+  const isPublicPreviewRoute =
+    pathname?.startsWith("/groups") ||
+    pathname?.startsWith("/create") ||
+    pathname?.startsWith("/profile") ||
+    false;
 
   if (isPublicCredentialRoute || isPublicEntryRoute) {
     return <>{children}</>;
