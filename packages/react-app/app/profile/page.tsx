@@ -51,6 +51,8 @@ const MOCK_CREDENTIALS = [
 
 export default function ProfilePage() {
   const { address } = useAccount();
+  const searchParams = useSearchParams();
+  const isDemoMode = !address || searchParams.get("demo") === "true";
   const { ensName } = useOptionalEnsName(address as Address | undefined);
   const { userGroups, activeGroupCount, totalSaved, cyclesCompleted, isGroupsLoading, isCyclesLoading } = useDashboardData();
   const { credentials, isLoading: isCredentialsLoading } = useUserCredentials();
