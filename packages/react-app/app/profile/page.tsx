@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { type Address } from "viem";
 import { useAccount } from "wagmi";
+import { useSearchParams } from "next/navigation";
+import { AlertCircle, ShieldCheck } from "lucide-react";
 import { CredentialsSection } from "@/components/profile/CredentialsSection";
 import { ProfileAuthPanel } from "@/components/profile/ProfileAuthPanel";
 import { NetworkMismatchNotice } from "@/components/shared/NetworkMismatchNotice";
@@ -15,6 +17,37 @@ import { useOptionalEnsName } from "@/hooks/useOptionalEnsName";
 import { useUserCredentials } from "@/hooks/useUserCredentials";
 import { formatCusdCurrency } from "@/lib/profile";
 import { shortenAddress } from "@/lib/utils";
+
+// Mock credentials for demo/preview mode
+const MOCK_CREDENTIALS = [
+  {
+    tokenId: 102n,
+    recipient: "0x70A8C3AbF529B26dB520a12ea63276cceb50bB30" as Address,
+    groupContract: "0xAb672F162220ebB17B82bBcf8823Cd0f141515b9" as Address,
+    groupName: "Weekly Market Traders Pot",
+    cyclesCompleted: 1n,
+    totalSaved: 50000000000000000000n, // 50 cUSD
+    completedAt: 1716812800n, // Mock date
+  },
+  {
+    tokenId: 84n,
+    recipient: "0x70A8C3AbF529B26dB520a12ea63276cceb50bB30" as Address,
+    groupContract: "0x765DE816845861e75A25fCA122bb6898B8B1282a" as Address,
+    groupName: "Daily Cooperative Circle",
+    cyclesCompleted: 2n,
+    totalSaved: 75000000000000000000n, // 75 cUSD
+    completedAt: 1714812800n,
+  },
+  {
+    tokenId: 41n,
+    recipient: "0x70A8C3AbF529B26dB520a12ea63276cceb50bB30" as Address,
+    groupContract: "0x70A8C3AbF529B26dB520a12ea63276cceb50bB30" as Address,
+    groupName: "Monthly Growth Club",
+    cyclesCompleted: 1n,
+    totalSaved: 100000000000000000000n, // 100 cUSD
+    completedAt: 1711812800n,
+  }
+];
 
 export default function ProfilePage() {
   const { address } = useAccount();
