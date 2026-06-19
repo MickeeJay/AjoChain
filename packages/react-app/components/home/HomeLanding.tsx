@@ -30,29 +30,29 @@ type HomeLandingProps = {
 
 const SIMULATION_STEPS = [
   {
-    title: "1. Create & Shuffle",
-    description: "Alice, Bob, and You form a group contributing 10 cUSD. The blockchain shuffles the payout order: Alice gets Round 1, Bob Round 2, You Round 3.",
-    actionText: "Start Savings Round 1",
+    title: "1. Form a Group",
+    description: "Alice, Bob, and You start a savings group. Each person will contribute 10 cUSD per round. The app fairly picks who gets paid first.",
+    actionText: "Start Round 1",
   },
   {
-    title: "2. Round 1 Payout",
-    description: "Everyone contributes 10 cUSD (Total: 30 cUSD). The smart contract automatically transfers the full 30 cUSD pot to Alice.",
-    actionText: "Advance to Round 2",
+    title: "2. Alice Gets Paid",
+    description: "Everyone puts in 10 cUSD. The full 30 cUSD pot goes straight to Alice’s wallet — automatically, no delays.",
+    actionText: "Go to Round 2",
   },
   {
-    title: "3. Round 2 Payout",
-    description: "Everyone contributes another 10 cUSD. The contract automatically pays 30 cUSD to Bob. No coordinator delay or disputes.",
-    actionText: "Advance to Round 3",
+    title: "3. Bob Gets Paid",
+    description: "Everyone contributes again. Bob receives the 30 cUSD pot. No arguments, no coordinator needed.",
+    actionText: "Go to Round 3",
   },
   {
-    title: "4. Round 3 (Your Turn)",
-    description: "Everyone contributes 10 cUSD. You receive the 30 cUSD payout pot directly to your wallet.",
-    actionText: "Finish & Mint Credential",
+    title: "4. Your Turn!",
+    description: "Everyone contributes one last time. You receive 30 cUSD directly to your wallet.",
+    actionText: "Earn Savings Certificate",
   },
   {
     title: "5. Cycle Complete!",
-    description: "All rounds settled. Everyone gets their initial capital back in payouts. Each member earns an on-chain Credential to build credit history.",
-    actionText: "Reset Simulation",
+    description: "Everyone got their money back through payouts. Each member earns a permanent savings certificate to prove their reliability.",
+    actionText: "Restart Demo",
   }
 ];
 
@@ -196,9 +196,9 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           <div>
             <h3 className="text-lg font-bold text-slate-950 dark:text-white flex items-center gap-2">
               <Coins className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              Interactive Savings Simulator
+              See how it works in 30 seconds
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">See how rotating savings circles work on AjoChain in 30 seconds.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Walk through a complete savings cycle with three members.</p>
           </div>
           <button
             onClick={() => setSimStep(0)}
