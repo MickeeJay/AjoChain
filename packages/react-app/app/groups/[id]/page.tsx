@@ -159,13 +159,13 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
       {!isConnected ? (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 flex items-center gap-2 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
           <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-          <span>Viewing in Preview Mode. You can read the current cycle status, member order, and contributions. To start participating, connect your wallet.</span>
+          <span>You are previewing this group. You can see the savings progress, payout order, and members. Connect your wallet to join or contribute.</span>
         </div>
       ) : null}
       {!isConnected ? (
         <WalletRequiredCard
-          title="Connect your wallet to contribute"
-          description="You can view group details while signed in, but contributions require a wallet signature."
+          title="Connect your wallet to start saving"
+          description="You can view group details while previewing, but joining or contributing requires your mobile wallet."
           className="bg-white dark:bg-slate-950/90"
         />
       ) : null}
