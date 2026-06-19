@@ -22,10 +22,10 @@ export default function CreateGroupPage({ searchParams }: CreateGroupPageProps) 
           </span>
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-slate-950 md:text-5xl dark:text-slate-100">
-              Set up a savings circle in minutes.
+              Start a new savings group.
             </h1>
             <p className="hidden max-w-2xl text-sm leading-6 text-slate-600 md:block md:text-base md:leading-7 dark:text-slate-400">
-              Four core inputs, one final create tap. The guided flow keeps setup simple on MiniPay while preserving complete on-chain parameters.
+              Set your contribution amount, choose how often people pay, and invite your members. Setup is quick and fully automatic.
             </p>
           </div>
 
