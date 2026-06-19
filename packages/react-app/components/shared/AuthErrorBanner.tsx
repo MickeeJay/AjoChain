@@ -9,13 +9,13 @@ type AuthErrorBannerProps = {
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
-  OAuthSignin: "Google sign-in did not start. Please try again.",
-  OAuthCallback: "Google sign-in was interrupted. Please try again.",
+  OAuthSignin: "Sign-in did not start. Please try again.",
+  OAuthCallback: "Sign-in was interrupted. Please try again.",
   OAuthCreateAccount: "We could not create your account. Please try again.",
-  OAuthAccountNotLinked: "This email is already linked to another sign-in method. Use the originally linked account.",
+  OAuthAccountNotLinked: "This email is already linked to another sign-in method. Please sign in using your original method.",
   AccessDenied: "Access denied. Please use an allowed account.",
   Verification: "Verification failed. Please try again.",
-  Configuration: "Auth is not configured yet. Please try again later.",
+  Configuration: "Sign-in is not fully configured yet. Please try again later.",
   Callback: "Sign-in failed to complete. Please try again.",
   SessionRequired: "Please sign in to continue.",
   Default: "Sign-in failed. Please try again.",
