@@ -9,7 +9,7 @@ import { SHELL_BOTTOM_NAV_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constant
 const items = [
   { href: "/", label: "Home", icon: Home, exact: true },
   { href: "/groups", label: "Groups", icon: Users },
-  { href: "/create", label: "Create", icon: PlusCircle },
+  { href: "/create", label: "New Group", icon: PlusCircle },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
