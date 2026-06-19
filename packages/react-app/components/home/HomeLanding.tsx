@@ -311,8 +311,8 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
                 <Users className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               </span>
               <div>
-                <p className="text-sm font-bold text-slate-950 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition">Browse Savings Groups</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">See forming and active circles, use quick templates.</p>
+                <p className="text-sm font-bold text-slate-950 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition">Find a Savings Group</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Browse forming groups or start a new one using our templates.</p>
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-600 transition group-hover:translate-x-1" />
@@ -329,8 +329,8 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
                 <Award className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               </span>
               <div>
-                <p className="text-sm font-bold text-slate-950 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition">View Demo Profile</p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">See completed achievements, reputation points, & certs.</p>
+                <p className="text-sm font-bold text-slate-950 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition">See a Demo Profile</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">Check out how completed cycles build your savings reputation.</p>
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-emerald-600 transition group-hover:translate-x-1" />
@@ -341,24 +341,24 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
       {/* On-Chain Security Features */}
       <section className="bg-slate-950 text-white rounded-3xl p-6 relative overflow-hidden dark:bg-slate-900">
         <div className="absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-emerald-500/20 blur-2xl" />
-        <h3 className="font-bold text-sm uppercase tracking-widest text-emerald-400">Built for MiniPay and Celo</h3>
-        <p className="mt-2 text-xl font-bold tracking-tight">Financial inclusion through secure code.</p>
+        <h3 className="font-bold text-sm uppercase tracking-widest text-emerald-400">Your money stays safe</h3>
+        <p className="mt-2 text-xl font-bold tracking-tight">Every protection is built into the app.</p>
         
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <div>
             <Fingerprint className="h-6 w-6 text-emerald-400" />
-            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Mento cUSD</h4>
-            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Stablecoin pegged to the US Dollar. Avoid inflation and local currency volatility.</p>
+            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Dollar-Value Savings</h4>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Your savings are in cUSD — a digital dollar. No more worrying about naira or shilling losing value.</p>
           </div>
           <div>
             <ShieldCheck className="h-6 w-6 text-emerald-400" />
-            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Soulbound Credential</h4>
-            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Verify your record of timely contributions. Safe to share with lending partners.</p>
+            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Savings Certificate</h4>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Complete a cycle and earn a permanent certificate that proves you're a reliable saver. Share it with lenders.</p>
           </div>
           <div>
             <TrendingUp className="h-6 w-6 text-emerald-400" />
-            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Automated Governance</h4>
-            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Member-shuffled rounds and secure contract controls prevent any bad actor overrides.</p>
+            <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Fair Payout Order</h4>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">The app decides who gets paid first using a fair, random system. No one can jump the queue.</p>
           </div>
         </div>
       </section>
