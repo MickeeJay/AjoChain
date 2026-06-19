@@ -24,6 +24,7 @@ import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
 import { SocialLoginGroup } from "@/components/shared/SocialLoginGroup";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import appIcon from "@/app/assets/android-chrome-192x192.png";
+import { HowItWorksSection } from "./HowItWorksSection";
 
 type HomeLandingProps = {
   isMiniPay: boolean;
@@ -68,7 +69,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
   return (
     <section className="space-y-8 text-slate-900 dark:text-slate-100">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-[2rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-lime-50/30 to-white p-6 sm:p-8 shadow-[0_20px_60px_rgba(7,149,95,0.12)] dark:border-emerald-500/20 dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950">
+      <div className="relative overflow-hidden rounded-[2rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-lime-50/30 to-white p-6 sm:p-8 shadow-[0_20px_60px_rgba(7,149,95,0.12)] dark:border-emerald-500/20 dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950 animate-slide-up">
         <div className="absolute -top-12 -right-12 h-36 w-36 rounded-full bg-emerald-300/40 blur-3xl dark:bg-emerald-500/10" aria-hidden="true" />
         <div className="absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-lime-300/30 blur-3xl dark:bg-lime-500/10" aria-hidden="true" />
 
@@ -129,8 +130,13 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
         </div>
       </div>
 
+      {/* How It Works Section */}
+      <div className="animate-slide-up delay-100">
+        <HowItWorksSection />
+      </div>
+
       {/* The Problem & Solution Section */}
-      <section className="space-y-4">
+      <section className="space-y-4 animate-slide-up delay-200">
         <div className="text-center sm:text-left">
           <h2 className="text-xl font-bold tracking-tight text-slate-950 dark:text-white">How AjoChain protects your group savings</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">See what changes when your savings group runs on AjoChain.</p>
@@ -192,7 +198,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
       </section>
 
       {/* Interactive Savings Simulation Widget */}
-      <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(16,42,44,0.06)] dark:border-slate-800 dark:bg-slate-950/90 space-y-5">
+      <section className="rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(16,42,44,0.06)] dark:border-slate-800 dark:bg-slate-950/90 space-y-5 animate-slide-up delay-300">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="text-lg font-bold text-slate-950 dark:text-white flex items-center gap-2">
@@ -301,7 +307,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
       </section>
 
       {/* Exploration Links */}
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid gap-4 sm:grid-cols-2 animate-slide-up delay-500">
         <Link
           href="/groups"
           className="group block p-5 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all dark:border-slate-800 dark:bg-slate-950/80"
@@ -340,7 +346,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
       </section>
 
       {/* On-Chain Security Features */}
-      <section className="bg-slate-950 text-white rounded-3xl p-6 relative overflow-hidden dark:bg-slate-900">
+      <section className="bg-slate-950 text-white rounded-3xl p-6 relative overflow-hidden dark:bg-slate-900 animate-slide-up delay-500">
         <div className="absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-emerald-500/20 blur-2xl" />
         <h3 className="font-bold text-sm uppercase tracking-widest text-emerald-400">Your money stays safe</h3>
         <p className="mt-2 text-xl font-bold tracking-tight">Every protection is built into the app.</p>
@@ -354,7 +360,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           <div>
             <ShieldCheck className="h-6 w-6 text-emerald-400" />
             <h4 className="mt-2.5 text-xs font-bold uppercase tracking-wider">Savings Certificate</h4>
-            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Complete a cycle and earn a permanent certificate that proves you're a reliable saver. Share it with lenders.</p>
+            <p className="mt-1 text-xs text-slate-400 leading-relaxed">Complete a cycle and earn a permanent certificate that proves you&apos;re a reliable saver. Share it with lenders.</p>
           </div>
           <div>
             <TrendingUp className="h-6 w-6 text-emerald-400" />
