@@ -16,19 +16,19 @@ const TEMPLATES = [
   {
     id: "weekly-market",
     title: "Weekly Market Circle",
-    subtitle: "Balanced for traders and salary earners.",
+    subtitle: "Great for traders, shop owners, and weekly earners.",
     details: "5 members · 10 cUSD · Weekly",
   },
   {
     id: "daily-coop",
     title: "Daily Cooperative Pot",
-    subtitle: "Fast-rotation cycles for tight communities.",
+    subtitle: "Fast daily rounds for close friends and family.",
     details: "7 members · 5 cUSD · Daily",
   },
   {
     id: "monthly-growth",
     title: "Monthly Growth Club",
-    subtitle: "Lower frequency for predictable long-term saving.",
+    subtitle: "Long-term monthly savings for larger goals.",
     details: "10 members · 20 cUSD · Monthly",
   },
  ] as const;
@@ -81,10 +81,10 @@ export function GroupsDiscoverBeta({ isConnected, isMiniPay }: GroupsDiscoverBet
             Discover beta
           </span>
           <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl dark:text-slate-100">
-            Find and join the right savings circle faster.
+            Find a savings group that fits your budget.
           </h2>
           <p className="max-w-2xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7 dark:text-slate-400">
-            Join through invite code, launch from proven group templates, and jump to your most urgent contribution action.
+            Have an invite code? Paste it below. Or start fresh with a ready-made template.
           </p>
         </div>
       </section>
@@ -111,7 +111,7 @@ export function GroupsDiscoverBeta({ isConnected, isMiniPay }: GroupsDiscoverBet
               Open invite
             </button>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Tip: invite codes start with 0x and can be pasted directly from WhatsApp or copied links.
+              Tip: Got an invite on WhatsApp or from a friend? Paste the code here.
             </p>
           </form>
         </article>
