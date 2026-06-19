@@ -14,7 +14,7 @@ type WalletRequiredCardProps = {
 
 export function WalletRequiredCard({
   title = "Wallet required",
-  description = "Connect a Celo wallet (like Valora or MiniPay) to create, join, or contribute to savings groups. A wallet is your secure personal account for handling deposits and payouts on the blockchain.",
+  description = "Connect your mobile wallet (MiniPay or Valora) to start saving. Your wallet is your secure account for sending and receiving money.",
   className,
   buttonClassName,
   fullWidthButton = true,
