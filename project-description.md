@@ -2,35 +2,35 @@
 
 ## Summary
 
-AjoChain is a rotating savings protocol and MiniPay-compatible web app on Celo. It models traditional contribution circles using audited, deterministic contract rules rather than manual coordination.
+AjoChain is a secure group savings application built on Celo, designed to run smoothly on mobile browsers like MiniPay. It replaces the organizer's manual notebook with secure smart contracts, ensuring your community savings are transparent, automated, and safe.
 
-## Problem Context
+## The Problem with Traditional Group Savings
 
-Rotating savings groups are widely used for community finance across many African markets. The common operational issues are manual record-keeping, organizer dependency, payout disputes, and weak transparency when the group scales.
+Rotating savings groups (such as Ajo, Chama, Esusu, or Pardna) are trusted by millions to build disciplined savings. However, traditional groups face common issues:
+- Manual bookkeeping errors or lost notebooks.
+- Risk of an organizer disappearing with the collection.
+- Disputes over payout order or who has contributed.
+- No permanent record of your reliable savings history to share with lenders.
 
-## Product Approach
+## Our Solution: Secure, Transparent Group Savings
 
-AjoChain keeps the social savings model while moving enforcement on-chain:
+AjoChain keeps the social savings model you know and trust, but uses secure technology to make it completely safe and easy:
 
-- Group parameters are fixed at creation and publicly verifiable.
-- Membership is controlled via invite-code joins.
-- Contribution windows and round completion are contract-enforced.
-- Payout order and round state are queryable in real time.
-- Completion credentials provide permanent participation records.
+- **Locked by Code**: Group rules and funds are protected by code. No single person or organizer can access or run away with the money.
+- **Fair Payout Order**: The payout sequence is decided automatically and fairly. No one can skip the queue or make changes without the group's consent.
+- **Complete Transparency**: Everyone in the group can see who has paid, how much is saved, and who is next in line for the payout in real time.
+- **Build Your Credit Reputation**: Every time you complete a savings cycle, you earn a digital savings certificate. You can show this permanent record of reliability to lenders and partners.
+
+## How It Works
+
+1. **Create or Join a Group**: Start a new group with a custom savings goal, contribution amount, and schedule, or join a friend's group using an invite code.
+2. **Contribute Weekly or Monthly**: Send your contribution in cUSD (a digital dollar that keeps its value) securely from your mobile wallet.
+3. **Receive Your Payout**: When it's your turn, the full group pot is automatically sent directly to your wallet.
+4. **Earn Your Certificate**: Complete the savings cycle to earn a permanent, digital certificate proving your reliability.
 
 ## Why Celo and MiniPay
 
-The system is built around cUSD-denominated contributions and mobile-first wallet flows. Celo and MiniPay reduce onboarding friction for users who already transact in stablecoins and need predictable fees for recurring micro-payments.
-
-## Core User Segments
-
-- Community groups that run recurring pooled savings.
-- Small business operators that depend on disciplined weekly/monthly cycles.
-- Family and diaspora circles coordinating shared contributions remotely.
-
-## Product Value
-
-- Transparent group state instead of private organizer records.
-- Enforced rules instead of informal trust-only coordination.
-- Shared visibility across members for contributions and payouts.
-- On-chain completion history for participant reputation signals.
+AjoChain is designed for mobile-first users:
+- **Digital Dollars**: Contributions are made using cUSD, protecting your savings from local currency inflation.
+- **Instant and Cheap**: Transactions take seconds and cost less than a cent, making micro-savings practical for everyone.
+- **Super Simple Logins**: Connect in one click using your phone or social accounts.
