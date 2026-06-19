@@ -11,6 +11,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh4.googleusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "abs.twimg.com",
+      },
     ],
   },
   async headers() {
@@ -45,8 +53,8 @@ const nextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com",
-              "connect-src 'self' https://forno.celo.org https://alfajores-forno.celo-testnet.org https://celoscan.io https://accounts.google.com wss:",
+              "img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://pbs.twimg.com https://abs.twimg.com",
+              "connect-src 'self' https://forno.celo.org https://alfajores-forno.celo-testnet.org https://celoscan.io https://accounts.google.com https://api.twitter.com wss:",
               "frame-ancestors 'none'",
             ].join("; "),
           },
