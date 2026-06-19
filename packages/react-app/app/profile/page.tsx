@@ -175,7 +175,7 @@ function ProfilePageContent() {
       {isDemoMode ? (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 flex items-center gap-2 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
           <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-          <span>Viewing in Demo Preview Mode. Connect a wallet to view your own on-chain savings score and achievements.</span>
+          <span>This is a demo profile. Connect your wallet to see your real savings history.</span>
         </div>
       ) : null}
       <ProfileIdentityHeader
@@ -205,7 +205,7 @@ function ProfilePageContent() {
       />
 
       <p className="text-xs text-slate-500 dark:text-slate-400">
-        Reputation reflects on-chain savings completions and can be queried by partners for creditworthiness.
+        Your savings reputation is stored permanently and can be shared with lenders or partners.
       </p>
     </section>
   );
