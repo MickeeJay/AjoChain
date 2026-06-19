@@ -117,11 +117,11 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
             <div className="flex flex-col justify-center gap-2 text-xs text-slate-500 dark:text-slate-400 sm:pl-3">
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <p><strong>Preview Mode</strong> is active: browse groups and templates without a wallet.</p>
+                <p><strong>Free to explore</strong> — no sign-up needed to browse groups and learn how it works.</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-lime-500" />
-                <p><strong>Digital Stablecoin</strong> contributions using cUSD.</p>
+                <p><strong>Dollar-value savings</strong> using cUSD, with support for local currencies like cKES, cNGN, and cGHS.</p>
               </div>
             </div>
           </div>
