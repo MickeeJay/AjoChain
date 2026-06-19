@@ -79,7 +79,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
               </div>
               <div>
                 <span className="text-sm font-bold uppercase tracking-[0.3em] text-emerald-700 dark:text-emerald-300">AjoChain</span>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400">Rotating Savings Circle Protocol</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Group Savings App</p>
               </div>
             </div>
             <div className="flex gap-2">
@@ -90,10 +90,10 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
 
           <div className="space-y-3">
             <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight tracking-tight text-slate-950 dark:text-slate-100">
-              Grow savings safely with your community.
+              Your group savings, protected by code — not promises.
             </h1>
             <p className="max-w-xl text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-350">
-              Traditional rotating savings groups (Ajo, Chama, Esusu) secured by smart contracts. Save together, prevent fraud, and build an on-chain credit reputation automatically.
+              AjoChain replaces the organizer notebook with automatic rules. No one can run away with the money. Everyone can see every payment. Every completed cycle builds your savings reputation.
             </p>
           </div>
 
