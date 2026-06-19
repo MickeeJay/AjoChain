@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s | AjoChain",
   },
   description:
-    "Create and join rotating savings circles with cUSD on Celo. Automated payouts, on-chain credentials, and MiniPay-native UX for community-driven finance.",
+    "Save money together with your community. AjoChain keeps group savings safe with automatic rules — no organizer can run off with the pot. Earn credit certificates for every completed cycle.",
   icons: {
     icon: [
       {
@@ -55,12 +55,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   openGraph: {
     title: "AjoChain",
-    description: "MiniPay-native rotating savings groups on Celo.",
+    description: "Save money together with your community. AjoChain keeps group savings safe with automatic rules.",
     type: "website",
     url: "/",
     images: [
       {
-        url: "/api/og?title=AjoChain&subtitle=MiniPay-native%20rotating%20savings%20groups%20on%20Celo.",
+        url: "/api/og?title=AjoChain&subtitle=Save%20money%20together%20with%20your%20community.",
         width: 1200,
         height: 630,
         alt: "AjoChain",
@@ -70,8 +70,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "AjoChain",
-    description: "MiniPay-native rotating savings groups on Celo.",
-    images: ["/api/og?title=AjoChain&subtitle=MiniPay-native%20rotating%20savings%20groups%20on%20Celo."],
+    description: "Save money together with your community. AjoChain keeps group savings safe with automatic rules.",
+    images: ["/api/og?title=AjoChain&subtitle=Save%20money%20together%20with%20your%20community."],
   },
 };
 
