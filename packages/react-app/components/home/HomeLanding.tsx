@@ -21,6 +21,7 @@ import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { SocialLoginGroup } from "@/components/shared/SocialLoginGroup";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import appIcon from "@/app/assets/android-chrome-192x192.png";
 
@@ -109,7 +110,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
                   userImage={userImage}
                 />
               ) : (
-                <GoogleSignInButton fullWidth label="Continue with Google" />
+                <SocialLoginGroup callbackUrl="/" />
               )}
               <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
             </div>
