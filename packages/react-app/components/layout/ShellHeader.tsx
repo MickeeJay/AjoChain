@@ -64,7 +64,7 @@ export function ShellHeader() {
               isMiniPay={isMiniPay}
               className="min-h-10 px-4 py-2 text-xs font-semibold"
               miniPayLabel="Open MiniPay"
-              defaultLabel="Connect"
+              defaultLabel="Sign In"
             />
           )}
         </div>
