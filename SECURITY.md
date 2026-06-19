@@ -2,24 +2,24 @@
 
 ## Reporting a Vulnerability
 
-Please report security issues privately through GitHub Security Advisories for this repository.
+We take the security of AjoChain seriously. If you discover a vulnerability, please report it privately through GitHub Security Advisories for this repository.
 
-If advisory flow is unavailable, contact `security@ajochain.dev`.
+If you are unable to use the advisory system, please contact our security team directly at `security@ajochain.dev`.
 
-Please do not open public issues or pull requests for unpatched vulnerabilities.
+To protect our users, please do not open public issues or pull requests for unpatched vulnerabilities. We appreciate your responsible disclosure and will work to address all valid reports promptly.
 
 ## Scope
 
-In scope:
+The following components are in scope:
 
-- Solidity contracts under `contracts/contracts`.
-- Contract deployment and verification scripts.
-- Frontend API routes that read contract state.
-- Repository secret handling controls (`.gitignore`, secret scan script, env patterns).
+- Solidity smart contracts under `contracts/contracts`.
+- Contract deployment, verification, and migration scripts.
+- Frontend API routes and state-reading logic.
+- Repository secret handling controls (`.gitignore`, secret scanning scripts, and environment variable patterns).
 
 Out of scope:
 
-- Third-party infrastructure outages.
+- Third-party infrastructure outages or network-level disruptions.
 - Vulnerabilities in external dependencies without a project-specific exploit path.
 
 ## Security Model
