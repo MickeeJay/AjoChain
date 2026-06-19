@@ -28,10 +28,10 @@ export default function GroupsPage() {
   const isMyGroupsTab = activeTab === "my-groups";
 
   const headerLabel = isMyGroupsTab ? "My groups" : "Discover";
-  const headerTitle = isMyGroupsTab ? "Your rotating savings circles." : "Discover savings circles made for you.";
+  const headerTitle = isMyGroupsTab ? "Your savings groups." : "Find a group that matches your savings goal.";
   const headerDescription = isMyGroupsTab
-    ? "Track each group cycle, contribution progress, and payout order with on-chain group state."
-    : "Join with an invite code, use a proven template, and jump to the right next action.";
+    ? "See your contribution progress, upcoming payouts, and group activity."
+    : "Join with an invite code from a friend, or start from a ready-made template.";
 
   return (
     <section className="flex flex-col gap-4 text-slate-900 dark:text-slate-100">
@@ -39,7 +39,7 @@ export default function GroupsPage() {
       {!isConnected ? (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-semibold text-amber-800 flex items-center gap-2 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-200">
           <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-          <span>Viewing in Preview Mode. You can browse templates and invite codes, but connecting a wallet is required to join, create, or contribute to groups.</span>
+          <span>Viewing in Preview Mode. Connect a wallet to start saving, join groups, or create a new one.</span>
         </div>
       ) : null}
       <div className="space-y-3">
