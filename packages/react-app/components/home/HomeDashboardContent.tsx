@@ -114,7 +114,7 @@ export function HomeDashboardContent() {
             </div>
           ) : (
             <div className="mt-3 space-y-3">
-              <p className="text-sm text-slate-600 dark:text-slate-400">You haven't joined a savings group yet.</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">You haven&apos;t joined a savings group yet.</p>
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Link
                   href="/create"
