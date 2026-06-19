@@ -131,8 +131,8 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
       {/* The Problem & Solution Section */}
       <section className="space-y-4">
         <div className="text-center sm:text-left">
-          <h2 className="text-xl font-bold tracking-tight text-slate-950 dark:text-white">Why use AjoChain?</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Comparing traditional savings groups with our secured protocol.</p>
+          <h2 className="text-xl font-bold tracking-tight text-slate-950 dark:text-white">How AjoChain protects your group savings</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">See what changes when your savings group runs on AjoChain.</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -140,24 +140,24 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           <article className="rounded-2xl border border-rose-100 bg-rose-50/20 p-5 dark:border-rose-950/20 dark:bg-rose-950/5">
             <div className="flex items-center gap-2 text-rose-700 dark:text-rose-400">
               <AlertCircle className="h-5 w-5" />
-              <h3 className="font-bold">Traditional Ajo & Chama Circles</h3>
+              <h3 className="font-bold">Without AjoChain</h3>
             </div>
             <ul className="mt-4 space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
               <li className="flex gap-2">
                 <span className="font-semibold text-rose-500">✕</span>
-                <span><strong>Risk of Theft:</strong> An organizer can run away with the pooled funds.</span>
+                <span><strong>Organizer can disappear</strong> with the entire savings pot.</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-rose-500">✕</span>
-                <span><strong>Manual Ledgers:</strong> Record keeping on paper/WhatsApp leads to disputes.</span>
+                <span><strong>Paper records get lost</strong> and WhatsApp chats cause disputes.</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-rose-500">✕</span>
-                <span><strong>Order Disputes:</strong> Conflict over who gets the payout pot first.</span>
+                <span><strong>Arguments over payout order</strong> — who gets the pot first?</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-rose-500">✕</span>
-                <span><strong>No Credit History:</strong> Your reliable savings habits are never recorded for banks.</span>
+                <span><strong>No proof you saved</strong> — banks never see your track record.</span>
               </li>
             </ul>
           </article>
@@ -166,24 +166,24 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
           <article className="rounded-2xl border border-emerald-200 bg-emerald-50/10 p-5 dark:border-emerald-950/20 dark:bg-emerald-950/5">
             <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
               <ShieldCheck className="h-5 w-5" />
-              <h3 className="font-bold">AjoChain On-Chain Savings</h3>
+              <h3 className="font-bold">With AjoChain</h3>
             </div>
             <ul className="mt-4 space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
               <li className="flex gap-2">
                 <span className="font-semibold text-emerald-500">✓</span>
-                <span><strong>Secure Escrow:</strong> Smart contracts hold the funds safely. No middleman can run off.</span>
+                <span><strong>Funds are locked in code</strong> — no one person can steal them.</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-emerald-500">✓</span>
-                <span><strong>Real-time Ledger:</strong> Anyone can verify contribution state directly on-chain.</span>
+                <span><strong>Every payment is visible</strong> — anyone can check the record anytime.</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-emerald-500">✓</span>
-                <span><strong>Automated Order:</strong> Payout order is randomized and enforced by verified contract code.</span>
+                <span><strong>Fair random payout order</strong> — the app decides, no one can jump the queue.</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-emerald-500">✓</span>
-                <span><strong>On-Chain Reputation:</strong> Completed cycles earn a Soulbound Certificate to show credit reliability.</span>
+                <span><strong>Earn a savings certificate</strong> — prove your reliability to lenders and partners.</span>
               </li>
             </ul>
           </article>
