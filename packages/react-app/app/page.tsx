@@ -6,7 +6,7 @@ import { HomeLanding } from "@/components/home/HomeLanding";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
-import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { SocialLoginGroup } from "@/components/shared/SocialLoginGroup";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
@@ -35,7 +35,7 @@ export default function HomePage() {
         {status !== "loading" && isSignedIn ? (
           <AuthStatusPill className="mt-4" userLabel={userLabel} userImage={userImage} />
         ) : (
-          <GoogleSignInButton fullWidth className="mt-4" />
+          <SocialLoginGroup className="mt-4" />
         )}
         <ConnectWalletButton isMiniPay fullWidth className="mt-4" />
         {error ? (
