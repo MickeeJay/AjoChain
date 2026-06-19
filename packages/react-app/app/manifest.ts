@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "AjoChain",
     short_name: "AjoChain",
-    description: "Community rotating savings circles on Celo with automated payouts and on-chain credentials.",
+    description: "Save money together with your community. AjoChain keeps group savings safe with automatic rules.",
     start_url: "/",
     scope: "/",
     icons: [
