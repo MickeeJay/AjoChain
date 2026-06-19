@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
-import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { SocialLoginGroup } from "@/components/shared/SocialLoginGroup";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useMiniPay } from "@/hooks/useMiniPay";
 
@@ -53,8 +53,8 @@ export function WalletGuard({ children }: WalletGuardProps) {
         To save money, join groups, or receive payouts — connect your mobile wallet (like MiniPay or Valora).
       </p>
       <AuthErrorBanner className="mt-3" />
-      <div className="mt-5 grid gap-3">
-        <GoogleSignInButton fullWidth />
+      <div className="mt-5 space-y-3">
+        <SocialLoginGroup />
         <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
       </div>
       <Link
