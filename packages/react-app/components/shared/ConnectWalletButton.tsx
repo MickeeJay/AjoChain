@@ -16,7 +16,7 @@ export function ConnectWalletButton({
   className,
   fullWidth = false,
   miniPayLabel = "Open MiniPay",
-  defaultLabel = "Connect wallet",
+  defaultLabel = "Connect Wallet",
   isMiniPay = false,
 }: ConnectWalletButtonProps) {
   const { connectWallet, isConnecting } = useMiniPay();
@@ -25,7 +25,7 @@ export function ConnectWalletButton({
     void connectWallet();
   };
 
-  const label = isConnecting ? "Connecting wallet" : isMiniPay ? miniPayLabel : defaultLabel;
+  const label = isConnecting ? "Connecting..." : isMiniPay ? miniPayLabel : defaultLabel;
 
   return (
     <button
