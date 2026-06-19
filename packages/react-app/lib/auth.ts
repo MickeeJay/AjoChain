@@ -1,4 +1,4 @@
-import type { NextAuthOptions, Provider } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import TwitterProvider from "next-auth/providers/twitter";
 
@@ -8,7 +8,7 @@ const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET ?? "";
 const twitterClientId = process.env.TWITTER_CLIENT_ID ?? "";
 const twitterClientSecret = process.env.TWITTER_CLIENT_SECRET ?? "";
 
-const providers: Provider[] = [];
+const providers: NextAuthOptions["providers"] = [];
 
 if (googleClientId && googleClientSecret) {
   providers.push(
