@@ -2,7 +2,7 @@
 
 import { AuthStatusPill } from "@/components/shared/AuthStatusPill";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
-import { GoogleSignInButton } from "@/components/shared/GoogleSignInButton";
+import { SocialLoginGroup } from "@/components/shared/SocialLoginGroup";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 
 export function ProfileAuthPanel() {
@@ -21,9 +21,9 @@ export function ProfileAuthPanel() {
       ) : (
         <div className="mt-3 space-y-3">
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            Sign in with Google to explore groups and profiles without connecting a wallet.
+            Sign in to explore groups and profiles without connecting a wallet.
           </p>
-          <GoogleSignInButton fullWidth />
+          <SocialLoginGroup />
         </div>
       )}
     </section>
