@@ -83,8 +83,8 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
               </div>
             </div>
             <div className="flex gap-2">
-              <span className="rounded-full border border-emerald-300 bg-emerald-100/80 px-3 py-1 text-[10px] font-bold tracking-wider uppercase text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300">Celo</span>
-              <span className="rounded-full border border-lime-300 bg-lime-100/80 px-3 py-1 text-[10px] font-bold tracking-wider uppercase text-lime-800 dark:border-lime-400/30 dark:bg-lime-500/20 dark:text-lime-300">MiniPay</span>
+              <span className="rounded-full border border-emerald-300 bg-emerald-100/80 px-3 py-1 text-[10px] font-bold tracking-wider uppercase text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300">Dollar-Linked Savings</span>
+              <span className="rounded-full border border-lime-300 bg-lime-100/80 px-3 py-1 text-[10px] font-bold tracking-wider uppercase text-lime-800 dark:border-lime-400/30 dark:bg-lime-500/20 dark:text-lime-300">Mobile Wallet Ready</span>
             </div>
           </div>
 
