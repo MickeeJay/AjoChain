@@ -55,7 +55,7 @@ function resolveTemplatePreset(template?: string) {
 export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
   const router = useRouter();
   const { createGroup, isCreating, error: contractError } = useAjoFactory();
-  const { isConnected, isWrongNetwork } = useMiniPay();
+  const { isConnected, isWrongNetwork, isMiniPay } = useMiniPay();
   const preset = resolveTemplatePreset(template);
   const [step, setStep] = useState(1);
   const [name, setName] = useState(preset?.name ?? "Market Traders Circle");
