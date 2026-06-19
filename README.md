@@ -1,6 +1,18 @@
 # AjoChain
 
-AjoChain is a Celo-based rotating savings protocol and MiniPay-ready web app. It formalizes community savings circles into auditable smart contract flows: group creation, invite-based membership, scheduled contributions in cUSD, deterministic round payouts, and non-transferable completion credentials.
+AjoChain is a secure group savings application built on the Celo blockchain. It replaces traditional rotating community savings circles (known as Ajo, Esusu, or Chamas) with automated smart contract rules.
+
+## What is AjoChain?
+
+In many parts of the world, communities save money together using rotating savings groups. However, traditional groups rely entirely on trust. If an organizer disappears or a member fails to pay on time, the cycle breaks, and community members lose their hard-earned money.
+
+**AjoChain protects your savings by locking them in code, not promises:**
+- **Secure Escrow**: Contributions are locked in automatic smart contracts. No single person or organizer can run off with the group's funds.
+- **Fair Payouts**: The payout order is determined by a fair, tamper-proof system. No one can jump the queue or change the schedule.
+- **Dollar-Pegged Savings**: Contributions and payouts use cUSD (Celo Dollar) to preserve value and avoid local currency inflation.
+- **Credit Reputation**: Every completed cycle mints a permanent, non-transferable certificate proving your history of reliable savings.
+
+AjoChain features a mobile-first, MiniPay-native user experience tailored for community-driven finance.
 
 ## Mainnet Status
 
