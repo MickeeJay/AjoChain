@@ -24,9 +24,9 @@ export function NetworkMismatchNotice({ className }: NetworkMismatchNoticeProps)
       <div className="flex items-start gap-3">
         <AlertTriangle className="mt-0.5 h-5 w-5" aria-hidden="true" />
         <div className="space-y-3">
-          <p className="text-sm font-semibold">Wallet network mismatch</p>
+          <p className="text-sm font-semibold">Wrong network selected</p>
           <p className="text-sm leading-6 text-amber-800 dark:text-amber-100/80">
-            Switch your wallet to Celo Mainnet (42220) before creating, joining, or contributing to groups.
+            Your wallet is connected to the wrong network. Tap below to switch to the correct one so you can save, join groups, and receive payouts.
           </p>
           <button
             type="button"
@@ -34,7 +34,7 @@ export function NetworkMismatchNotice({ className }: NetworkMismatchNoticeProps)
             disabled={isConnecting}
             className="inline-flex min-h-10 items-center justify-center rounded-full bg-amber-700 px-4 py-2 text-xs font-semibold text-white transition hover:bg-amber-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
           >
-            {isConnecting ? "Switching" : "Switch to Celo Mainnet"}
+            {isConnecting ? "Switching..." : "Switch to Celo Network"}
           </button>
         </div>
       </div>
