@@ -7,6 +7,7 @@ import { useAjoFactory } from "@/hooks/useAjoFactory";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
 import { WalletRequiredCard } from "@/components/shared/WalletRequiredCard";
+import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
 import { cn } from "@/lib/utils";
 
 type CreateGroupFormProps = {
@@ -183,11 +184,13 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
         }
       />
 
-      <WalletRequiredCard
-        title="Wallet required to create"
-        description="Connect a wallet to create a savings group on-chain. Google sign-in is for exploring only."
-        className="bg-slate-50 dark:bg-slate-900/60"
-      />
+      {step === maxSteps && !isConnected ? (
+        <WalletRequiredCard
+          title="Wallet required to create"
+          description="Connect a wallet to create a savings group on-chain. Google sign-in is for exploring only."
+          className="bg-slate-50 dark:bg-slate-900/60"
+        />
+      ) : null}
 
       <div className="space-y-2">
         <div className="flex gap-1">
@@ -353,7 +356,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
         </p>
       ) : null}
 
-      <div className="flex flex-col-reverse minipay:flex-row items-center gap-2">
+      <div className="flex flex-col-reverse minipay:flex-row items-center gap-2 w-full">
         <button
           type="button"
           onClick={previousStep}
@@ -362,13 +365,19 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
         >
           Back
         </button>
-        <button
-          type="submit"
-          disabled={isCreating || !isConnected || isWrongNetwork}
-          className="inline-flex min-h-12 w-full minipay:flex-1 justify-center items-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-emerald-400 dark:text-slate-950 dark:hover:bg-emerald-300 dark:disabled:bg-slate-700"
-        >
-          {isCreating ? "Creating..." : step === maxSteps ? "Create Group" : "Next"}
-        </button>
+        {step === maxSteps && !isConnected ? (
+          <div className="w-full minipay:flex-1">
+            <ConnectWalletButton isMiniPay={isMiniPay} fullWidth className="min-h-12 w-full rounded-full" />
+          </div>
+        ) : (
+          <button
+            type="submit"
+            disabled={isCreating || (step === maxSteps && isWrongNetwork)}
+            className="inline-flex min-h-12 w-full minipay:flex-1 justify-center items-center rounded-full bg-celo-dark px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400 dark:bg-emerald-400 dark:text-slate-950 dark:hover:bg-emerald-300 dark:disabled:bg-slate-700"
+          >
+            {isCreating ? "Creating..." : step === maxSteps ? "Create Group" : "Next"}
+          </button>
+        )}
       </div>
     </form>
   );
