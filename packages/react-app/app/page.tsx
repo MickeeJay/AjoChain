@@ -29,7 +29,7 @@ export default function HomePage() {
       <section className="rounded-[1.25rem] sm:rounded-[1.5rem] border border-slate-200 bg-white p-4 sm:p-5 text-slate-900 shadow-[0_16px_40px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100">
         <p className="text-lg font-semibold">MiniPay wallet detected</p>
         <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
-          Tap the button below to connect your MiniPay wallet. This lets AjoChain read your cUSD balance and display your savings groups.
+          Tap below to connect your MiniPay account. This lets AjoChain show your balance and savings groups.
         </p>
         <AuthErrorBanner className="mt-3" />
         {status !== "loading" && isSignedIn ? (
