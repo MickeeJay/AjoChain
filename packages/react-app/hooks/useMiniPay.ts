@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
 
 type EthereumProvider = {
@@ -55,7 +55,8 @@ export function useMiniPay() {
   
   const { address: wagmiAddress, chainId: wagmiChainId, isConnected: wagmiIsConnected } = useAccount();
   const { connectAsync, connectors, isPending } = useConnect();
-  const { user, authenticated, ready: privyReady, connectWallet: privyConnectWallet } = usePrivy();
+  const { disconnectAsync } = useDisconnect();
+  const { user, authenticated, ready: privyReady, connectWallet: privyConnectWallet, logout } = usePrivy();
   const hasAttemptedConnectorSyncRef = useRef(false);
 
   useEffect(() => {
@@ -195,6 +196,21 @@ export function useMiniPay() {
     }
   }, []);
 
+  const disconnect = useCallback(async () => {
+    try {
+      setError(null);
+      if (authenticated) {
+        await logout();
+      }
+      await disconnectAsync();
+      setAddress(undefined);
+      setChainId(undefined);
+      hasAttemptedConnectorSyncRef.current = false;
+    } catch (disconnectError) {
+      setError(getErrorMessage(disconnectError));
+    }
+  }, [authenticated, logout, disconnectAsync]);
+
   const resolvedAddress = address ?? wagmiAddress ?? (user?.wallet?.address as `0x${string}` | undefined);
   const resolvedChainId = chainId ?? wagmiChainId;
   const isConnected = Boolean(resolvedAddress);
@@ -213,6 +229,7 @@ export function useMiniPay() {
     isWrongNetwork,
     connectWallet,
     switchToCeloMainnet,
+    disconnect,
     address: resolvedAddress,
     chainId: resolvedChainId,
     error,
