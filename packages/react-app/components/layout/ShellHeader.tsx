@@ -75,12 +75,12 @@ export function ShellHeader() {
               isMiniPay={isMiniPay}
               className="min-h-10 px-4 py-2 text-xs font-semibold"
               miniPayLabel="Open MiniPay"
-              defaultLabel="Sign In"
+              defaultLabel="Connect / Sign In"
             />
           ) : (
             <PrivyLoginButton
               className="min-h-10 px-4 py-2 text-xs font-semibold"
-              label="Sign In"
+              label="Connect / Sign In"
             />
           )}
         </div>
