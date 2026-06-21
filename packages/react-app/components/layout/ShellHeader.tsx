@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { PrivyLoginButton } from "@/components/shared/PrivyLoginButton";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useMiniPay } from "@/hooks/useMiniPay";
@@ -59,12 +60,17 @@ export function ShellHeader() {
                 <span className="truncate">{balanceLabel}</span>
               </span>
             </div>
-          ) : (
+          ) : isMiniPay ? (
             <ConnectWalletButton
               isMiniPay={isMiniPay}
               className="min-h-10 px-4 py-2 text-xs font-semibold"
               miniPayLabel="Open MiniPay"
               defaultLabel="Sign In"
+            />
+          ) : (
+            <PrivyLoginButton
+              className="min-h-10 px-4 py-2 text-xs font-semibold"
+              label="Sign In"
             />
           )}
         </div>
