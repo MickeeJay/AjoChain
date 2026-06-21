@@ -2,24 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "lh4.googleusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "pbs.twimg.com",
-      },
-      {
-        protocol: "https",
-        hostname: "abs.twimg.com",
-      },
-    ],
+    remotePatterns: [],
   },
   async headers() {
     return [
@@ -53,8 +36,9 @@ const nextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://pbs.twimg.com https://abs.twimg.com",
-              "connect-src 'self' https://forno.celo.org https://alfajores-forno.celo-testnet.org https://celoscan.io https://accounts.google.com https://api.twitter.com wss:",
+              "img-src 'self' data: blob: https://auth.privy.io",
+              "connect-src 'self' https://forno.celo.org https://alfajores-forno.celo-testnet.org https://celoscan.io https://auth.privy.io https://*.privy.io wss:",
+              "frame-src 'self' https://auth.privy.io",
               "frame-ancestors 'none'",
             ].join("; "),
           },
