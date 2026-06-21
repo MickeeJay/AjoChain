@@ -6,6 +6,7 @@ import { PiggyBank, Trophy, Users } from "lucide-react";
 import { useAccount } from "wagmi";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { formatCountdown, formatCusdFromWei } from "@/lib/formatters";
 import { shortenAddress } from "@/lib/utils";
 
@@ -46,7 +47,8 @@ export function HomeDashboardContent() {
     return () => window.clearInterval(intervalId);
   }, [nextActionGroup]);
 
-  const greetingName = useMemo(() => shortenAddress(address), [address]);
+  const { userLabel } = useAuthStatus();
+  const greetingName = userLabel;
   const greetingPrefix = resolveGreeting();
 
   return (
