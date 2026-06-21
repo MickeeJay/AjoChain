@@ -9,17 +9,14 @@ type AuthErrorBannerProps = {
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
-  OAuthSignin: "Sign-in did not start. Please try again.",
-  OAuthCallback: "Sign-in was interrupted. Please try again.",
-  OAuthCreateAccount: "We could not create your account. Please try again.",
-  OAuthAccountNotLinked: "This email is already linked to another sign-in method. Please sign in using your original method.",
   AccessDenied: "Access denied. Please use an allowed account.",
   Verification: "Verification failed. Please try again.",
-  Configuration: "Sign-in is not fully configured yet. Please try again later.",
-  Callback: "Sign-in failed to complete. Please try again.",
+  Configuration: "Sign-in configuration issue. Please check your settings.",
+  Callback: "Authentication failed. Please try again.",
   SessionRequired: "Please sign in to continue.",
-  Default: "Sign-in failed. Please try again.",
+  Default: "Authentication failed. Please try again.",
 };
+
 
 function AuthErrorBannerInner({ className }: AuthErrorBannerProps) {
   const searchParams = useSearchParams();
