@@ -7,6 +7,7 @@ import { PrivyLoginButton } from "@/components/shared/PrivyLoginButton";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useCUSD } from "@/hooks/useCUSD";
 import { useMiniPay } from "@/hooks/useMiniPay";
+import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { formatCusdAmount } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { SHELL_HEADER_HEIGHT_PX, SHELL_MAX_WIDTH_PX } from "./shell.constants";
@@ -15,6 +16,7 @@ import { LogOut } from "lucide-react";
 
 export function ShellHeader() {
   const { isMiniPay, isLoading, isConnected, address, chainId, disconnect } = useMiniPay();
+  const { isSignedIn, userLabel } = useAuthStatus();
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
   const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
   const showWalletStatus = !isMiniPay && !isLoading && isConnected;
@@ -66,6 +68,25 @@ export function ShellHeader() {
                 className="inline-flex min-h-10 items-center justify-center rounded-full border border-slate-200 bg-white p-2.5 text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800/80 transition shadow-sm shrink-0"
                 title="Disconnect Wallet"
                 aria-label="Disconnect Wallet"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </div>
+          ) : isSignedIn ? (
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" />
+              <span
+                className="inline-flex min-h-10 max-w-[150px] items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 text-[13px] font-semibold text-emerald-700 whitespace-nowrap dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200"
+                title={userLabel}
+              >
+                <span className="truncate">{userLabel}</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => void disconnect()}
+                className="inline-flex min-h-10 items-center justify-center rounded-full border border-slate-200 bg-white p-2.5 text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800/80 transition shadow-sm shrink-0"
+                title="Sign Out"
+                aria-label="Sign Out"
               >
                 <LogOut className="h-4 w-4" />
               </button>
