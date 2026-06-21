@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAccount, useConnect } from "wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 
 declare global {
   interface Window {
@@ -48,8 +49,10 @@ export function useMiniPay() {
   const [address, setAddress] = useState<`0x${string}` | undefined>();
   const [chainId, setChainId] = useState<number | undefined>();
   const [error, setError] = useState<string | null>(null);
+  
   const { address: wagmiAddress, chainId: wagmiChainId, isConnected: wagmiIsConnected } = useAccount();
   const { connectAsync, connectors, isPending } = useConnect();
+  const { user, authenticated, ready: privyReady } = usePrivy();
   const hasAttemptedConnectorSyncRef = useRef(false);
 
   useEffect(() => {
@@ -176,7 +179,7 @@ export function useMiniPay() {
     }
   }, []);
 
-  const resolvedAddress = address ?? wagmiAddress;
+  const resolvedAddress = address ?? wagmiAddress ?? (user?.wallet?.address as `0x${string}` | undefined);
   const resolvedChainId = chainId ?? wagmiChainId;
   const isConnected = Boolean(resolvedAddress);
   const isWrongNetwork = Boolean(
@@ -188,7 +191,7 @@ export function useMiniPay() {
 
   return {
     isMiniPay,
-    isLoading,
+    isLoading: isLoading && !privyReady,
     isConnecting: isConnecting || isPending,
     isConnected,
     isWrongNetwork,
@@ -199,3 +202,4 @@ export function useMiniPay() {
     error,
   };
 }
+
