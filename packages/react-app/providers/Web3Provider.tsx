@@ -1,10 +1,10 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { PrivyProvider } from "@privy-io/react-auth";
+import { PrivyProvider, usePrivy, useCreateWallet } from "@privy-io/react-auth";
 import { WagmiProvider, createConfig } from "@privy-io/wagmi";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { http } from "wagmi";
 import { celoAlfajores, celoMainnet } from "@/lib/celo";
@@ -18,6 +18,35 @@ const wagmiConfig = createConfig({
     [celoAlfajores.id]: http(celoAlfajores.rpcUrls.default.http[0]),
   },
 });
+
+function WalletCreationSync() {
+  const { ready, authenticated, user } = usePrivy();
+  const { createWallet } = useCreateWallet();
+  const creatingRef = useRef(false);
+
+  useEffect(() => {
+    if (!ready || !authenticated || !user) return;
+
+    // Check if the user already has an embedded wallet or any wallet linked
+    const hasWallet = !!user.wallet || (user.linkedAccounts && user.linkedAccounts.some((acc) => acc.type === "wallet"));
+
+    if (!hasWallet && !creatingRef.current) {
+      creatingRef.current = true;
+      console.log("User is authenticated but has no wallet. Programmatically creating embedded wallet...");
+      createWallet()
+        .then((wallet) => {
+          console.log("Embedded wallet programmatically created:", wallet.address);
+          creatingRef.current = false;
+        })
+        .catch((error) => {
+          console.error("Failed to programmatically create embedded wallet:", error);
+          creatingRef.current = false;
+        });
+    }
+  }, [ready, authenticated, user, createWallet]);
+
+  return null;
+}
 
 export function Web3Provider({ children }: { children: ReactNode }) {
   const { resolvedTheme } = useTheme();
@@ -56,6 +85,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
         supportedChains: [celoMainnet, celoAlfajores],
       }}
     >
+      <WalletCreationSync />
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
           {children}

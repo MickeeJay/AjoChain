@@ -1,6 +1,7 @@
 "use client";
 
 import { lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import { HomeDashboardSkeleton } from "@/components/home/HomeDashboardSkeleton";
 import { HomeLanding } from "@/components/home/HomeLanding";
 import { AuthErrorBanner } from "@/components/shared/AuthErrorBanner";
@@ -22,6 +23,20 @@ export default function HomePage() {
 
   if (!isConnected && !isMiniPay && !isSignedIn) {
     return <HomeLanding isMiniPay={isMiniPay} />;
+  }
+
+  if (isSignedIn && !isConnected && !isMiniPay) {
+    return (
+      <div className="mx-auto mt-6 flex w-full max-w-[360px] flex-col justify-center rounded-[1.5rem] border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_20px_80px_rgba(16,42,44,0.12)] minipay:min-h-[520px] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100 animate-pulse">
+        <div className="flex flex-col items-center text-center p-4">
+          <Loader2 className="h-10 w-10 animate-spin text-celo-green" />
+          <p className="mt-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Setting up your wallet...</p>
+          <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+            AjoChain is securing your decentralized wallet. This only takes a moment.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (!isConnected && isMiniPay) {
