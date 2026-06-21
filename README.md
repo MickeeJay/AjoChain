@@ -163,10 +163,8 @@ Required/commonly used values:
 - `NEXT_PUBLIC_CELO_CHAIN_ID`
 - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
 - `NEXT_PUBLIC_APP_URL`
-- `NEXTAUTH_URL`
-- `NEXTAUTH_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
+- `NEXT_PUBLIC_PRIVY_APP_ID` (Privy dashboard App ID for social/email login)
+
 
 Optional Alfajores values:
 
