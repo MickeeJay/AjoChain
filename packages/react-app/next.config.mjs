@@ -7,7 +7,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/:path*",
         headers: [
           {
             key: "X-Frame-Options",
@@ -30,16 +30,20 @@ const nextConfig = {
             value: "max-age=63072000; includeSubDomains; preload",
           },
           {
-            key: "Content-Security-Policy",
+            key: "Content-Security-Policy-Report-Only",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://auth.privy.io",
-              "connect-src 'self' https://forno.celo.org https://alfajores-forno.celo-testnet.org https://celoscan.io https://auth.privy.io https://*.privy.io wss:",
-              "frame-src 'self' https://auth.privy.io",
+              "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data:",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
               "frame-ancestors 'none'",
+              "child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org",
+              "frame-src https://auth.privy.io https://*.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com",
+              "connect-src 'self' https://auth.privy.io https://*.privy.io https://forno.celo.org https://alfajores-forno.celo-testnet.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org wss://*.privy.io https://*.rpc.privy.systems https://explorer-api.walletconnect.com https://celoscan.io https://alfajores.celoscan.io",
             ].join("; "),
           },
         ],
