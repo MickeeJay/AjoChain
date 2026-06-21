@@ -3,7 +3,6 @@ import { Fraunces, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { AppProviders } from "@/providers/AppProviders";
-import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 
 const bodyFont = Manrope({
