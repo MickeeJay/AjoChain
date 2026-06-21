@@ -38,7 +38,12 @@ export function WalletRequiredCard({
       {isMiniPay ? (
         <ConnectWalletButton isMiniPay={isMiniPay} fullWidth={fullWidthButton} className={cn("mt-4", buttonClassName)} />
       ) : (
-        <PrivyLoginButton fullWidth={fullWidthButton} className={cn("mt-4", buttonClassName)} label="Sign In / Connect Wallet" />
+        <div className="space-y-2 mt-4">
+          <PrivyLoginButton fullWidth={fullWidthButton} className={buttonClassName} label="Connect Wallet / Sign In" />
+          <p className="text-[11px] text-slate-550 dark:text-slate-400 text-center leading-relaxed">
+            💡 <strong>New to Web3?</strong> Sign in with email and we&apos;ll automatically create a secure wallet for you.
+          </p>
+        </div>
       )}
     </section>
   );
