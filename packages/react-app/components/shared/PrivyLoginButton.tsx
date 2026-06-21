@@ -13,9 +13,13 @@ type PrivyLoginButtonProps = {
 export function PrivyLoginButton({
   className,
   fullWidth = false,
-  label = "Sign In / Connect Wallet",
+  label = "Connect / Sign In",
 }: PrivyLoginButtonProps) {
-  const { login, ready } = usePrivy();
+  const { login, ready, authenticated } = usePrivy();
+
+  if (authenticated) {
+    return null;
+  }
 
   const handleLogin = () => {
     if (ready) {
