@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar } from "@/components/shared/Avatar";
-import { GoogleSignOutButton } from "@/components/shared/GoogleSignOutButton";
+import { PrivyLogoutButton } from "@/components/shared/PrivyLogoutButton";
 import { cn } from "@/lib/utils";
 
 type AuthStatusPillProps = {
@@ -21,7 +21,7 @@ export function AuthStatusPill({ userLabel, userImage, className, actionClassNam
     >
       <Avatar name={userLabel} imageUrl={userImage} size="sm" />
       <span className="max-w-[180px] truncate">Signed in as {userLabel}</span>
-      <GoogleSignOutButton className={cn("min-h-8 px-3 py-1 text-xs", actionClassName)} label="Sign out" />
+      <PrivyLogoutButton className={cn("min-h-8 px-3 py-1 text-xs", actionClassName)} label="Sign out" />
     </div>
   );
 }
