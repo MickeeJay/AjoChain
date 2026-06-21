@@ -10,7 +10,7 @@ type SocialLoginGroupProps = {
 export function SocialLoginGroup({ className }: SocialLoginGroupProps) {
   return (
     <div className={className}>
-      <PrivyLoginButton fullWidth label="Sign In with Email or Wallet" />
+      <PrivyLoginButton fullWidth label="Connect / Sign In with Email or Wallet" />
     </div>
   );
 }
