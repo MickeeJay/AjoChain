@@ -1,6 +1,7 @@
 "use client";
 
 import { ConnectWalletButton } from "@/components/shared/ConnectWalletButton";
+import { PrivyLoginButton } from "@/components/shared/PrivyLoginButton";
 import { useMiniPay } from "@/hooks/useMiniPay";
 import { cn } from "@/lib/utils";
 
@@ -13,8 +14,8 @@ type WalletRequiredCardProps = {
 };
 
 export function WalletRequiredCard({
-  title = "Wallet required",
-  description = "Connect your mobile wallet (MiniPay or Valora) to start saving. Your wallet is your secure account for sending and receiving money.",
+  title = "Wallet or Sign-In Required",
+  description = "Sign in with email or connect a mobile wallet to start saving. We will automatically create a secure Celo savings wallet for you if you don't have one.",
   className,
   buttonClassName,
   fullWidthButton = true,
@@ -34,7 +35,12 @@ export function WalletRequiredCard({
     >
       <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{title}</p>
       <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{description}</p>
-      <ConnectWalletButton isMiniPay={isMiniPay} fullWidth={fullWidthButton} className={cn("mt-4", buttonClassName)} />
+      {isMiniPay ? (
+        <ConnectWalletButton isMiniPay={isMiniPay} fullWidth={fullWidthButton} className={cn("mt-4", buttonClassName)} />
+      ) : (
+        <PrivyLoginButton fullWidth={fullWidthButton} className={cn("mt-4", buttonClassName)} label="Sign In / Connect Wallet" />
+      )}
     </section>
   );
 }
+
