@@ -194,7 +194,7 @@ export function useMiniPay() {
 
   return {
     isMiniPay,
-    isLoading: isLoading && !privyReady,
+    isLoading: isMiniPay ? isLoading : (isLoading || !privyReady),
     isConnecting: isConnecting || isPending,
     isConnected,
     isWrongNetwork,
