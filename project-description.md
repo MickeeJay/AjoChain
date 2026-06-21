@@ -33,4 +33,6 @@ AjoChain keeps the social savings model you know and trust, but uses secure tech
 AjoChain is designed for mobile-first users:
 - **Digital Dollars**: Contributions are made using cUSD, protecting your savings from local currency inflation.
 - **Instant and Cheap**: Transactions take seconds and cost less than a cent, making micro-savings practical for everyone.
-- **Super Simple Logins**: Connect in one click using your phone or social accounts.
+- **Super Simple Logins**: Connect in seconds using your email (which automatically creates a secure, built-in savings wallet) or connect your own mobile wallet.
+- **Chain Availability**: Live on Celo mainnet/testnet, and fully integrated with the MiniPay miniapp store.
+
