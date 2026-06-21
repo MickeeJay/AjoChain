@@ -12,14 +12,16 @@ export function useAuthStatus() {
     ? "authenticated"
     : "unauthenticated";
 
-  // Derive user label (prefer email, fallback to wallet address, fallback to user id)
+  // Derive the embedded wallet address from Privy user object
+  const walletAddress = user?.wallet?.address as `0x${string}` | undefined;
+
+  // Derive user display label (prefer email, fallback to truncated wallet, fallback to user id)
   let userLabel = "Signed in";
   if (user) {
     if (user.email?.address) {
       userLabel = user.email.address;
-    } else if (user.wallet?.address) {
-      const addr = user.wallet.address;
-      userLabel = `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+    } else if (walletAddress) {
+      userLabel = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
     } else {
       userLabel = user.id.slice(0, 10);
     }
@@ -35,6 +37,7 @@ export function useAuthStatus() {
     isSignedIn,
     userLabel,
     userImage,
+    walletAddress,
     logout,
   };
 }
