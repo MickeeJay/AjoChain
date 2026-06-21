@@ -55,7 +55,7 @@ export function useMiniPay() {
   
   const { address: wagmiAddress, chainId: wagmiChainId, isConnected: wagmiIsConnected } = useAccount();
   const { connectAsync, connectors, isPending } = useConnect();
-  const { user, authenticated, ready: privyReady } = usePrivy();
+  const { user, authenticated, ready: privyReady, connectWallet: privyConnectWallet } = usePrivy();
   const hasAttemptedConnectorSyncRef = useRef(false);
 
   useEffect(() => {
@@ -123,6 +123,19 @@ export function useMiniPay() {
   }, [connectAsync, connectors, wagmiIsConnected]);
 
   const connectWallet = useCallback(async () => {
+    if (!isMiniPay) {
+      if (privyReady) {
+        try {
+          privyConnectWallet();
+          return true;
+        } catch (connectError) {
+          setError(getErrorMessage(connectError));
+          return false;
+        }
+      }
+      return false;
+    }
+
     const provider = getProvider();
 
     if (!provider) {
@@ -156,7 +169,7 @@ export function useMiniPay() {
     } finally {
       setIsConnecting(false);
     }
-  }, [connectAsync, connectors, wagmiIsConnected]);
+  }, [isMiniPay, privyReady, privyConnectWallet, connectAsync, connectors, wagmiIsConnected]);
 
   const switchToCeloMainnet = useCallback(async () => {
     const provider = getProvider();
