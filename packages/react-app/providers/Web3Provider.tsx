@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 import { http } from "wagmi";
 import { celoAlfajores, celoMainnet } from "@/lib/celo";
 
-const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
+const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID || "cluy7b3w80000jzp089s78e1b";
 
 const wagmiConfig = createConfig({
   chains: [celoMainnet, celoAlfajores],
