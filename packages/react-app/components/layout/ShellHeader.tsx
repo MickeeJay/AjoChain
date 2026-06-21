@@ -16,7 +16,7 @@ import { LogOut } from "lucide-react";
 
 export function ShellHeader() {
   const { isMiniPay, isLoading, isConnected, address, chainId, disconnect } = useMiniPay();
-  const { isSignedIn, userLabel } = useAuthStatus();
+  const { isSignedIn, userLabel, walletAddress } = useAuthStatus();
   const resolvedChainId = chainId === 44787 ? 44787 : 42220;
   const { balance } = useCUSD({ owner: address, chainId: resolvedChainId });
   const showWalletStatus = !isMiniPay && !isLoading && isConnected;
@@ -75,12 +75,21 @@ export function ShellHeader() {
           ) : isSignedIn ? (
             <div className="flex min-w-0 items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-celo-green" aria-hidden="true" />
-              <span
-                className="inline-flex min-h-10 max-w-[150px] items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 text-[13px] font-semibold text-emerald-700 whitespace-nowrap dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200"
-                title={userLabel}
-              >
-                <span className="truncate">{userLabel}</span>
-              </span>
+              {walletAddress ? (
+                <span
+                  className="inline-flex min-h-10 max-w-[150px] items-center rounded-full border border-celo-green/20 bg-white px-3 text-[13px] font-semibold text-slate-900 whitespace-nowrap shadow-sm dark:border-emerald-400/30 dark:bg-slate-950 dark:text-slate-100"
+                  title={walletAddress}
+                >
+                  <span className="truncate">{`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}</span>
+                </span>
+              ) : (
+                <span
+                  className="inline-flex min-h-10 max-w-[150px] items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 text-[13px] font-semibold text-emerald-700 whitespace-nowrap dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-200"
+                  title={userLabel}
+                >
+                  <span className="truncate">{userLabel}</span>
+                </span>
+              )}
               <button
                 type="button"
                 onClick={() => void disconnect()}
