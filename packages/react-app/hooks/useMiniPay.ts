@@ -4,15 +4,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAccount, useConnect } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
 
-declare global {
-  interface Window {
-    ethereum?: {
-      isMiniPay?: boolean;
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-      on?: (eventName: string, listener: (...args: unknown[]) => void) => void;
-      removeListener?: (eventName: string, listener: (...args: unknown[]) => void) => void;
-    };
-  }
+type EthereumProvider = {
+  isMiniPay?: boolean;
+  request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
+  on?: (eventName: string, listener: (...args: unknown[]) => void) => void;
+  removeListener?: (eventName: string, listener: (...args: unknown[]) => void) => void;
+};
+
+function getProvider(): EthereumProvider | undefined {
+  if (typeof window === "undefined") return undefined;
+  const eth = (window as unknown as { ethereum?: EthereumProvider }).ethereum;
+  if (!eth || typeof eth.request !== "function") return undefined;
+  return eth;
 }
 
 const CELO_MAINNET_CHAIN_ID = 42220;
@@ -56,7 +59,7 @@ export function useMiniPay() {
   const hasAttemptedConnectorSyncRef = useRef(false);
 
   useEffect(() => {
-    const provider = window.ethereum;
+    const provider = getProvider();
     const detected = Boolean(provider?.isMiniPay);
     setIsMiniPay(detected);
 
@@ -120,7 +123,7 @@ export function useMiniPay() {
   }, [connectAsync, connectors, wagmiIsConnected]);
 
   const connectWallet = useCallback(async () => {
-    const provider = window.ethereum;
+    const provider = getProvider();
 
     if (!provider) {
       setError("No supported wallet provider was detected.");
@@ -156,7 +159,7 @@ export function useMiniPay() {
   }, [connectAsync, connectors, wagmiIsConnected]);
 
   const switchToCeloMainnet = useCallback(async () => {
-    const provider = window.ethereum;
+    const provider = getProvider();
 
     if (!provider) {
       setError("No wallet provider is available to switch networks.");
