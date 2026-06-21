@@ -50,7 +50,7 @@ export function WalletGuard({ children }: WalletGuardProps) {
         Sign in to participate in secure, decentralized group savings.
       </p>
       <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-500">
-        No wallet? No problem! Sign in with your email and we'll automatically create a secure savings wallet for you.
+        No wallet? No problem! Sign in with your email and we&apos;ll automatically create a secure savings wallet for you.
       </p>
       <AuthErrorBanner className="mt-3" />
       <div className="mt-5 space-y-3">
