@@ -47,10 +47,10 @@ export function WalletGuard({ children }: WalletGuardProps) {
     <div className="mx-auto mt-6 flex w-full max-w-[360px] flex-col justify-center rounded-[1.5rem] border border-slate-200 bg-white p-5 text-slate-900 shadow-[0_20px_80px_rgba(16,42,44,0.12)] minipay:min-h-[520px] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100">
       <h2 className="text-xl font-semibold tracking-tight text-slate-950 dark:text-slate-100">Welcome to AjoChain</h2>
       <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-        Sign in to explore savings groups, view profiles, and track your progress.
+        Sign in to participate in secure, decentralized group savings.
       </p>
       <p className="mt-2 text-xs leading-relaxed text-slate-500 dark:text-slate-500">
-        To save money, join groups, or receive payouts — connect your mobile wallet (like MiniPay or Valora).
+        No wallet? No problem! Sign in with your email and we'll automatically create a secure savings wallet for you.
       </p>
       <AuthErrorBanner className="mt-3" />
       <div className="mt-5 space-y-3">
@@ -66,3 +66,4 @@ export function WalletGuard({ children }: WalletGuardProps) {
     </div>
   );
 }
+
