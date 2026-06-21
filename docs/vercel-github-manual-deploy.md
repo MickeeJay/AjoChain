@@ -26,6 +26,8 @@ Set these in Vercel Project Settings for Production:
 - `NEXT_PUBLIC_CUSD_ADDRESS=0x765DE816845861e75A25fCA122bb6898B8B1282a`
 - `NEXT_PUBLIC_CELO_CHAIN_ID=42220`
 - `NEXT_PUBLIC_APP_URL=https://ajochain.vercel.app`
+- `NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id`
+
 
 Optional testnet values:
 
