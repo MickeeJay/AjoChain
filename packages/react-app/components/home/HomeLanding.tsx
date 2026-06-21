@@ -117,7 +117,12 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
                   userImage={userImage}
                 />
               ) : (
-                <SocialLoginGroup callbackUrl="/" />
+                <>
+                  <SocialLoginGroup callbackUrl="/" />
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
+                    💡 <strong>New to Web3?</strong> No MetaMask needed! Just sign in with your email and AjoChain will automatically create a secure Celo savings wallet for you.
+                  </p>
+                </>
               )}
               <ConnectWalletButton isMiniPay={isMiniPay} fullWidth />
             </div>
