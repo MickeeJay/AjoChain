@@ -1,22 +1,22 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
+import { PrivyProvider } from "@privy-io/react-auth";
+import { WagmiProvider, createConfig } from "@privy-io/wagmi";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
-import { createConfig, http, WagmiProvider } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { http } from "wagmi";
 import { celoAlfajores, celoMainnet } from "@/lib/celo";
+
+const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? "";
 
 const wagmiConfig = createConfig({
   chains: [celoMainnet, celoAlfajores],
-  connectors: [injected()],
   transports: {
     [celoMainnet.id]: http(celoMainnet.rpcUrls.default.http[0]),
     [celoAlfajores.id]: http(celoAlfajores.rpcUrls.default.http[0]),
   },
-  ssr: true,
 });
 
 export function Web3Provider({ children }: { children: ReactNode }) {
@@ -32,24 +32,35 @@ export function Web3Provider({ children }: { children: ReactNode }) {
       }),
   );
 
-  const rainbowTheme = useMemo(() => {
-    const isDark = resolvedTheme === "dark";
-    const buildTheme = isDark ? darkTheme : lightTheme;
-
-    return buildTheme({
-      accentColor: "#35D07F",
-      accentColorForeground: isDark ? "#0b1412" : "white",
-      borderRadius: "large",
-    });
+  const privyTheme = useMemo(() => {
+    return resolvedTheme === "dark" ? "dark" : "light";
   }, [resolvedTheme]);
 
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <PrivyProvider
+      appId={privyAppId}
+      config={{
+        appearance: {
+          theme: privyTheme,
+          accentColor: "#35D07F",
+          logo: "/android-chrome-192x192.png",
+          walletChainType: "ethereum-only",
+        },
+        loginMethods: ["email", "wallet"],
+        embeddedWallets: {
+          ethereum: {
+            createOnLogin: "users-without-wallets",
+          },
+        },
+        defaultChain: celoMainnet,
+        supportedChains: [celoMainnet, celoAlfajores],
+      }}
+    >
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={rainbowTheme}>
+        <WagmiProvider config={wagmiConfig}>
           {children}
-        </RainbowKitProvider>
+        </WagmiProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </PrivyProvider>
   );
 }
