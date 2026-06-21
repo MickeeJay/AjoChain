@@ -20,7 +20,7 @@ export default function HomePage() {
     return <HomeDashboardSkeleton />;
   }
 
-  if (!isConnected && !isMiniPay) {
+  if (!isConnected && !isMiniPay && !isSignedIn) {
     return <HomeLanding isMiniPay={isMiniPay} />;
   }
 
