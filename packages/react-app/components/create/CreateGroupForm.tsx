@@ -115,7 +115,7 @@ export function CreateGroupForm({ template, onSubmit }: CreateGroupFormProps) {
 
   return (
     <form
-      className="grid gap-3 rounded-[1.5rem] border border-slate-200 bg-white p-4 text-slate-900 shadow-[0_16px_50px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100"
+      className="grid gap-3 rounded-[1.5rem] border border-slate-200 bg-white p-3 minipay:p-4 text-slate-900 shadow-[0_16px_50px_rgba(16,42,44,0.08)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-slate-100"
       onSubmit={(event) => {
         event.preventDefault();
 
