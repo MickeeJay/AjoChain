@@ -99,7 +99,7 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
 
   return (
     <section className="mx-auto flex w-full max-w-5xl flex-col gap-5 text-slate-900 dark:text-slate-100">
-      <div className="rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white via-emerald-50/70 to-cyan-50/70 p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:from-slate-950 dark:via-emerald-900/30 dark:to-cyan-900/30">
+      <div className="rounded-[1.5rem] minipay:rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white via-emerald-50/70 to-cyan-50/70 p-4 minipay:p-5 sm:p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:from-slate-950 dark:via-emerald-900/30 dark:to-cyan-900/30">
         <span className="inline-flex rounded-full bg-celo-green/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-celo-green">Invite link</span>
         <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl dark:text-slate-100">Join {inviteGroup.name}</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base md:leading-7 dark:text-slate-400">
@@ -132,7 +132,7 @@ export default async function InviteLandingPage({ params }: InviteLandingPagePro
         </div>
       </div>
 
-      <div className="rounded-[2rem] border border-slate-200/70 bg-white p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:bg-slate-950/90">
+      <div className="rounded-[1.5rem] minipay:rounded-[2rem] border border-slate-200/70 bg-white p-4 minipay:p-5 sm:p-6 shadow-[0_20px_80px_rgba(16,42,44,0.12)] dark:border-slate-800/80 dark:bg-slate-950/90">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-celo-green">How AjoChain works</p>
         <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <article className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
