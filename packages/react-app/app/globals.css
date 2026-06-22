@@ -64,6 +64,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
 }
 
 body {
@@ -75,6 +77,7 @@ body {
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
 }
 
 :where(a, button, input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible {
