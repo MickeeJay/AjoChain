@@ -48,7 +48,7 @@ export default function CreateGroupPage({ searchParams }: CreateGroupPageProps) 
           </div>
         </section>
 
-        <aside className="rounded-[1.5rem] bg-slate-950 p-5 text-white dark:bg-slate-900">
+        <aside className="rounded-[1.5rem] bg-slate-950 p-3 minipay:p-4 sm:p-5 text-white dark:bg-slate-900">
           <CreateGroupForm template={template} />
           <Link
             href="/groups"
