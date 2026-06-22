@@ -7,11 +7,11 @@ import { MINIPAY_VIEWPORT_HEIGHT_PX, SHELL_HEADER_OFFSET_CLASS, SHELL_MAIN_BOTTO
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div
-      className="mx-auto flex min-h-dvh w-full flex-col overflow-hidden text-foreground"
+      className="mx-auto flex min-h-dvh w-full flex-col text-foreground"
       style={{ background: "var(--shell-bg)", maxWidth: SHELL_MAX_WIDTH_PX, minHeight: `max(100dvh, ${MINIPAY_VIEWPORT_HEIGHT_PX}px)` }}
     >
       <ShellHeader />
-      <main className={`flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-3 minipay:px-4 pb-2 ${SHELL_HEADER_OFFSET_CLASS} ${SHELL_MAIN_BOTTOM_PADDING_CLASS}`}>
+      <main className={`flex-1 px-3 minipay:px-4 pb-2 ${SHELL_HEADER_OFFSET_CLASS} ${SHELL_MAIN_BOTTOM_PADDING_CLASS}`}>
         <WalletGuard>{children}</WalletGuard>
       </main>
       <BottomNav />
