@@ -40,7 +40,7 @@ export function WalletRequiredCard({
       ) : (
         <div className="space-y-2 mt-4">
           <PrivyLoginButton fullWidth={fullWidthButton} className={buttonClassName} label="Connect Wallet / Sign In" />
-          <p className="text-[11px] text-slate-550 dark:text-slate-400 text-center leading-relaxed">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 text-center leading-relaxed">
             💡 <strong>New to Web3?</strong> Sign in with email and we&apos;ll automatically create a secure wallet for you.
           </p>
         </div>
