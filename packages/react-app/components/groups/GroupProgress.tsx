@@ -24,7 +24,7 @@ export function GroupProgress({ currentRound, totalRounds, memberOrder, nextPayo
       </div>
 
       <div className="grid gap-2">
-        <div className="overflow-x-auto pb-1">
+        <div className="overflow-x-auto overscroll-x-contain pb-1">
           <div className="grid gap-0.5" style={{ minWidth: `${timelineMinWidth}px`, gridTemplateColumns: `repeat(${timelineCount}, minmax(0, 1fr))` }}>
             {rounds.map((round) => {
               const isCompleted = round < normalizedCurrentRound;
