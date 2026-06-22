@@ -26,7 +26,7 @@ export function ShellHeader() {
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80"
+      className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80"
       style={{ height: SHELL_HEADER_HEIGHT_PX }}
     >
       <div className="mx-auto flex h-full w-full items-center justify-between gap-3 px-4" style={{ maxWidth: SHELL_MAX_WIDTH_PX }}>
