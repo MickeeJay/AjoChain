@@ -25,7 +25,10 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80">
+    <nav
+      className="sticky bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/80"
+      style={{ touchAction: "none" }}
+    >
       <div className="mx-auto w-full px-3 pb-safe-bottom" style={{ maxWidth: SHELL_MAX_WIDTH_PX }}>
         <div className="grid grid-cols-4 gap-1" style={{ height: SHELL_BOTTOM_NAV_HEIGHT_PX }}>
         {items.map((item) => {
