@@ -68,7 +68,7 @@ export function HomeLanding({ isMiniPay }: HomeLandingProps) {
   return (
     <section className="space-y-8 text-slate-900 dark:text-slate-100">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-[2rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-lime-50/30 to-white p-6 sm:p-8 shadow-[0_20px_60px_rgba(7,149,95,0.12)] dark:border-emerald-500/20 dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950 animate-slide-up">
+      <div className="relative overflow-clip rounded-[2rem] border border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-lime-50/30 to-white p-6 sm:p-8 shadow-[0_20px_60px_rgba(7,149,95,0.12)] dark:border-emerald-500/20 dark:from-emerald-950/40 dark:via-slate-950 dark:to-slate-950 animate-slide-up">
         <div className="absolute -top-12 -right-12 h-36 w-36 rounded-full bg-emerald-300/40 blur-3xl dark:bg-emerald-500/10" aria-hidden="true" />
         <div className="absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-lime-300/30 blur-3xl dark:bg-lime-500/10" aria-hidden="true" />
 
